@@ -1,13 +1,21 @@
 import { useState, useEffect, useRef } from "react";
-import { View, Animated, Dimensions, Share } from "react-native";
+import { View, Animated, Dimensions, Share, Alert } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import { captureRef } from "react-native-view-shot";
 import {
   useFonts,
   CormorantGaramond_400Regular_Italic,
 } from "@expo-google-fonts/cormorant-garamond";
 import { COLORS } from "./src/constants/colors";
 import { CATEGORIES, Category } from "./src/constants/categories";
-import { Quote, getRandomQuote, getQuoteCount } from "./src/database/quotes";
+import {
+  Quote,
+  getRandomQuote,
+  getQuoteCount,
+  getSavedQuotes,
+  addSavedQuote,
+  removeSavedQuote,
+} from "./src/database/quotes";
 import {
   getPreferredCategories,
   setPreferredCategories,
@@ -18,8 +26,10 @@ import QuoteCard from "./src/components/QuoteCard";
 import PaginationDots from "./src/components/PaginationDots";
 import ActionBar from "./src/components/ActionBar";
 import HistorySheet from "./src/components/HistorySheet";
+import ShareCard from "./src/components/ShareCard";
 import SettingsScreen from "./src/screens/SettingsScreen";
 import PersonalizationScreen from "./src/screens/PersonalizationScreen";
+import ThemeScreen from "./src/screens/ThemeScreen";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -40,7 +50,7 @@ export default function App() {
   const [savedQuotes, setSavedQuotes] = useState<Quote[]>([]);
   const [historyVisible, setHistoryVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState<
-    "home" | "settings" | "personalization"
+    "home" | "settings" | "personalization" | "theme"
   >("home");
   const [preferredCategories, setPreferredCategoriesState] = useState<
     Category[]
@@ -52,6 +62,10 @@ export default function App() {
   const slideAnim = useRef(new Animated.Value(0)).current;
   const sheetAnim = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
   const backdropAnim = useRef(new Animated.Value(0)).current;
+
+  // Refs
+  const isAnimating = useRef(false);
+  const shareCardRef = useRef<View>(null);
 
   const [fontsLoaded] = useFonts({
     CormorantGaramond_400Regular_Italic,
@@ -67,6 +81,9 @@ export default function App() {
 
       const prefs = await getPreferredCategories();
       setPreferredCategoriesState(prefs);
+
+      const saved = await getSavedQuotes();
+      setSavedQuotes(saved);
 
       const count = await getQuoteCount();
       setQuoteCount(count);
@@ -93,9 +110,13 @@ export default function App() {
   const canGoNext = historyIndex < quoteHistory.length - 1;
 
   // ── Quote Transition Animation ──
-  const animateToQuote = (newQuote: Quote, direction: "left" | "right") => {
+  const animateToQuote = (newIndex: number, direction: "left" | "right") => {
+    if (isAnimating.current) return;
+    isAnimating.current = true;
+
     const toSlide = direction === "left" ? -60 : 60;
 
+    // Phase 1: Fade out + slide out
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 0,
@@ -108,9 +129,14 @@ export default function App() {
         useNativeDriver: true,
       }),
     ]).start(() => {
+      // Update state AFTER fade-out completes (no overlap)
+      setHistoryIndex(newIndex);
+
+      // Reset position to opposite side
       slideAnim.setValue(-toSlide);
       fadeAnim.setValue(0);
 
+      // Phase 2: Fade in + slide in
       Animated.parallel([
         Animated.timing(fadeAnim, {
           toValue: 1,
@@ -122,36 +148,88 @@ export default function App() {
           duration: 300,
           useNativeDriver: true,
         }),
-      ]).start();
+      ]).start(() => {
+        isAnimating.current = false;
+      });
     });
   };
 
   // ── Handlers ──
   const goNext = () => {
+    if (isAnimating.current) return;
+
     if (canGoNext) {
-      // Already have a next quote in history — just move forward
-      const nextIdx = historyIndex + 1;
-      setHistoryIndex(nextIdx);
-      animateToQuote(quoteHistory[nextIdx], "right");
+      animateToQuote(historyIndex + 1, "right");
     } else {
-      // Fetch a new random quote from preferred categories
+      isAnimating.current = true;
       getRandomQuote(preferredCategories).then((newQuote) => {
-        if (!newQuote) return;
-        setQuoteHistory((prev) => [...prev, newQuote]);
-        setHistoryIndex((prev) => prev + 1);
-        animateToQuote(newQuote, "right");
+        if (!newQuote) {
+          isAnimating.current = false;
+          return;
+        }
+        const toSlide = 60;
+
+        Animated.parallel([
+          Animated.timing(fadeAnim, {
+            toValue: 0,
+            duration: 200,
+            useNativeDriver: true,
+          }),
+          Animated.timing(slideAnim, {
+            toValue: toSlide,
+            duration: 200,
+            useNativeDriver: true,
+          }),
+        ]).start(() => {
+          setQuoteHistory((prev) => [...prev, newQuote]);
+          setHistoryIndex((prev) => prev + 1);
+
+          slideAnim.setValue(-toSlide);
+          fadeAnim.setValue(0);
+
+          Animated.parallel([
+            Animated.timing(fadeAnim, {
+              toValue: 1,
+              duration: 300,
+              useNativeDriver: true,
+            }),
+            Animated.timing(slideAnim, {
+              toValue: 0,
+              duration: 300,
+              useNativeDriver: true,
+            }),
+          ]).start(() => {
+            isAnimating.current = false;
+          });
+        });
       });
     }
   };
 
   const goPrev = () => {
-    if (!canGoPrev) return;
-    const prevIdx = historyIndex - 1;
-    setHistoryIndex(prevIdx);
-    animateToQuote(quoteHistory[prevIdx], "left");
+    if (isAnimating.current || !canGoPrev) return;
+    animateToQuote(historyIndex - 1, "left");
   };
 
-  const handleShare = async () => {
+  // ── Share: Text vs Image ──
+  const handleShare = () => {
+    Alert.alert("Share Quote", "How would you like to share?", [
+      {
+        text: "Share as Text",
+        onPress: shareAsText,
+      },
+      {
+        text: "Share as Image",
+        onPress: shareAsImage,
+      },
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+    ]);
+  };
+
+  const shareAsText = async () => {
     try {
       await Share.share({
         message: `"${currentQuote.text}"\n— ${currentQuote.author}`,
@@ -161,22 +239,39 @@ export default function App() {
     }
   };
 
+  const shareAsImage = async () => {
+    try {
+      const uri = await captureRef(shareCardRef, {
+        format: "png",
+        quality: 1,
+        result: "tmpfile",
+      });
+      await Share.share({
+        url: uri,
+        message: `"${currentQuote.text}"\n— ${currentQuote.author}\n\nShared from Echo`,
+      });
+    } catch (_error) {
+      Alert.alert("Error", "Failed to generate image. Please try text share.");
+    }
+  };
+
   const toggleCategory = (cat: Category) => {
     setPreferredCategoriesState((prev) => {
       const next = prev.includes(cat)
         ? prev.filter((c) => c !== cat)
         : [...prev, cat];
-      // Don't allow deselecting all
       if (next.length === 0) return prev;
       setPreferredCategories(next);
       return next;
     });
   };
 
-  const toggleBookmark = () => {
+  const toggleBookmark = async () => {
     if (isSaved) {
+      await removeSavedQuote(currentQuote.id);
       setSavedQuotes((prev) => prev.filter((q) => q.id !== currentQuote.id));
     } else {
+      await addSavedQuote(currentQuote.id);
       setSavedQuotes((prev) => [...prev, currentQuote]);
     }
   };
@@ -214,6 +309,18 @@ export default function App() {
     ]).start(() => setHistoryVisible(false));
   };
 
+  // ── Page routing ──
+  if (currentPage === "theme") {
+    return (
+      <ThemeScreen
+        colors={c}
+        isDark={isDark}
+        onToggleTheme={() => setIsDark(!isDark)}
+        onBack={() => setCurrentPage("settings")}
+      />
+    );
+  }
+
   if (currentPage === "personalization") {
     return (
       <PersonalizationScreen
@@ -230,9 +337,9 @@ export default function App() {
       <SettingsScreen
         colors={c}
         isDark={isDark}
-        onToggleTheme={() => setIsDark(!isDark)}
         onBack={() => setCurrentPage("home")}
         onOpenPersonalization={() => setCurrentPage("personalization")}
+        onOpenTheme={() => setCurrentPage("theme")}
         preferredCount={preferredCategories.length}
       />
     );
@@ -286,6 +393,20 @@ export default function App() {
         backdropAnim={backdropAnim}
         onClose={closeHistory}
       />
+
+      {/* Offscreen ShareCard for image capture */}
+      <View
+        ref={shareCardRef}
+        style={{
+          position: "absolute",
+          left: -1000,
+          top: 0,
+          opacity: 1,
+        }}
+        collapsable={false}
+      >
+        <ShareCard quote={currentQuote} colors={c} />
+      </View>
     </View>
   );
 }

@@ -15,14 +15,12 @@ import { COLORS } from "../constants/colors";
 interface SettingsScreenProps {
   colors: (typeof COLORS)["light"];
   isDark: boolean;
-  onToggleTheme: () => void;
   onBack: () => void;
   onOpenPersonalization: () => void;
+  onOpenTheme: () => void;
   preferredCount: number;
 }
 
-const SHARE_MESSAGE =
-  "Check out Echo — a daily quote generator app! https://echo.app";
 const FEEDBACK_EMAIL = "mailto:feedback@echo.app?subject=Echo%20Feedback";
 const PRIVACY_URL = "https://echo.app/privacy";
 const TERMS_URL = "https://echo.app/terms";
@@ -43,13 +41,18 @@ async function safeOpenURL(url: string) {
 export default function SettingsScreen({
   colors,
   isDark,
-  onToggleTheme,
   onBack,
   onOpenPersonalization,
+  onOpenTheme,
   preferredCount,
 }: SettingsScreenProps) {
   const handleShareApp = () => {
-    Share.share({ message: SHARE_MESSAGE });
+    Share.share({
+      message:
+        "Check out Echo — a daily quote generator app!\nhttps://apps.apple.com/app/echo/id0000000000",
+      url: "https://apps.apple.com/app/echo/id0000000000",
+      title: "Echo",
+    });
   };
 
   const handleSendFeedback = () => {
@@ -80,7 +83,7 @@ export default function SettingsScreen({
           APPEARANCE
         </Text>
         <View style={[styles.card, { backgroundColor: colors.btnBg }]}>
-          <View style={styles.cardRow}>
+          <Pressable style={styles.cardRow} onPress={onOpenTheme}>
             <View style={styles.cardLeft}>
               <Ionicons
                 name="color-palette-outline"
@@ -88,16 +91,20 @@ export default function SettingsScreen({
                 color={colors.btnIcon}
               />
               <Text style={[styles.cardLabel, { color: colors.text }]}>
-                Dark Mode
+                Theme
               </Text>
             </View>
-            <Switch
-              value={isDark}
-              onValueChange={onToggleTheme}
-              trackColor={{ false: colors.inactiveDot, true: colors.label }}
-              thumbColor="#fff"
-            />
-          </View>
+            <View style={styles.cardRight}>
+              <Text style={[styles.cardValue, { color: colors.author }]}>
+                {isDark ? "Dark" : "Light"}
+              </Text>
+              <Ionicons
+                name="chevron-forward"
+                size={16}
+                color={colors.btnIcon}
+              />
+            </View>
+          </Pressable>
         </View>
 
         {/* ── Personalization ── */}
@@ -157,17 +164,24 @@ export default function SettingsScreen({
             style={[styles.cardDivider, { backgroundColor: colors.divider }]}
           />
 
-          <View style={styles.cardRow}>
+          <Pressable style={styles.cardRow}>
             <View style={styles.cardLeft}>
               <Ionicons name="moon-outline" size={20} color={colors.btnIcon} />
               <Text style={[styles.cardLabel, { color: colors.text }]}>
                 Quiet Hours
               </Text>
             </View>
-            <Text style={[styles.cardValue, { color: colors.author }]}>
-              Off
-            </Text>
-          </View>
+            <View style={styles.cardRight}>
+              <Text style={[styles.cardValue, { color: colors.author }]}>
+                10:00 PM – 7:00 AM
+              </Text>
+              <Ionicons
+                name="chevron-forward"
+                size={16}
+                color={colors.btnIcon}
+              />
+            </View>
+          </Pressable>
         </View>
 
         {/* ── Languages ── */}

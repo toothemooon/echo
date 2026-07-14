@@ -120,6 +120,54 @@ export async function getQuoteCount(): Promise<number> {
 }
 
 /**
+ * Add a quote to saved collection.
+ */
+export async function addSavedQuote(quoteId: number): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync(
+    "INSERT OR IGNORE INTO saved_quotes (quote_id) VALUES (?)",
+    [quoteId],
+  );
+}
+
+/**
+ * Remove a quote from saved collection.
+ */
+export async function removeSavedQuote(quoteId: number): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync("DELETE FROM saved_quotes WHERE quote_id = ?", [quoteId]);
+}
+
+/**
+ * Check if a quote is saved.
+ */
+export async function isQuoteSaved(quoteId: number): Promise<boolean> {
+  const db = await getDatabase();
+  const row = await db.getFirstAsync<{ count: number }>(
+    "SELECT COUNT(*) as count FROM saved_quotes WHERE quote_id = ?",
+    [quoteId],
+  );
+  return (row?.count ?? 0) > 0;
+}
+
+/**
+ * Get all saved quotes with full data.
+ */
+export async function getSavedQuotes(): Promise<Quote[]> {
+  const db = await getDatabase();
+  const rows = await db.getAllAsync<Quote>(
+    `SELECT q.id, q.text, q.author, q.role, q.primary_category
+     FROM quotes q
+     INNER JOIN saved_quotes sq ON q.id = sq.quote_id
+     ORDER BY sq.saved_at DESC`,
+  );
+  for (const row of rows) {
+    row.categories = await getQuoteCategories(row.id);
+  }
+  return rows;
+}
+
+/**
  * Upsert quotes and their category associations.
  * Inserts new quotes, updates existing ones. Never deletes.
  */

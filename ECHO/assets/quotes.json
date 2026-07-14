@@ -998,5 +998,285 @@
     "role": "Tibetan spiritual leader",
     "primary_category": "GRATITUDE",
     "categories": ["GRATITUDE", "MINDFULNESS"]
+  },
+  {
+    "id": 126,
+    "text": "Breathing in, I calm body and mind. Breathing out, I smile.",
+    "author": "Thich Nhat Hanh",
+    "role": "Buddhist monk & mindfulness teacher",
+    "primary_category": "MINDFULNESS",
+    "categories": ["MINDFULNESS"]
+  },
+  {
+    "id": 127,
+    "text": "The best meditation is the one you actually do.",
+    "author": "Sharon Salzberg",
+    "role": "Meditation teacher & author",
+    "primary_category": "MINDFULNESS",
+    "categories": ["MINDFULNESS", "GROWTH"]
+  },
+  {
+    "id": 128,
+    "text": "Awareness is the greatest agent for change.",
+    "author": "Eckhart Tolle",
+    "role": "Spiritual teacher & author",
+    "primary_category": "MINDFULNESS",
+    "categories": ["MINDFULNESS", "GROWTH"]
+  },
+  {
+    "id": 129,
+    "text": "In the stillness between thoughts, peace reveals itself.",
+    "author": "Dan Millman",
+    "role": "Author & motivational speaker",
+    "primary_category": "MINDFULNESS",
+    "categories": ["MINDFULNESS", "HEALING"]
+  },
+  {
+    "id": 130,
+    "text": "The only thing we can truly control is our response to what happens.",
+    "author": "Viktor Frankl",
+    "role": "Psychiatrist & Holocaust survivor",
+    "primary_category": "WISDOM",
+    "categories": ["WISDOM", "COURAGE"]
+  },
+  {
+    "id": 131,
+    "text": "The mind is not a vessel to be filled, but a fire to be kindled.",
+    "author": "Plutarch",
+    "role": "Greek historian & biographer",
+    "primary_category": "GROWTH",
+    "categories": ["GROWTH", "WISDOM"]
+  },
+  {
+    "id": 132,
+    "text": "What we achieve inwardly will change outer reality.",
+    "author": "Plutarch",
+    "role": "Greek historian & biographer",
+    "primary_category": "GROWTH",
+    "categories": ["GROWTH", "MINDFULNESS"]
+  },
+  {
+    "id": 133,
+    "text": "The secret of change is to focus all of your energy, not on fighting the old, but on building the new.",
+    "author": "Socrates",
+    "role": "Classical philosopher",
+    "primary_category": "GROWTH",
+    "categories": ["GROWTH", "WISDOM"]
+  },
+  {
+    "id": 134,
+    "text": "We delight in the beauty of the butterfly, but rarely admit the changes it has gone through.",
+    "author": "Maya Angelou",
+    "role": "Poet & civil rights activist",
+    "primary_category": "GROWTH",
+    "categories": ["GROWTH", "COURAGE"]
+  },
+  {
+    "id": 135,
+    "text": "I am not what happened to me. I am what I choose to become.",
+    "author": "Carl Jung",
+    "role": "Psychiatrist & psychoanalyst",
+    "primary_category": "GROWTH",
+    "categories": ["GROWTH", "COURAGE"]
+  },
+  {
+    "id": 136,
+    "text": "The only impossible journey is the one you never begin.",
+    "author": "Tony Robbins",
+    "role": "Life coach & author",
+    "primary_category": "GROWTH",
+    "categories": ["GROWTH", "COURAGE"]
+  },
+  {
+    "id": 137,
+    "text": "Growth is painful. Change is painful. But nothing is as painful as staying stuck somewhere you don't belong.",
+    "author": "Mandy Hale",
+    "role": "Author & blogger",
+    "primary_category": "GROWTH",
+    "categories": ["GROWTH", "COURAGE"]
+  },
+  {
+    "id": 138,
+    "text": "The only person you should try to be better than is the person you were yesterday.",
+    "author": "Matty Mullins",
+    "role": "Musician & author",
+    "primary_category": "GROWTH",
+    "categories": ["GROWTH"]
+  },
+  {
+    "id": 139,
+    "text": "If you don't like something, change it. If you can't change it, change your attitude.",
+    "author": "Maya Angelou",
+    "role": "Poet & civil rights activist",
+    "primary_category": "GROWTH",
+    "categories": ["GROWTH", "WISDOM"]
+  },
+  {
+    "id": 140,
+    "text": "Learning is not attained by chance, it must be sought for with ardor and attended to with diligence.",
+    "author": "Abigail Adams",
+    "role": "Former First Lady",
+    "primary_category": "GROWTH",
+    "categories": ["GROWTH"]
+  },
+  {
+    "id": 141,
+    "text": "The wound is the place where the Light enters you.",
+    "author": "Rumi",
+    "role": "Sufi mystic & poet",
+    "primary_category": "HEALING",
+    "categories": ["HEALING", "WISDOM"]
+  },
+  {
+    "id": 142,
+    "text": "Healing is an inside job. Do not look outside yourself for the cure.",
+    "author": "Brené Brown",
+    "role": "Research professor & author",
+    "primary_category": "HEALING",
+    "categories": ["HEALING", "GROWTH"]
+  },
+  {
+    "id": 143,
+    "text": "The greatest healing therapy is forgiveness.",
+    "author": "Andrew Weil",
+    "role": "Physician & author",
+    "primary_category": "HEALING",
+    "categories": ["HEALING", "LOVE"]
+  },
+  {
+    "id": 144,
+    "text": "Your task is not to seek for love, but merely to seek and find all the barriers within yourself that you have built against it.",
+    "author": "Rumi",
+    "role": "Sufi mystic & poet",
+    "primary_category": "HEALING",
+    "categories": ["HEALING", "LOVE"]
+  },
+  {
+    "id": 145,
+    "text": "The quieter you become, the more you can hear.",
+    "author": "Rumi",
+    "role": "Sufi mystic & poet",
+    "primary_category": "HEALING",
+    "categories": ["HEALING", "MINDFULNESS"]
+  },
+  {
+    "id": 146,
+    "text": "Pain is inevitable. Suffering is optional.",
+    "author": "Haruki Murakami",
+    "role": "Novelist",
+    "primary_category": "HEALING",
+    "categories": ["HEALING", "WISDOM"]
+  },
+  {
+    "id": 147,
+    "text": "Time does not heal all wounds. It only makes the pain less sharp.",
+    "author": "Mason Cooley",
+    "role": "Author & aphorist",
+    "primary_category": "HEALING",
+    "categories": ["HEALING"]
+  },
+  {
+    "id": 148,
+    "text": "The most beautiful people are those who have known defeat, known suffering, known loss, and have found their way out of the depths.",
+    "author": "Elisabeth Kübler-Ross",
+    "role": "Psychiatrist & author",
+    "primary_category": "HEALING",
+    "categories": ["HEALING", "COURAGE"]
+  },
+  {
+    "id": 149,
+    "text": "Sleep is the best meditation.",
+    "author": "Dalai Lama",
+    "role": "Tibetan spiritual leader",
+    "primary_category": "HEALING",
+    "categories": ["HEALING", "MINDFULNESS"]
+  },
+  {
+    "id": 150,
+    "text": "Every day is a new beginning. Take a deep breath, smile, and start again.",
+    "author": "Unknown",
+    "role": "",
+    "primary_category": "HEALING",
+    "categories": ["HEALING", "GRATITUDE"]
+  },
+  {
+    "id": 151,
+    "text": "Gratitude is the sign of noble souls.",
+    "author": "Aesop",
+    "role": "Ancient Greek storyteller",
+    "primary_category": "GRATITUDE",
+    "categories": ["GRATITUDE", "WISDOM"]
+  },
+  {
+    "id": 152,
+    "text": "We would worry less if we praised more. Thanksgiving is the enemy of discontent and dissatisfaction.",
+    "author": "Henry Ward Beecher",
+    "role": "Clergyman & abolitionist",
+    "primary_category": "GRATITUDE",
+    "categories": ["GRATITUDE", "LOVE"]
+  },
+  {
+    "id": 153,
+    "text": "Joy is the simplest form of gratitude.",
+    "author": "Karl Barth",
+    "role": "Swiss Reformed theologian",
+    "primary_category": "GRATITUDE",
+    "categories": ["GRATITUDE", "LOVE"]
+  },
+  {
+    "id": 154,
+    "text": "Gratitude opens the door to power, wisdom, creativity, and the constructive aspects of our character.",
+    "author": "Dennis Prager",
+    "role": "Author & radio host",
+    "primary_category": "GRATITUDE",
+    "categories": ["GRATITUDE", "GROWTH"]
+  },
+  {
+    "id": 155,
+    "text": "Feeling gratitude and not expressing it is like wrapping a present and not giving it.",
+    "author": "William Arthur Ward",
+    "role": "Writer & motivational author",
+    "primary_category": "GRATITUDE",
+    "categories": ["GRATITUDE"]
+  },
+  {
+    "id": 156,
+    "text": "Piglet noticed that even though he had a very small heart, it could hold a rather large amount of gratitude.",
+    "author": "A.A. Milne",
+    "role": "Author of Winnie-the-Pooh",
+    "primary_category": "GRATITUDE",
+    "categories": ["GRATITUDE", "LOVE"]
+  },
+  {
+    "id": 157,
+    "text": "Let us be grateful to the people who make us happy.",
+    "author": "Marcel Proust",
+    "role": "Novelist",
+    "primary_category": "GRATITUDE",
+    "categories": ["GRATITUDE", "LOVE"]
+  },
+  {
+    "id": 158,
+    "text": "Be thankful for what you have; you'll end up having more.",
+    "author": "Oprah Winfrey",
+    "role": "Media mogul & philanthropist",
+    "primary_category": "GRATITUDE",
+    "categories": ["GRATITUDE", "WISDOM"]
+  },
+  {
+    "id": 159,
+    "text": "Gratitude changes the pangs of memory into a tranquil joy.",
+    "author": "Dietrich Bonhoeffer",
+    "role": "Theologian & anti-Nazi activist",
+    "primary_category": "GRATITUDE",
+    "categories": ["GRATITUDE", "HEALING"]
+  },
+  {
+    "id": 160,
+    "text": "Happiness cannot be traveled to, owned, earned, worn, or consumed. Happiness is the spiritual experience of living every minute with love, grace, and gratitude.",
+    "author": "Denis Waitley",
+    "role": "Author & motivational speaker",
+    "primary_category": "GRATITUDE",
+    "categories": ["GRATITUDE", "LOVE"]
   }
 ]

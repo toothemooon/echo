@@ -48,7 +48,7 @@ export default function QuoteCard({
 
       {/* Role */}
       {quote.role ? (
-        <Text style={[styles.role, { color: colors.inactiveDot }]}>
+        <Text style={[styles.role, { color: colors.roleText }]}>
           {quote.role}
         </Text>
       ) : null}

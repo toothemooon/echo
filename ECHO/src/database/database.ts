@@ -17,6 +17,7 @@ export async function getDatabase(): Promise<SQLite.SQLiteDatabase> {
   await db.execAsync(`
     DROP TABLE IF EXISTS quote_categories;
     DROP TABLE IF EXISTS quotes;
+    -- Note: saved_quotes is NOT dropped — it preserves user bookmarks across restarts
 
     CREATE TABLE quotes (
       id               INTEGER PRIMARY KEY,
@@ -37,6 +38,12 @@ export async function getDatabase(): Promise<SQLite.SQLiteDatabase> {
     );
 
     CREATE INDEX idx_qc_category ON quote_categories(category);
+
+    CREATE TABLE IF NOT EXISTS saved_quotes (
+      quote_id INTEGER PRIMARY KEY,
+      saved_at TEXT DEFAULT (datetime('now')),
+      FOREIGN KEY (quote_id) REFERENCES quotes(id) ON DELETE CASCADE
+    );
   `);
 
   return db;
