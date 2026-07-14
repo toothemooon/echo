@@ -1,25 +1,37 @@
 import { useState, useEffect, useRef } from "react";
-import { View, Animated, Dimensions } from "react-native";
+import { View, Animated, Dimensions, Share } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import {
   useFonts,
   CormorantGaramond_400Regular_Italic,
 } from "@expo-google-fonts/cormorant-garamond";
 import { COLORS } from "./src/constants/colors";
-import { QUOTES, Quote } from "./src/data/quotes";
+import { Quote, getRandomQuote, getQuoteCount } from "./src/database/quotes";
+import { seedDatabase } from "./src/database/seed";
 import Header from "./src/components/Header";
 import QuoteCard from "./src/components/QuoteCard";
 import PaginationDots from "./src/components/PaginationDots";
 import ActionBar from "./src/components/ActionBar";
 import HistorySheet from "./src/components/HistorySheet";
+import SettingsScreen from "./src/screens/SettingsScreen";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
+const PLACEHOLDER_QUOTE: Quote = {
+  id: 0,
+  text: "Loading...",
+  author: "",
+  category: "",
+};
+
 export default function App() {
   const [isDark, setIsDark] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentQuote, setCurrentQuote] = useState<Quote>(PLACEHOLDER_QUOTE);
+  const [quoteCount, setQuoteCount] = useState(0);
   const [savedQuotes, setSavedQuotes] = useState<Quote[]>([]);
   const [historyVisible, setHistoryVisible] = useState(false);
+  const [currentPage, setCurrentPage] = useState<"home" | "settings">("home");
+  const [dbReady, setDbReady] = useState(false);
 
   // Animation values
   const fadeAnim = useRef(new Animated.Value(1)).current;
@@ -31,20 +43,32 @@ export default function App() {
     CormorantGaramond_400Regular_Italic,
   });
 
+  // Initialize database, seed data, load first quote
   useEffect(() => {
-    const colorScheme = require("react-native").Appearance?.getColorScheme();
-    if (colorScheme === "dark") setIsDark(true);
+    async function init() {
+      const colorScheme = require("react-native").Appearance?.getColorScheme();
+      if (colorScheme === "dark") setIsDark(true);
+
+      await seedDatabase();
+      const count = await getQuoteCount();
+      setQuoteCount(count);
+
+      const quote = await getRandomQuote();
+      if (quote) setCurrentQuote(quote);
+
+      setDbReady(true);
+    }
+    init();
   }, []);
 
-  if (!fontsLoaded) return null;
+  if (!fontsLoaded || !dbReady) return null;
 
   const c = isDark ? COLORS.dark : COLORS.light;
   const statusBar = isDark ? "light" : "dark";
-  const currentQuote = QUOTES[currentIndex];
   const isSaved = savedQuotes.some((q) => q.id === currentQuote.id);
 
   // ── Quote Transition Animation ──
-  const animateQuote = (direction: "left" | "right") => {
+  const animateQuote = async (direction: "left" | "right") => {
     const toSlide = direction === "left" ? -60 : 60;
 
     Animated.parallel([
@@ -58,14 +82,10 @@ export default function App() {
         duration: 200,
         useNativeDriver: true,
       }),
-    ]).start(() => {
-      setCurrentIndex((prev) => {
-        if (direction === "right") {
-          return prev < QUOTES.length - 1 ? prev + 1 : 0;
-        } else {
-          return prev > 0 ? prev - 1 : QUOTES.length - 1;
-        }
-      });
+    ]).start(async () => {
+      // Fetch a new random quote from SQLite
+      const newQuote = await getRandomQuote();
+      if (newQuote) setCurrentQuote(newQuote);
 
       slideAnim.setValue(-toSlide);
       fadeAnim.setValue(0);
@@ -88,6 +108,16 @@ export default function App() {
   // ── Handlers ──
   const goNext = () => animateQuote("right");
   const goPrev = () => animateQuote("left");
+
+  const handleShare = async () => {
+    try {
+      await Share.share({
+        message: `"${currentQuote.text}"\n— ${currentQuote.author}`,
+      });
+    } catch (_error) {
+      // User cancelled
+    }
+  };
 
   const toggleBookmark = () => {
     if (isSaved) {
@@ -130,6 +160,17 @@ export default function App() {
     ]).start(() => setHistoryVisible(false));
   };
 
+  if (currentPage === "settings") {
+    return (
+      <SettingsScreen
+        colors={c}
+        isDark={isDark}
+        onToggleTheme={() => setIsDark(!isDark)}
+        onBack={() => setCurrentPage("home")}
+      />
+    );
+  }
+
   return (
     <View
       style={{
@@ -146,6 +187,7 @@ export default function App() {
         colors={c}
         isDark={isDark}
         onToggleTheme={() => setIsDark(!isDark)}
+        onMenu={() => setCurrentPage("settings")}
       />
 
       <QuoteCard
@@ -157,8 +199,8 @@ export default function App() {
 
       <View style={{ alignItems: "center" }}>
         <PaginationDots
-          total={QUOTES.length}
-          activeIndex={currentIndex}
+          total={Math.min(quoteCount, 50)}
+          activeIndex={0}
           colors={c}
         />
 
@@ -168,6 +210,7 @@ export default function App() {
           onPrev={goPrev}
           onNext={goNext}
           onBookmark={toggleBookmark}
+          onShare={handleShare}
           onHistory={openHistory}
         />
       </View>

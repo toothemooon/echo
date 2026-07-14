@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Alert, StyleSheet } from "react-native";
+import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/colors";
 
@@ -8,6 +8,7 @@ interface ActionBarProps {
   onPrev: () => void;
   onNext: () => void;
   onBookmark: () => void;
+  onShare: () => void;
   onHistory: () => void;
 }
 
@@ -17,6 +18,7 @@ export default function ActionBar({
   onPrev,
   onNext,
   onBookmark,
+  onShare,
   onHistory,
 }: ActionBarProps) {
   return (
@@ -43,7 +45,7 @@ export default function ActionBar({
 
         <Pressable
           style={[styles.actionBtn, { backgroundColor: colors.btnBg }]}
-          onPress={() => Alert.alert("Share", "Share feature coming soon!")}
+          onPress={onShare}
         >
           <Ionicons name="share-outline" size={20} color={colors.btnIcon} />
         </Pressable>

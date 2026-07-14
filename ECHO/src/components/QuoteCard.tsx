@@ -1,6 +1,6 @@
 import { View, Text, Animated, StyleSheet } from "react-native";
 import { COLORS } from "../constants/colors";
-import { Quote } from "../data/quotes";
+import { Quote } from "../database/quotes";
 
 interface QuoteCardProps {
   quote: Quote;

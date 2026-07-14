@@ -7,7 +7,7 @@ import {
   Dimensions,
 } from "react-native";
 import { COLORS } from "../constants/colors";
-import { Quote } from "../data/quotes";
+import { Quote } from "../database/quotes";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 

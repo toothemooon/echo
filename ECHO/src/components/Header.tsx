@@ -6,9 +6,15 @@ interface HeaderProps {
   colors: (typeof COLORS)["light"];
   isDark: boolean;
   onToggleTheme: () => void;
+  onMenu: () => void;
 }
 
-export default function Header({ colors, isDark, onToggleTheme }: HeaderProps) {
+export default function Header({
+  colors,
+  isDark,
+  onToggleTheme,
+  onMenu,
+}: HeaderProps) {
   return (
     <>
       <View style={styles.header}>
@@ -31,6 +37,7 @@ export default function Header({ colors, isDark, onToggleTheme }: HeaderProps) {
           </Pressable>
           <Pressable
             style={[styles.iconBtn, { backgroundColor: colors.btnBg }]}
+            onPress={onMenu}
           >
             <Ionicons
               name="ellipsis-horizontal"
