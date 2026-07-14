@@ -1,0 +1,36 @@
+export const COLORS = {
+  light: {
+    background: "#E5E0D8",
+    text: "#2C2A26",
+    author: "#9A9690",
+    label: "#8FAE8B",
+    dot: "#8FAE8B",
+    inactiveDot: "#D0CECC",
+    divider: "#D5D2CC",
+    btnBg: "#DDD9D4",
+    btnIcon: "#8A8680",
+    menuIcon: "#9A9690",
+    sheetBg: "#EAE6DF",
+    sheetHandle: "#D0CECC",
+    sheetTitle: "#2C2A26",
+    sheetEmpty: "#B5B0AA",
+  },
+  dark: {
+    background: "#1A1A18",
+    text: "#E8E6E2",
+    author: "#7A7874",
+    label: "#8FAE8B",
+    dot: "#8FAE8B",
+    inactiveDot: "#3A3A38",
+    divider: "#333230",
+    btnBg: "#2A2A28",
+    btnIcon: "#8A8884",
+    menuIcon: "#7A7874",
+    sheetBg: "#252523",
+    sheetHandle: "#3A3A38",
+    sheetTitle: "#E8E6E2",
+    sheetEmpty: "#5A5854",
+  },
+};
+
+export type ColorTokens = keyof typeof COLORS.light;
