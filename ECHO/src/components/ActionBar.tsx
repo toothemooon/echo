@@ -5,7 +5,7 @@ import { COLORS } from "../constants/colors";
 interface ActionBarProps {
   colors: (typeof COLORS)["light"];
   isSaved: boolean;
-  onPrev: () => void;
+  onPrev?: () => void;
   onNext: () => void;
   onBookmark: () => void;
   onShare: () => void;
@@ -26,8 +26,11 @@ export default function ActionBar({
       {/* Action Buttons */}
       <View style={styles.actionRow}>
         <Pressable
-          style={[styles.actionBtn, { backgroundColor: colors.btnBg }]}
-          onPress={onPrev}
+          style={[
+            styles.actionBtn,
+            { backgroundColor: colors.btnBg, opacity: onPrev ? 1 : 0.4 },
+          ]}
+          onPress={onPrev ?? (() => {})}
         >
           <Ionicons name="chevron-back" size={20} color={colors.btnIcon} />
         </Pressable>

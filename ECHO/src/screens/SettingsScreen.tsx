@@ -33,7 +33,7 @@ export default function SettingsScreen({
 
       <View style={[styles.divider, { backgroundColor: colors.divider }]} />
 
-      {/* Appearance Section */}
+      {/* ── Appearance ── */}
       <Text style={[styles.sectionTitle, { color: colors.label }]}>
         APPEARANCE
       </Text>
@@ -58,23 +58,97 @@ export default function SettingsScreen({
         </View>
       </View>
 
-      {/* Font Section */}
-      <Text style={[styles.sectionTitle, { color: colors.label }]}>FONTS</Text>
+      {/* ── Notifications ── */}
+      <Text style={[styles.sectionTitle, { color: colors.label }]}>
+        NOTIFICATIONS
+      </Text>
       <View style={[styles.card, { backgroundColor: colors.btnBg }]}>
         <View style={styles.cardRow}>
           <View style={styles.cardLeft}>
-            <Ionicons name="text-outline" size={20} color={colors.btnIcon} />
+            <Ionicons
+              name="notifications-outline"
+              size={20}
+              color={colors.btnIcon}
+            />
             <Text style={[styles.cardLabel, { color: colors.text }]}>
-              Quote Style
+              Daily Reminder
             </Text>
           </View>
-          <Text style={[styles.cardValue, { color: colors.author }]}>
-            Cormorant Garamond
-          </Text>
+          <Switch
+            value={false}
+            onValueChange={() => {}}
+            trackColor={{ false: colors.inactiveDot, true: colors.label }}
+            thumbColor="#fff"
+          />
+        </View>
+
+        <View
+          style={[styles.cardDivider, { backgroundColor: colors.divider }]}
+        />
+
+        <View style={styles.cardRow}>
+          <View style={styles.cardLeft}>
+            <Ionicons name="moon-outline" size={20} color={colors.btnIcon} />
+            <Text style={[styles.cardLabel, { color: colors.text }]}>
+              Quiet Hours
+            </Text>
+          </View>
+          <Text style={[styles.cardValue, { color: colors.author }]}>Off</Text>
         </View>
       </View>
 
-      {/* About Section */}
+      {/* ── Languages ── */}
+      <Text style={[styles.sectionTitle, { color: colors.label }]}>
+        LANGUAGES
+      </Text>
+      <View style={[styles.card, { backgroundColor: colors.btnBg }]}>
+        <View style={styles.cardRow}>
+          <View style={styles.cardLeft}>
+            <Ionicons name="globe-outline" size={20} color={colors.btnIcon} />
+            <Text style={[styles.cardLabel, { color: colors.text }]}>
+              Language
+            </Text>
+          </View>
+          <View style={styles.cardRight}>
+            <Text style={[styles.cardValue, { color: colors.author }]}>
+              English
+            </Text>
+            <Ionicons name="chevron-forward" size={16} color={colors.btnIcon} />
+          </View>
+        </View>
+      </View>
+
+      {/* ── Feedback ── */}
+      <Text style={[styles.sectionTitle, { color: colors.label }]}>
+        FEEDBACK
+      </Text>
+      <View style={[styles.card, { backgroundColor: colors.btnBg }]}>
+        <View style={styles.cardRow}>
+          <View style={styles.cardLeft}>
+            <Ionicons name="mail-outline" size={20} color={colors.btnIcon} />
+            <Text style={[styles.cardLabel, { color: colors.text }]}>
+              Send Feedback
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={16} color={colors.btnIcon} />
+        </View>
+
+        <View
+          style={[styles.cardDivider, { backgroundColor: colors.divider }]}
+        />
+
+        <View style={styles.cardRow}>
+          <View style={styles.cardLeft}>
+            <Ionicons name="star-outline" size={20} color={colors.btnIcon} />
+            <Text style={[styles.cardLabel, { color: colors.text }]}>
+              Rate App
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={16} color={colors.btnIcon} />
+        </View>
+      </View>
+
+      {/* ── About ── */}
       <Text style={[styles.sectionTitle, { color: colors.label }]}>ABOUT</Text>
       <View style={[styles.card, { backgroundColor: colors.btnBg }]}>
         <View style={styles.cardRow}>
@@ -163,6 +237,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
+  },
+  cardRight: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
   },
   cardLabel: {
     fontSize: 16,

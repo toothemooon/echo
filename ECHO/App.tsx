@@ -26,7 +26,8 @@ const PLACEHOLDER_QUOTE: Quote = {
 
 export default function App() {
   const [isDark, setIsDark] = useState(false);
-  const [currentQuote, setCurrentQuote] = useState<Quote>(PLACEHOLDER_QUOTE);
+  const [quoteHistory, setQuoteHistory] = useState<Quote[]>([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
   const [quoteCount, setQuoteCount] = useState(0);
   const [savedQuotes, setSavedQuotes] = useState<Quote[]>([]);
   const [historyVisible, setHistoryVisible] = useState(false);
@@ -53,8 +54,11 @@ export default function App() {
       const count = await getQuoteCount();
       setQuoteCount(count);
 
-      const quote = await getRandomQuote();
-      if (quote) setCurrentQuote(quote);
+      const firstQuote = await getRandomQuote();
+      if (firstQuote) {
+        setQuoteHistory([firstQuote]);
+        setHistoryIndex(0);
+      }
 
       setDbReady(true);
     }
@@ -65,10 +69,14 @@ export default function App() {
 
   const c = isDark ? COLORS.dark : COLORS.light;
   const statusBar = isDark ? "light" : "dark";
+  const currentQuote =
+    historyIndex >= 0 ? quoteHistory[historyIndex] : PLACEHOLDER_QUOTE;
   const isSaved = savedQuotes.some((q) => q.id === currentQuote.id);
+  const canGoPrev = historyIndex > 0;
+  const canGoNext = historyIndex < quoteHistory.length - 1;
 
   // ── Quote Transition Animation ──
-  const animateQuote = async (direction: "left" | "right") => {
+  const animateToQuote = (newQuote: Quote, direction: "left" | "right") => {
     const toSlide = direction === "left" ? -60 : 60;
 
     Animated.parallel([
@@ -82,11 +90,7 @@ export default function App() {
         duration: 200,
         useNativeDriver: true,
       }),
-    ]).start(async () => {
-      // Fetch a new random quote from SQLite
-      const newQuote = await getRandomQuote();
-      if (newQuote) setCurrentQuote(newQuote);
-
+    ]).start(() => {
       slideAnim.setValue(-toSlide);
       fadeAnim.setValue(0);
 
@@ -106,8 +110,29 @@ export default function App() {
   };
 
   // ── Handlers ──
-  const goNext = () => animateQuote("right");
-  const goPrev = () => animateQuote("left");
+  const goNext = () => {
+    if (canGoNext) {
+      // Already have a next quote in history — just move forward
+      const nextIdx = historyIndex + 1;
+      setHistoryIndex(nextIdx);
+      animateToQuote(quoteHistory[nextIdx], "right");
+    } else {
+      // Fetch a new random quote and append to history
+      getRandomQuote().then((newQuote) => {
+        if (!newQuote) return;
+        setQuoteHistory((prev) => [...prev, newQuote]);
+        setHistoryIndex((prev) => prev + 1);
+        animateToQuote(newQuote, "right");
+      });
+    }
+  };
+
+  const goPrev = () => {
+    if (!canGoPrev) return;
+    const prevIdx = historyIndex - 1;
+    setHistoryIndex(prevIdx);
+    animateToQuote(quoteHistory[prevIdx], "left");
+  };
 
   const handleShare = async () => {
     try {
@@ -200,14 +225,14 @@ export default function App() {
       <View style={{ alignItems: "center" }}>
         <PaginationDots
           total={Math.min(quoteCount, 50)}
-          activeIndex={0}
+          activeIndex={historyIndex % Math.min(quoteCount, 50)}
           colors={c}
         />
 
         <ActionBar
           colors={c}
           isSaved={isSaved}
-          onPrev={goPrev}
+          onPrev={canGoPrev ? goPrev : undefined}
           onNext={goNext}
           onBookmark={toggleBookmark}
           onShare={handleShare}
