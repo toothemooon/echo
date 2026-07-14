@@ -20,7 +20,6 @@ export async function getRandomQuote(): Promise<Quote | null> {
 
 /**
  * Get quotes with pagination (limit + offset).
- * Useful for displaying a subset or for virtualized lists.
  */
 export async function getQuotes(
   limit: number = 50,
@@ -67,30 +66,25 @@ export async function getQuoteCount(category?: string): Promise<number> {
 }
 
 /**
- * Check if the quotes table has any data.
+ * Upsert quotes: insert new ones, update existing ones by stable ID.
+ * Never deletes — only adds or updates.
  */
-export async function hasQuotes(): Promise<boolean> {
+export async function syncQuotes(quotes: Quote[]): Promise<void> {
   const db = await getDatabase();
-  const row = await db.getFirstAsync<{ count: number }>(
-    "SELECT COUNT(*) as count FROM quotes",
-  );
-  return (row?.count ?? 0) > 0;
-}
-
-/**
- * Bulk insert quotes in batches of 1000 (transaction-wrapped).
- */
-export async function insertQuotes(quotes: Omit<Quote, "id">[]): Promise<void> {
-  const db = await getDatabase();
-  const BATCH_SIZE = 1000;
+  const BATCH_SIZE = 100;
 
   for (let i = 0; i < quotes.length; i += BATCH_SIZE) {
     const batch = quotes.slice(i, i + BATCH_SIZE);
-    const placeholders = batch.map(() => "(?, ?, ?)").join(", ");
-    const values = batch.flatMap((q) => [q.text, q.author, q.category]);
+    const placeholders = batch.map(() => "(?, ?, ?, ?)").join(", ");
+    const values = batch.flatMap((q) => [q.id, q.text, q.author, q.category]);
 
     await db.runAsync(
-      `INSERT INTO quotes (text, author, category) VALUES ${placeholders}`,
+      `INSERT INTO quotes (id, text, author, category)
+       VALUES ${placeholders}
+       ON CONFLICT(id) DO UPDATE SET
+         text = excluded.text,
+         author = excluded.author,
+         category = excluded.category`,
       values,
     );
   }

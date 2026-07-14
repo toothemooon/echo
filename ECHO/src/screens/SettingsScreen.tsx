@@ -1,4 +1,14 @@
-import { View, Text, Pressable, Switch, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  Switch,
+  StyleSheet,
+  Linking,
+  Alert,
+  Platform,
+  Share,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/colors";
 
@@ -9,12 +19,39 @@ interface SettingsScreenProps {
   onBack: () => void;
 }
 
+const SHARE_MESSAGE =
+  "Check out Echo — a daily quote generator app! https://echo.app";
+const FEEDBACK_EMAIL = "mailto:feedback@echo.app?subject=Echo%20Feedback";
+const PRIVACY_URL = "https://echo.app/privacy";
+const TERMS_URL = "https://echo.app/terms";
+
+async function safeOpenURL(url: string) {
+  try {
+    const canOpen = await Linking.canOpenURL(url);
+    if (canOpen) {
+      await Linking.openURL(url);
+    } else {
+      Alert.alert("Unable to open", url);
+    }
+  } catch (_error) {
+    Alert.alert("Unable to open", url);
+  }
+}
+
 export default function SettingsScreen({
   colors,
   isDark,
   onToggleTheme,
   onBack,
 }: SettingsScreenProps) {
+  const handleShareApp = () => {
+    Share.share({ message: SHARE_MESSAGE });
+  };
+
+  const handleSendFeedback = () => {
+    safeOpenURL(FEEDBACK_EMAIL);
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Header */}
@@ -123,7 +160,7 @@ export default function SettingsScreen({
         FEEDBACK
       </Text>
       <View style={[styles.card, { backgroundColor: colors.btnBg }]}>
-        <View style={styles.cardRow}>
+        <Pressable style={styles.cardRow} onPress={handleSendFeedback}>
           <View style={styles.cardLeft}>
             <Ionicons name="mail-outline" size={20} color={colors.btnIcon} />
             <Text style={[styles.cardLabel, { color: colors.text }]}>
@@ -131,55 +168,63 @@ export default function SettingsScreen({
             </Text>
           </View>
           <Ionicons name="chevron-forward" size={16} color={colors.btnIcon} />
-        </View>
+        </Pressable>
 
         <View
           style={[styles.cardDivider, { backgroundColor: colors.divider }]}
         />
 
-        <View style={styles.cardRow}>
+        <Pressable style={styles.cardRow} onPress={handleShareApp}>
           <View style={styles.cardLeft}>
-            <Ionicons name="star-outline" size={20} color={colors.btnIcon} />
+            <Ionicons name="share-outline" size={20} color={colors.btnIcon} />
             <Text style={[styles.cardLabel, { color: colors.text }]}>
-              Rate App
+              Share App
             </Text>
           </View>
           <Ionicons name="chevron-forward" size={16} color={colors.btnIcon} />
-        </View>
+        </Pressable>
       </View>
 
       {/* ── About ── */}
       <Text style={[styles.sectionTitle, { color: colors.label }]}>ABOUT</Text>
       <View style={[styles.card, { backgroundColor: colors.btnBg }]}>
-        <View style={styles.cardRow}>
+        <Pressable
+          style={styles.cardRow}
+          onPress={() => safeOpenURL(PRIVACY_URL)}
+        >
           <View style={styles.cardLeft}>
             <Ionicons
-              name="information-circle-outline"
+              name="document-text-outline"
               size={20}
               color={colors.btnIcon}
             />
             <Text style={[styles.cardLabel, { color: colors.text }]}>
-              Version
+              Privacy Policy
             </Text>
           </View>
-          <Text style={[styles.cardValue, { color: colors.author }]}>
-            1.0.0
-          </Text>
-        </View>
+          <Ionicons name="chevron-forward" size={16} color={colors.btnIcon} />
+        </Pressable>
 
         <View
           style={[styles.cardDivider, { backgroundColor: colors.divider }]}
         />
 
-        <View style={styles.cardRow}>
+        <Pressable
+          style={styles.cardRow}
+          onPress={() => safeOpenURL(TERMS_URL)}
+        >
           <View style={styles.cardLeft}>
-            <Ionicons name="heart-outline" size={20} color={colors.btnIcon} />
+            <Ionicons
+              name="shield-checkmark-outline"
+              size={20}
+              color={colors.btnIcon}
+            />
             <Text style={[styles.cardLabel, { color: colors.text }]}>
-              Made with ♥
+              Terms of Service
             </Text>
           </View>
-          <Text style={[styles.cardValue, { color: colors.author }]}>Echo</Text>
-        </View>
+          <Ionicons name="chevron-forward" size={16} color={colors.btnIcon} />
+        </Pressable>
       </View>
     </View>
   );

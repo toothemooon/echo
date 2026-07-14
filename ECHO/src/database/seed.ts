@@ -1,25 +1,27 @@
-import { hasQuotes, insertQuotes } from "./quotes";
+import { syncQuotes } from "./quotes";
 
 const quotesData: {
+  id: number;
   text: string;
   author: string;
   category: string;
 }[] = require("../../assets/quotes.json");
 
 /**
- * Seed the database with initial quotes if empty.
- * Reads from assets/quotes.json and bulk inserts.
+ * Sync quotes from JSON into SQLite on every launch.
+ * - New quotes are inserted
+ * - Existing quotes are updated (text, author, category)
+ * - Old quotes in DB are preserved (never deleted)
+ * - Saved quotes / history are untouched
  */
-export async function seedDatabase(): Promise<void> {
-  const exists = await hasQuotes();
-  if (exists) return;
-
+export async function syncDatabase(): Promise<void> {
   const quotes = quotesData.map((q) => ({
+    id: q.id,
     text: q.text,
     author: q.author,
     category: q.category,
   }));
 
-  await insertQuotes(quotes);
-  console.log(`Seeded ${quotes.length} quotes into database.`);
+  await syncQuotes(quotes);
+  console.log(`Synced ${quotes.length} quotes to database.`);
 }

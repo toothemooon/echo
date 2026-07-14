@@ -7,7 +7,7 @@ import {
 } from "@expo-google-fonts/cormorant-garamond";
 import { COLORS } from "./src/constants/colors";
 import { Quote, getRandomQuote, getQuoteCount } from "./src/database/quotes";
-import { seedDatabase } from "./src/database/seed";
+import { syncDatabase } from "./src/database/seed";
 import Header from "./src/components/Header";
 import QuoteCard from "./src/components/QuoteCard";
 import PaginationDots from "./src/components/PaginationDots";
@@ -50,7 +50,7 @@ export default function App() {
       const colorScheme = require("react-native").Appearance?.getColorScheme();
       if (colorScheme === "dark") setIsDark(true);
 
-      await seedDatabase();
+      await syncDatabase();
       const count = await getQuoteCount();
       setQuoteCount(count);
 
@@ -223,11 +223,7 @@ export default function App() {
       />
 
       <View style={{ alignItems: "center" }}>
-        <PaginationDots
-          total={Math.min(quoteCount, 50)}
-          activeIndex={historyIndex % Math.min(quoteCount, 50)}
-          colors={c}
-        />
+        <PaginationDots total={5} activeIndex={historyIndex % 5} colors={c} />
 
         <ActionBar
           colors={c}

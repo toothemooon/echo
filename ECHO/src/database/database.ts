@@ -11,10 +11,10 @@ export async function getDatabase(): Promise<SQLite.SQLiteDatabase> {
   await db.execAsync("PRAGMA journal_mode = WAL;");
   await db.execAsync("PRAGMA synchronous = NORMAL;");
 
-  // Create tables
+  // Create tables — id is a stable integer provided by quotes.json
   await db.execAsync(`
     CREATE TABLE IF NOT EXISTS quotes (
-      id         INTEGER PRIMARY KEY AUTOINCREMENT,
+      id         INTEGER PRIMARY KEY,
       text       TEXT    NOT NULL,
       author     TEXT    NOT NULL,
       category   TEXT    NOT NULL,
