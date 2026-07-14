@@ -6,8 +6,8 @@ import {
   StyleSheet,
   Linking,
   Alert,
-  Platform,
   Share,
+  ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/colors";
@@ -17,6 +17,8 @@ interface SettingsScreenProps {
   isDark: boolean;
   onToggleTheme: () => void;
   onBack: () => void;
+  onOpenPersonalization: () => void;
+  preferredCount: number;
 }
 
 const SHARE_MESSAGE =
@@ -43,6 +45,8 @@ export default function SettingsScreen({
   isDark,
   onToggleTheme,
   onBack,
+  onOpenPersonalization,
+  preferredCount,
 }: SettingsScreenProps) {
   const handleShareApp = () => {
     Share.share({ message: SHARE_MESSAGE });
@@ -70,162 +74,224 @@ export default function SettingsScreen({
 
       <View style={[styles.divider, { backgroundColor: colors.divider }]} />
 
-      {/* ── Appearance ── */}
-      <Text style={[styles.sectionTitle, { color: colors.label }]}>
-        APPEARANCE
-      </Text>
-      <View style={[styles.card, { backgroundColor: colors.btnBg }]}>
-        <View style={styles.cardRow}>
-          <View style={styles.cardLeft}>
-            <Ionicons
-              name="color-palette-outline"
-              size={20}
-              color={colors.btnIcon}
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* ── Appearance ── */}
+        <Text style={[styles.sectionTitle, { color: colors.label }]}>
+          APPEARANCE
+        </Text>
+        <View style={[styles.card, { backgroundColor: colors.btnBg }]}>
+          <View style={styles.cardRow}>
+            <View style={styles.cardLeft}>
+              <Ionicons
+                name="color-palette-outline"
+                size={20}
+                color={colors.btnIcon}
+              />
+              <Text style={[styles.cardLabel, { color: colors.text }]}>
+                Dark Mode
+              </Text>
+            </View>
+            <Switch
+              value={isDark}
+              onValueChange={onToggleTheme}
+              trackColor={{ false: colors.inactiveDot, true: colors.label }}
+              thumbColor="#fff"
             />
-            <Text style={[styles.cardLabel, { color: colors.text }]}>
-              Dark Mode
-            </Text>
           </View>
-          <Switch
-            value={isDark}
-            onValueChange={onToggleTheme}
-            trackColor={{ false: colors.inactiveDot, true: colors.label }}
-            thumbColor="#fff"
-          />
         </View>
-      </View>
 
-      {/* ── Notifications ── */}
-      <Text style={[styles.sectionTitle, { color: colors.label }]}>
-        NOTIFICATIONS
-      </Text>
-      <View style={[styles.card, { backgroundColor: colors.btnBg }]}>
-        <View style={styles.cardRow}>
-          <View style={styles.cardLeft}>
-            <Ionicons
-              name="notifications-outline"
-              size={20}
-              color={colors.btnIcon}
+        {/* ── Personalization ── */}
+        <Text style={[styles.sectionTitle, { color: colors.label }]}>
+          PERSONALIZATION
+        </Text>
+        <View style={[styles.card, { backgroundColor: colors.btnBg }]}>
+          <Pressable style={styles.cardRow} onPress={onOpenPersonalization}>
+            <View style={styles.cardLeft}>
+              <Ionicons
+                name="color-filter-outline"
+                size={20}
+                color={colors.btnIcon}
+              />
+              <Text style={[styles.cardLabel, { color: colors.text }]}>
+                Categories
+              </Text>
+            </View>
+            <View style={styles.cardRight}>
+              <Text style={[styles.cardValue, { color: colors.author }]}>
+                {preferredCount} Selected
+              </Text>
+              <Ionicons
+                name="chevron-forward"
+                size={16}
+                color={colors.btnIcon}
+              />
+            </View>
+          </Pressable>
+        </View>
+
+        {/* ── Notifications ── */}
+        <Text style={[styles.sectionTitle, { color: colors.label }]}>
+          NOTIFICATIONS
+        </Text>
+        <View style={[styles.card, { backgroundColor: colors.btnBg }]}>
+          <View style={styles.cardRow}>
+            <View style={styles.cardLeft}>
+              <Ionicons
+                name="notifications-outline"
+                size={20}
+                color={colors.btnIcon}
+              />
+              <Text style={[styles.cardLabel, { color: colors.text }]}>
+                Daily Reminder
+              </Text>
+            </View>
+            <Switch
+              value={false}
+              onValueChange={() => {}}
+              trackColor={{ false: colors.inactiveDot, true: colors.label }}
+              thumbColor="#fff"
             />
-            <Text style={[styles.cardLabel, { color: colors.text }]}>
-              Daily Reminder
-            </Text>
           </View>
-          <Switch
-            value={false}
-            onValueChange={() => {}}
-            trackColor={{ false: colors.inactiveDot, true: colors.label }}
-            thumbColor="#fff"
+
+          <View
+            style={[styles.cardDivider, { backgroundColor: colors.divider }]}
           />
-        </View>
 
-        <View
-          style={[styles.cardDivider, { backgroundColor: colors.divider }]}
-        />
-
-        <View style={styles.cardRow}>
-          <View style={styles.cardLeft}>
-            <Ionicons name="moon-outline" size={20} color={colors.btnIcon} />
-            <Text style={[styles.cardLabel, { color: colors.text }]}>
-              Quiet Hours
-            </Text>
-          </View>
-          <Text style={[styles.cardValue, { color: colors.author }]}>Off</Text>
-        </View>
-      </View>
-
-      {/* ── Languages ── */}
-      <Text style={[styles.sectionTitle, { color: colors.label }]}>
-        LANGUAGES
-      </Text>
-      <View style={[styles.card, { backgroundColor: colors.btnBg }]}>
-        <View style={styles.cardRow}>
-          <View style={styles.cardLeft}>
-            <Ionicons name="globe-outline" size={20} color={colors.btnIcon} />
-            <Text style={[styles.cardLabel, { color: colors.text }]}>
-              Language
-            </Text>
-          </View>
-          <View style={styles.cardRight}>
+          <View style={styles.cardRow}>
+            <View style={styles.cardLeft}>
+              <Ionicons name="moon-outline" size={20} color={colors.btnIcon} />
+              <Text style={[styles.cardLabel, { color: colors.text }]}>
+                Quiet Hours
+              </Text>
+            </View>
             <Text style={[styles.cardValue, { color: colors.author }]}>
-              English
+              Off
             </Text>
-            <Ionicons name="chevron-forward" size={16} color={colors.btnIcon} />
           </View>
         </View>
-      </View>
 
-      {/* ── Feedback ── */}
-      <Text style={[styles.sectionTitle, { color: colors.label }]}>
-        FEEDBACK
-      </Text>
-      <View style={[styles.card, { backgroundColor: colors.btnBg }]}>
-        <Pressable style={styles.cardRow} onPress={handleSendFeedback}>
-          <View style={styles.cardLeft}>
-            <Ionicons name="mail-outline" size={20} color={colors.btnIcon} />
-            <Text style={[styles.cardLabel, { color: colors.text }]}>
-              Send Feedback
-            </Text>
+        {/* ── Languages ── */}
+        <Text style={[styles.sectionTitle, { color: colors.label }]}>
+          LANGUAGES
+        </Text>
+        <View style={[styles.card, { backgroundColor: colors.btnBg }]}>
+          <View style={styles.cardRow}>
+            <View style={styles.cardLeft}>
+              <Ionicons name="globe-outline" size={20} color={colors.btnIcon} />
+              <Text style={[styles.cardLabel, { color: colors.text }]}>
+                Interface Language
+              </Text>
+            </View>
+            <View style={styles.cardRight}>
+              <Text style={[styles.cardValue, { color: colors.author }]}>
+                English
+              </Text>
+              <Ionicons
+                name="chevron-forward"
+                size={16}
+                color={colors.btnIcon}
+              />
+            </View>
           </View>
-          <Ionicons name="chevron-forward" size={16} color={colors.btnIcon} />
-        </Pressable>
 
-        <View
-          style={[styles.cardDivider, { backgroundColor: colors.divider }]}
-        />
+          <View
+            style={[styles.cardDivider, { backgroundColor: colors.divider }]}
+          />
 
-        <Pressable style={styles.cardRow} onPress={handleShareApp}>
-          <View style={styles.cardLeft}>
-            <Ionicons name="share-outline" size={20} color={colors.btnIcon} />
-            <Text style={[styles.cardLabel, { color: colors.text }]}>
-              Share App
-            </Text>
+          <View style={[styles.cardRow, { opacity: 0.5 }]}>
+            <View style={styles.cardLeft}>
+              <Ionicons name="book-outline" size={20} color={colors.btnIcon} />
+              <Text style={[styles.cardLabel, { color: colors.text }]}>
+                Quote Language
+              </Text>
+            </View>
+            <View style={styles.cardRight}>
+              <Text style={[styles.cardValue, { color: colors.author }]}>
+                English
+              </Text>
+              <Ionicons
+                name="chevron-forward"
+                size={16}
+                color={colors.btnIcon}
+              />
+            </View>
           </View>
-          <Ionicons name="chevron-forward" size={16} color={colors.btnIcon} />
-        </Pressable>
-      </View>
+        </View>
 
-      {/* ── About ── */}
-      <Text style={[styles.sectionTitle, { color: colors.label }]}>ABOUT</Text>
-      <View style={[styles.card, { backgroundColor: colors.btnBg }]}>
-        <Pressable
-          style={styles.cardRow}
-          onPress={() => safeOpenURL(PRIVACY_URL)}
-        >
-          <View style={styles.cardLeft}>
-            <Ionicons
-              name="document-text-outline"
-              size={20}
-              color={colors.btnIcon}
-            />
-            <Text style={[styles.cardLabel, { color: colors.text }]}>
-              Privacy Policy
-            </Text>
-          </View>
-          <Ionicons name="chevron-forward" size={16} color={colors.btnIcon} />
-        </Pressable>
+        {/* ── Feedback ── */}
+        <Text style={[styles.sectionTitle, { color: colors.label }]}>
+          FEEDBACK
+        </Text>
+        <View style={[styles.card, { backgroundColor: colors.btnBg }]}>
+          <Pressable style={styles.cardRow} onPress={handleSendFeedback}>
+            <View style={styles.cardLeft}>
+              <Ionicons name="mail-outline" size={20} color={colors.btnIcon} />
+              <Text style={[styles.cardLabel, { color: colors.text }]}>
+                Send Feedback
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={16} color={colors.btnIcon} />
+          </Pressable>
 
-        <View
-          style={[styles.cardDivider, { backgroundColor: colors.divider }]}
-        />
+          <View
+            style={[styles.cardDivider, { backgroundColor: colors.divider }]}
+          />
 
-        <Pressable
-          style={styles.cardRow}
-          onPress={() => safeOpenURL(TERMS_URL)}
-        >
-          <View style={styles.cardLeft}>
-            <Ionicons
-              name="shield-checkmark-outline"
-              size={20}
-              color={colors.btnIcon}
-            />
-            <Text style={[styles.cardLabel, { color: colors.text }]}>
-              Terms of Service
-            </Text>
-          </View>
-          <Ionicons name="chevron-forward" size={16} color={colors.btnIcon} />
-        </Pressable>
-      </View>
+          <Pressable style={styles.cardRow} onPress={handleShareApp}>
+            <View style={styles.cardLeft}>
+              <Ionicons name="share-outline" size={20} color={colors.btnIcon} />
+              <Text style={[styles.cardLabel, { color: colors.text }]}>
+                Share App
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={16} color={colors.btnIcon} />
+          </Pressable>
+        </View>
+
+        {/* ── About ── */}
+        <Text style={[styles.sectionTitle, { color: colors.label }]}>
+          ABOUT
+        </Text>
+        <View style={[styles.card, { backgroundColor: colors.btnBg }]}>
+          <Pressable
+            style={styles.cardRow}
+            onPress={() => safeOpenURL(PRIVACY_URL)}
+          >
+            <View style={styles.cardLeft}>
+              <Ionicons
+                name="document-text-outline"
+                size={20}
+                color={colors.btnIcon}
+              />
+              <Text style={[styles.cardLabel, { color: colors.text }]}>
+                Privacy Policy
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={16} color={colors.btnIcon} />
+          </Pressable>
+
+          <View
+            style={[styles.cardDivider, { backgroundColor: colors.divider }]}
+          />
+
+          <Pressable
+            style={styles.cardRow}
+            onPress={() => safeOpenURL(TERMS_URL)}
+          >
+            <View style={styles.cardLeft}>
+              <Ionicons
+                name="shield-checkmark-outline"
+                size={20}
+                color={colors.btnIcon}
+              />
+              <Text style={[styles.cardLabel, { color: colors.text }]}>
+                Terms of Service
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={16} color={colors.btnIcon} />
+          </Pressable>
+        </View>
+      </ScrollView>
     </View>
   );
 }

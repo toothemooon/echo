@@ -6,7 +6,12 @@ import {
   CormorantGaramond_400Regular_Italic,
 } from "@expo-google-fonts/cormorant-garamond";
 import { COLORS } from "./src/constants/colors";
+import { CATEGORIES, Category } from "./src/constants/categories";
 import { Quote, getRandomQuote, getQuoteCount } from "./src/database/quotes";
+import {
+  getPreferredCategories,
+  setPreferredCategories,
+} from "./src/database/preferences";
 import { syncDatabase } from "./src/database/seed";
 import Header from "./src/components/Header";
 import QuoteCard from "./src/components/QuoteCard";
@@ -14,6 +19,7 @@ import PaginationDots from "./src/components/PaginationDots";
 import ActionBar from "./src/components/ActionBar";
 import HistorySheet from "./src/components/HistorySheet";
 import SettingsScreen from "./src/screens/SettingsScreen";
+import PersonalizationScreen from "./src/screens/PersonalizationScreen";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -21,7 +27,9 @@ const PLACEHOLDER_QUOTE: Quote = {
   id: 0,
   text: "Loading...",
   author: "",
-  category: "",
+  role: "",
+  primary_category: "",
+  categories: [],
 };
 
 export default function App() {
@@ -31,7 +39,12 @@ export default function App() {
   const [quoteCount, setQuoteCount] = useState(0);
   const [savedQuotes, setSavedQuotes] = useState<Quote[]>([]);
   const [historyVisible, setHistoryVisible] = useState(false);
-  const [currentPage, setCurrentPage] = useState<"home" | "settings">("home");
+  const [currentPage, setCurrentPage] = useState<
+    "home" | "settings" | "personalization"
+  >("home");
+  const [preferredCategories, setPreferredCategoriesState] = useState<
+    Category[]
+  >([...CATEGORIES]);
   const [dbReady, setDbReady] = useState(false);
 
   // Animation values
@@ -51,10 +64,14 @@ export default function App() {
       if (colorScheme === "dark") setIsDark(true);
 
       await syncDatabase();
+
+      const prefs = await getPreferredCategories();
+      setPreferredCategoriesState(prefs);
+
       const count = await getQuoteCount();
       setQuoteCount(count);
 
-      const firstQuote = await getRandomQuote();
+      const firstQuote = await getRandomQuote(prefs);
       if (firstQuote) {
         setQuoteHistory([firstQuote]);
         setHistoryIndex(0);
@@ -117,8 +134,8 @@ export default function App() {
       setHistoryIndex(nextIdx);
       animateToQuote(quoteHistory[nextIdx], "right");
     } else {
-      // Fetch a new random quote and append to history
-      getRandomQuote().then((newQuote) => {
+      // Fetch a new random quote from preferred categories
+      getRandomQuote(preferredCategories).then((newQuote) => {
         if (!newQuote) return;
         setQuoteHistory((prev) => [...prev, newQuote]);
         setHistoryIndex((prev) => prev + 1);
@@ -142,6 +159,18 @@ export default function App() {
     } catch (_error) {
       // User cancelled
     }
+  };
+
+  const toggleCategory = (cat: Category) => {
+    setPreferredCategoriesState((prev) => {
+      const next = prev.includes(cat)
+        ? prev.filter((c) => c !== cat)
+        : [...prev, cat];
+      // Don't allow deselecting all
+      if (next.length === 0) return prev;
+      setPreferredCategories(next);
+      return next;
+    });
   };
 
   const toggleBookmark = () => {
@@ -185,6 +214,17 @@ export default function App() {
     ]).start(() => setHistoryVisible(false));
   };
 
+  if (currentPage === "personalization") {
+    return (
+      <PersonalizationScreen
+        colors={c}
+        preferredCategories={preferredCategories}
+        onToggleCategory={toggleCategory}
+        onBack={() => setCurrentPage("settings")}
+      />
+    );
+  }
+
   if (currentPage === "settings") {
     return (
       <SettingsScreen
@@ -192,6 +232,8 @@ export default function App() {
         isDark={isDark}
         onToggleTheme={() => setIsDark(!isDark)}
         onBack={() => setCurrentPage("home")}
+        onOpenPersonalization={() => setCurrentPage("personalization")}
+        preferredCount={preferredCategories.length}
       />
     );
   }

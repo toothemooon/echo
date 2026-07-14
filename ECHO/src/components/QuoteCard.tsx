@@ -29,7 +29,7 @@ export default function QuoteCard({
       <View style={styles.categoryRow}>
         <View style={[styles.categoryDot, { backgroundColor: colors.dot }]} />
         <Text style={[styles.label, { color: colors.label }]}>
-          {quote.category}
+          {quote.primary_category}
         </Text>
       </View>
 
@@ -45,6 +45,13 @@ export default function QuoteCard({
       <Text style={[styles.author, { color: colors.author }]}>
         — {quote.author}
       </Text>
+
+      {/* Role */}
+      {quote.role ? (
+        <Text style={[styles.role, { color: colors.inactiveDot }]}>
+          {quote.role}
+        </Text>
+      ) : null}
     </Animated.View>
   );
 }
@@ -88,5 +95,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "400",
     textAlign: "right",
+  },
+  role: {
+    fontSize: 12,
+    fontWeight: "300",
+    textAlign: "right",
+    marginTop: 2,
+    fontStyle: "italic",
   },
 });

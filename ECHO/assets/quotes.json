@@ -3,570 +3,1000 @@
     "id": 1,
     "text": "The present moment is the only moment available to us, and it is the door to all moments.",
     "author": "Thich Nhat Hanh",
-    "category": "MINDFULNESS"
+    "role": "Buddhist monk & mindfulness teacher",
+    "primary_category": "MINDFULNESS",
+    "categories": ["MINDFULNESS", "WISDOM"]
   },
   {
     "id": 2,
     "text": "Feelings come and go like clouds in a windy sky. Conscious breathing is my anchor.",
     "author": "Thich Nhat Hanh",
-    "category": "MINDFULNESS"
+    "role": "Buddhist monk & mindfulness teacher",
+    "primary_category": "MINDFULNESS",
+    "categories": ["MINDFULNESS"]
   },
   {
     "id": 3,
     "text": "Walk as if you are kissing the Earth with your feet.",
     "author": "Thich Nhat Hanh",
-    "category": "MINDFULNESS"
+    "role": "Buddhist monk & mindfulness teacher",
+    "primary_category": "MINDFULNESS",
+    "categories": ["MINDFULNESS", "NATURE"]
   },
   {
     "id": 4,
     "text": "The mind is everything. What you think you become.",
     "author": "Buddha",
-    "category": "MINDFULNESS"
+    "role": "Spiritual teacher",
+    "primary_category": "MINDFULNESS",
+    "categories": ["MINDFULNESS", "WISDOM"]
   },
   {
     "id": 5,
     "text": "Smile, breathe, and go slowly.",
     "author": "Thich Nhat Hanh",
-    "category": "MINDFULNESS"
+    "role": "Buddhist monk & mindfulness teacher",
+    "primary_category": "MINDFULNESS",
+    "categories": ["MINDFULNESS"]
   },
   {
     "id": 6,
     "text": "Do not dwell in the past, do not dream of the future, concentrate the mind on the present moment.",
     "author": "Buddha",
-    "category": "MINDFULNESS"
+    "role": "Spiritual teacher",
+    "primary_category": "MINDFULNESS",
+    "categories": ["MINDFULNESS", "WISDOM"]
   },
   {
     "id": 7,
     "text": "The thing about meditation is: you become more and more you.",
     "author": "David Lynch",
-    "category": "MINDFULNESS"
+    "role": "Filmmaker & meditation advocate",
+    "primary_category": "MINDFULNESS",
+    "categories": ["MINDFULNESS"]
   },
   {
     "id": 8,
     "text": "Almost everything will work again if you unplug it for a few minutes, including you.",
     "author": "Anne Lamott",
-    "category": "MINDFULNESS"
+    "role": "Author & essayist",
+    "primary_category": "MINDFULNESS",
+    "categories": ["MINDFULNESS", "HEALING"]
   },
   {
     "id": 9,
     "text": "Wherever you are, be there totally.",
     "author": "Eckhart Tolle",
-    "category": "MINDFULNESS"
+    "role": "Spiritual teacher & author",
+    "primary_category": "MINDFULNESS",
+    "categories": ["MINDFULNESS", "WISDOM"]
   },
   {
     "id": 10,
     "text": "Quiet the mind, and the soul will speak.",
     "author": "Ma Jaya Sati Bhagavati",
-    "category": "MINDFULNESS"
+    "role": "Spiritual teacher",
+    "primary_category": "MINDFULNESS",
+    "categories": ["MINDFULNESS", "HEALING"]
   },
   {
     "id": 11,
     "text": "The present moment is filled with joy and happiness. If you are attentive, you will see it.",
     "author": "Thich Nhat Hanh",
-    "category": "MINDFULNESS"
+    "role": "Buddhist monk & mindfulness teacher",
+    "primary_category": "MINDFULNESS",
+    "categories": ["MINDFULNESS", "GRATITUDE"]
   },
   {
     "id": 12,
     "text": "Mindfulness is a way of befriending ourselves and our experience.",
     "author": "Jon Kabat-Zinn",
-    "category": "MINDFULNESS"
+    "role": "Meditation teacher & scientist",
+    "primary_category": "MINDFULNESS",
+    "categories": ["MINDFULNESS", "HEALING"]
   },
   {
     "id": 13,
     "text": "When you own your breath, nobody can steal your peace.",
     "author": "Unknown",
-    "category": "MINDFULNESS"
+    "role": "",
+    "primary_category": "MINDFULNESS",
+    "categories": ["MINDFULNESS"]
   },
   {
     "id": 14,
     "text": "The greatest weapon against stress is our ability to choose one thought over another.",
     "author": "William James",
-    "category": "MINDFULNESS"
+    "role": "Philosopher & psychologist",
+    "primary_category": "MINDFULNESS",
+    "categories": ["MINDFULNESS", "WISDOM"]
   },
   {
     "id": 15,
     "text": "Meditation is not about stopping thoughts, but recognizing that we are more than our thoughts.",
     "author": "Arianna Huffington",
-    "category": "MINDFULNESS"
+    "role": "Journalist & entrepreneur",
+    "primary_category": "MINDFULNESS",
+    "categories": ["MINDFULNESS", "GROWTH"]
   },
   {
     "id": 16,
     "text": "In today's rush, we all think too much, seek too much, want too much — and forget about the joy of just being.",
     "author": "Eckhart Tolle",
-    "category": "MINDFULNESS"
+    "role": "Spiritual teacher & author",
+    "primary_category": "MINDFULNESS",
+    "categories": ["MINDFULNESS"]
   },
   {
     "id": 17,
     "text": "The only real voyage of discovery consists not in seeking new landscapes, but in having new eyes.",
     "author": "Marcel Proust",
-    "category": "WISDOM"
+    "role": "Novelist",
+    "primary_category": "WISDOM",
+    "categories": ["WISDOM", "GROWTH"]
   },
   {
     "id": 18,
     "text": "In the middle of difficulty lies opportunity.",
     "author": "Albert Einstein",
-    "category": "WISDOM"
+    "role": "Theoretical physicist",
+    "primary_category": "WISDOM",
+    "categories": ["WISDOM", "COURAGE"]
   },
   {
     "id": 19,
     "text": "The wise man does at once what the fool does finally.",
     "author": "Niccolò Machiavelli",
-    "category": "WISDOM"
+    "role": "Political philosopher",
+    "primary_category": "WISDOM",
+    "categories": ["WISDOM"]
   },
   {
     "id": 20,
     "text": "Turn your wounds into wisdom.",
     "author": "Oprah Winfrey",
-    "category": "WISDOM"
+    "role": "Media mogul & philanthropist",
+    "primary_category": "WISDOM",
+    "categories": ["WISDOM", "HEALING"]
   },
   {
     "id": 21,
     "text": "The unexamined life is not worth living.",
     "author": "Socrates",
-    "category": "WISDOM"
+    "role": "Classical philosopher",
+    "primary_category": "WISDOM",
+    "categories": ["WISDOM", "GROWTH"]
   },
   {
     "id": 22,
     "text": "Knowing yourself is the beginning of all wisdom.",
     "author": "Aristotle",
-    "category": "WISDOM"
+    "role": "Classical philosopher",
+    "primary_category": "WISDOM",
+    "categories": ["WISDOM", "GROWTH"]
   },
   {
     "id": 23,
     "text": "Our life is frittered away by detail. Simplify, simplify.",
     "author": "Henry David Thoreau",
-    "category": "WISDOM"
+    "role": "Essayist & naturalist",
+    "primary_category": "WISDOM",
+    "categories": ["WISDOM", "MINDFULNESS"]
   },
   {
     "id": 24,
     "text": "The journey of a thousand miles begins with a single step.",
     "author": "Lao Tzu",
-    "category": "WISDOM"
+    "role": "Ancient Chinese philosopher",
+    "primary_category": "WISDOM",
+    "categories": ["WISDOM", "COURAGE"]
   },
   {
     "id": 25,
     "text": "What we think, we become.",
     "author": "Buddha",
-    "category": "WISDOM"
+    "role": "Spiritual teacher",
+    "primary_category": "WISDOM",
+    "categories": ["WISDOM", "MINDFULNESS"]
   },
   {
     "id": 26,
     "text": "He who knows others is wise; he who knows himself is enlightened.",
     "author": "Lao Tzu",
-    "category": "WISDOM"
+    "role": "Ancient Chinese philosopher",
+    "primary_category": "WISDOM",
+    "categories": ["WISDOM", "GROWTH"]
   },
   {
     "id": 27,
     "text": "The only true wisdom is in knowing you know nothing.",
     "author": "Socrates",
-    "category": "WISDOM"
+    "role": "Classical philosopher",
+    "primary_category": "WISDOM",
+    "categories": ["WISDOM"]
   },
   {
     "id": 28,
     "text": "Life is really simple, but we insist on making it complicated.",
     "author": "Confucius",
-    "category": "WISDOM"
+    "role": "Chinese philosopher",
+    "primary_category": "WISDOM",
+    "categories": ["WISDOM"]
   },
   {
     "id": 29,
     "text": "Simplicity is the ultimate sophistication.",
     "author": "Leonardo da Vinci",
-    "category": "WISDOM"
+    "role": "Polymath & artist",
+    "primary_category": "WISDOM",
+    "categories": ["WISDOM"]
   },
   {
     "id": 30,
     "text": "The fool doth think he is wise, but the wise man knows himself to be a fool.",
     "author": "William Shakespeare",
-    "category": "WISDOM"
+    "role": "Playwright & poet",
+    "primary_category": "WISDOM",
+    "categories": ["WISDOM"]
   },
   {
     "id": 31,
     "text": "Time you enjoy wasting is not wasted time.",
     "author": "Marthe Troly-Curtin",
-    "category": "WISDOM"
+    "role": "Writer",
+    "primary_category": "WISDOM",
+    "categories": ["WISDOM", "MINDFULNESS"]
   },
   {
     "id": 32,
     "text": "Be kind whenever it is possible. It is always possible.",
     "author": "Dalai Lama",
-    "category": "WISDOM"
+    "role": "Tibetan spiritual leader",
+    "primary_category": "WISDOM",
+    "categories": ["WISDOM", "LOVE"]
   },
   {
     "id": 33,
     "text": "The best time to plant a tree was twenty years ago. The second best time is now.",
     "author": "Chinese Proverb",
-    "category": "WISDOM"
+    "role": "Proverb",
+    "primary_category": "WISDOM",
+    "categories": ["WISDOM", "GROWTH"]
   },
   {
     "id": 34,
     "text": "Not all those who wander are lost.",
     "author": "J.R.R. Tolkien",
-    "category": "WISDOM"
+    "role": "Author & philologist",
+    "primary_category": "WISDOM",
+    "categories": ["WISDOM", "COURAGE"]
   },
   {
     "id": 35,
     "text": "Happiness is not something ready-made. It comes from your own actions.",
     "author": "Dalai Lama",
-    "category": "WISDOM"
+    "role": "Tibetan spiritual leader",
+    "primary_category": "WISDOM",
+    "categories": ["WISDOM", "GRATITUDE"]
   },
   {
     "id": 36,
     "text": "It is never too late to be what you might have been.",
     "author": "George Eliot",
-    "category": "COURAGE"
+    "role": "Novelist",
+    "primary_category": "COURAGE",
+    "categories": ["COURAGE", "GROWTH"]
   },
   {
     "id": 37,
     "text": "You miss 100% of the shots you don't take.",
     "author": "Wayne Gretzky",
-    "category": "COURAGE"
+    "role": "Hall of Fame hockey player",
+    "primary_category": "COURAGE",
+    "categories": ["COURAGE"]
   },
   {
     "id": 38,
     "text": "Do one thing every day that scares you.",
     "author": "Eleanor Roosevelt",
-    "category": "COURAGE"
+    "role": "Former First Lady & activist",
+    "primary_category": "COURAGE",
+    "categories": ["COURAGE", "GROWTH"]
   },
   {
     "id": 39,
     "text": "Life shrinks or expands in proportion to one's courage.",
     "author": "Anaïs Nin",
-    "category": "COURAGE"
+    "role": "Diary author & novelist",
+    "primary_category": "COURAGE",
+    "categories": ["COURAGE", "GROWTH"]
   },
   {
     "id": 40,
     "text": "Courage is not the absence of fear, but the triumph over it.",
     "author": "Nelson Mandela",
-    "category": "COURAGE"
+    "role": "Anti-apartheid leader & president",
+    "primary_category": "COURAGE",
+    "categories": ["COURAGE"]
   },
   {
     "id": 41,
     "text": "Everything you've ever wanted is on the other side of fear.",
     "author": "George Addair",
-    "category": "COURAGE"
+    "role": "Author & motivational speaker",
+    "primary_category": "COURAGE",
+    "categories": ["COURAGE", "GROWTH"]
   },
   {
     "id": 42,
     "text": "The secret of getting ahead is getting started.",
     "author": "Mark Twain",
-    "category": "COURAGE"
+    "role": "Author & humorist",
+    "primary_category": "COURAGE",
+    "categories": ["COURAGE", "GROWTH"]
   },
   {
     "id": 43,
     "text": "Act as if what you do makes a difference. It does.",
     "author": "William James",
-    "category": "COURAGE"
+    "role": "Philosopher & psychologist",
+    "primary_category": "COURAGE",
+    "categories": ["COURAGE", "GRATITUDE"]
   },
   {
     "id": 44,
     "text": "What lies behind us and what lies before us are tiny matters compared to what lies within us.",
     "author": "Ralph Waldo Emerson",
-    "category": "COURAGE"
+    "role": "Essayist & philosopher",
+    "primary_category": "COURAGE",
+    "categories": ["COURAGE", "WISDOM"]
   },
   {
     "id": 45,
     "text": "You are never too old to set another goal or to dream a new dream.",
     "author": "C.S. Lewis",
-    "category": "COURAGE"
+    "role": "Author & theologian",
+    "primary_category": "COURAGE",
+    "categories": ["COURAGE", "GROWTH"]
   },
   {
     "id": 46,
     "text": "The best revenge is massive success.",
     "author": "Frank Sinatra",
-    "category": "COURAGE"
+    "role": "Singer & actor",
+    "primary_category": "COURAGE",
+    "categories": ["COURAGE"]
   },
   {
     "id": 47,
     "text": "I have not failed. I've just found 10,000 ways that won't work.",
     "author": "Thomas Edison",
-    "category": "COURAGE"
+    "role": "Inventor & entrepreneur",
+    "primary_category": "COURAGE",
+    "categories": ["COURAGE", "GROWTH"]
   },
   {
     "id": 48,
     "text": "If you're going through hell, keep going.",
     "author": "Winston Churchill",
-    "category": "COURAGE"
+    "role": "British Prime Minister",
+    "primary_category": "COURAGE",
+    "categories": ["COURAGE"]
   },
   {
     "id": 49,
     "text": "Start where you are. Use what you have. Do what you can.",
     "author": "Arthur Ashe",
-    "category": "COURAGE"
+    "role": "Tennis champion & activist",
+    "primary_category": "COURAGE",
+    "categories": ["COURAGE", "GROWTH"]
   },
   {
     "id": 50,
     "text": "Success is not final, failure is not fatal: it is the courage to continue that counts.",
     "author": "Winston Churchill",
-    "category": "COURAGE"
+    "role": "British Prime Minister",
+    "primary_category": "COURAGE",
+    "categories": ["COURAGE", "WISDOM"]
   },
   {
     "id": 51,
     "text": "Believe you can and you're halfway there.",
     "author": "Theodore Roosevelt",
-    "category": "COURAGE"
+    "role": "26th U.S. President",
+    "primary_category": "COURAGE",
+    "categories": ["COURAGE"]
   },
   {
     "id": 52,
     "text": "Don't watch the clock; do what it does. Keep going.",
     "author": "Sam Levenson",
-    "category": "COURAGE"
+    "role": "Humorist & columnist",
+    "primary_category": "COURAGE",
+    "categories": ["COURAGE"]
   },
   {
     "id": 53,
     "text": "What you get by achieving your goals is not as important as what you become by achieving your goals.",
     "author": "Zig Ziglar",
-    "category": "COURAGE"
+    "role": "Author & motivational speaker",
+    "primary_category": "COURAGE",
+    "categories": ["COURAGE", "GROWTH"]
   },
   {
     "id": 54,
     "text": "The only limit to our realization of tomorrow is our doubts of today.",
     "author": "Franklin D. Roosevelt",
-    "category": "COURAGE"
+    "role": "32nd U.S. President",
+    "primary_category": "COURAGE",
+    "categories": ["COURAGE"]
   },
   {
     "id": 55,
     "text": "It always seems impossible until it's done.",
     "author": "Nelson Mandela",
-    "category": "COURAGE"
+    "role": "Anti-apartheid leader & president",
+    "primary_category": "COURAGE",
+    "categories": ["COURAGE", "GROWTH"]
   },
   {
     "id": 56,
     "text": "The greatest thing you'll ever learn is just to love and be loved in return.",
     "author": "Eden Ahbez",
-    "category": "LOVE"
+    "role": "Songwriter",
+    "primary_category": "LOVE",
+    "categories": ["LOVE"]
   },
   {
     "id": 57,
     "text": "Where there is love there is life.",
     "author": "Mahatma Gandhi",
-    "category": "LOVE"
+    "role": "Independence leader",
+    "primary_category": "LOVE",
+    "categories": ["LOVE", "WISDOM"]
   },
   {
     "id": 58,
     "text": "The opposite of love is not hate, it's indifference.",
     "author": "Elie Wiesel",
-    "category": "LOVE"
+    "role": "Holocaust survivor & Nobel laureate",
+    "primary_category": "LOVE",
+    "categories": ["LOVE", "WISDOM"]
   },
   {
     "id": 59,
     "text": "Love is not about how many days, months, or years you've been together. Love is about how much you love each other every single day.",
     "author": "Unknown",
-    "category": "LOVE"
+    "role": "",
+    "primary_category": "LOVE",
+    "categories": ["LOVE"]
   },
   {
     "id": 60,
     "text": "To love and be loved is to feel the sun from both sides.",
     "author": "David Viscott",
-    "category": "LOVE"
+    "role": "Psychiatrist & author",
+    "primary_category": "LOVE",
+    "categories": ["LOVE", "GRATITUDE"]
   },
   {
     "id": 61,
     "text": "The course of true love never did run smooth.",
     "author": "William Shakespeare",
-    "category": "LOVE"
+    "role": "Playwright & poet",
+    "primary_category": "LOVE",
+    "categories": ["LOVE"]
   },
   {
     "id": 62,
     "text": "Love does not consist of gazing at each other, but in looking outward together in the same direction.",
     "author": "Antoine de Saint-Exupéry",
-    "category": "LOVE"
+    "role": "Author & aviator",
+    "primary_category": "LOVE",
+    "categories": ["LOVE", "WISDOM"]
   },
   {
     "id": 63,
     "text": "The best and most beautiful things in this world cannot be seen or even heard, but must be felt with the heart.",
     "author": "Helen Keller",
-    "category": "LOVE"
+    "role": "Author & activist",
+    "primary_category": "LOVE",
+    "categories": ["LOVE", "WISDOM"]
   },
   {
     "id": 64,
     "text": "Being deeply loved by someone gives you strength, while loving someone deeply gives you courage.",
     "author": "Lao Tzu",
-    "category": "LOVE"
+    "role": "Ancient Chinese philosopher",
+    "primary_category": "LOVE",
+    "categories": ["LOVE", "COURAGE"]
   },
   {
     "id": 65,
     "text": "Love is composed of a single soul inhabiting two bodies.",
     "author": "Aristotle",
-    "category": "LOVE"
+    "role": "Classical philosopher",
+    "primary_category": "LOVE",
+    "categories": ["LOVE", "WISDOM"]
   },
   {
     "id": 66,
     "text": "In the end, we will remember not the words of our enemies, but the silence of our friends.",
     "author": "Martin Luther King Jr.",
-    "category": "LOVE"
+    "role": "Civil rights leader",
+    "primary_category": "LOVE",
+    "categories": ["LOVE", "WISDOM"]
   },
   {
     "id": 67,
     "text": "The greatest happiness of life is the conviction that we are loved.",
     "author": "Victor Hugo",
-    "category": "LOVE"
+    "role": "Novelist & poet",
+    "primary_category": "LOVE",
+    "categories": ["LOVE", "GRATITUDE"]
   },
   {
     "id": 68,
     "text": "Know what's important, and what matters. And what matters is love.",
     "author": "David R. Hawkins",
-    "category": "LOVE"
+    "role": "Psychiatrist & author",
+    "primary_category": "LOVE",
+    "categories": ["LOVE", "WISDOM"]
   },
   {
     "id": 69,
     "text": "Love takes off the masks that we fear we cannot live without and know we cannot live within.",
     "author": "James Baldwin",
-    "category": "LOVE"
+    "role": "Novelist & essayist",
+    "primary_category": "LOVE",
+    "categories": ["LOVE", "COURAGE"]
   },
   {
     "id": 70,
     "text": "We are most alive when we're in love.",
     "author": "John Updike",
-    "category": "LOVE"
+    "role": "Novelist & poet",
+    "primary_category": "LOVE",
+    "categories": ["LOVE"]
   },
   {
     "id": 71,
     "text": "Love doesn't just sit there, like a stone; it has to be made, like bread; remade all the time, made new.",
     "author": "Ursula K. Le Guin",
-    "category": "LOVE"
+    "role": "Science fiction author",
+    "primary_category": "LOVE",
+    "categories": ["LOVE", "GROWTH"]
   },
   {
     "id": 72,
     "text": "If I know what love is, it is because of you.",
     "author": "Hermann Hesse",
-    "category": "LOVE"
+    "role": "Novelist & poet",
+    "primary_category": "LOVE",
+    "categories": ["LOVE", "GRATITUDE"]
   },
   {
     "id": 73,
     "text": "Love is the bridge between you and everything.",
     "author": "Rumi",
-    "category": "LOVE"
+    "role": "Sufi mystic & poet",
+    "primary_category": "LOVE",
+    "categories": ["LOVE", "MINDFULNESS"]
   },
   {
     "id": 74,
     "text": "The giving of love is an education in itself.",
     "author": "Eleanor Roosevelt",
-    "category": "LOVE"
+    "role": "Former First Lady & activist",
+    "primary_category": "LOVE",
+    "categories": ["LOVE", "GROWTH"]
   },
   {
     "id": 75,
     "text": "You yourself, as much as anybody in the entire universe, deserve your love and affection.",
     "author": "Buddha",
-    "category": "LOVE"
+    "role": "Spiritual teacher",
+    "primary_category": "LOVE",
+    "categories": ["LOVE", "HEALING"]
   },
   {
     "id": 76,
     "text": "Look deep into nature, and then you will understand everything better.",
     "author": "Albert Einstein",
-    "category": "NATURE"
+    "role": "Theoretical physicist",
+    "primary_category": "NATURE",
+    "categories": ["NATURE", "WISDOM"]
   },
   {
     "id": 77,
     "text": "The earth has music for those who listen.",
     "author": "William Shakespeare",
-    "category": "NATURE"
+    "role": "Playwright & poet",
+    "primary_category": "NATURE",
+    "categories": ["NATURE", "MINDFULNESS"]
   },
   {
     "id": 78,
     "text": "In every walk with nature one receives far more than he seeks.",
     "author": "John Muir",
-    "category": "NATURE"
+    "role": "Naturalist & conservationist",
+    "primary_category": "NATURE",
+    "categories": ["NATURE", "GRATITUDE"]
   },
   {
     "id": 79,
     "text": "Adopt the pace of nature: her secret is patience.",
     "author": "Ralph Waldo Emerson",
-    "category": "NATURE"
+    "role": "Essayist & philosopher",
+    "primary_category": "NATURE",
+    "categories": ["NATURE", "WISDOM"]
   },
   {
     "id": 80,
     "text": "Study nature, love nature, stay close to nature. It will never fail you.",
     "author": "Frank Lloyd Wright",
-    "category": "NATURE"
+    "role": "Architect",
+    "primary_category": "NATURE",
+    "categories": ["NATURE"]
   },
   {
     "id": 81,
     "text": "The clearest way into the Universe is through a forest wilderness.",
     "author": "John Muir",
-    "category": "NATURE"
+    "role": "Naturalist & conservationist",
+    "primary_category": "NATURE",
+    "categories": ["NATURE", "MINDFULNESS"]
   },
   {
     "id": 82,
     "text": "If you truly love nature, you will find beauty everywhere.",
     "author": "Vincent van Gogh",
-    "category": "NATURE"
+    "role": "Post-Impressionist painter",
+    "primary_category": "NATURE",
+    "categories": ["NATURE", "LOVE"]
   },
   {
     "id": 83,
     "text": "Every flower blooms in its own time.",
     "author": "Ken Petti",
-    "category": "NATURE"
+    "role": "Author",
+    "primary_category": "NATURE",
+    "categories": ["NATURE", "WISDOM"]
   },
   {
     "id": 84,
     "text": "Nature is not a place to visit. It is home.",
     "author": "Gary Snyder",
-    "category": "NATURE"
+    "role": "Poet & environmentalist",
+    "primary_category": "NATURE",
+    "categories": ["NATURE", "MINDFULNESS"]
   },
   {
     "id": 85,
     "text": "The mountains are calling and I must go.",
     "author": "John Muir",
-    "category": "NATURE"
+    "role": "Naturalist & conservationist",
+    "primary_category": "NATURE",
+    "categories": ["NATURE", "COURAGE"]
   },
   {
     "id": 86,
     "text": "A walk in nature walks the soul back home.",
     "author": "Mary Davis",
-    "category": "NATURE"
+    "role": "Author",
+    "primary_category": "NATURE",
+    "categories": ["NATURE", "HEALING"]
   },
   {
     "id": 87,
     "text": "Keep close to nature's heart… and break clear away, once in a while, and climb a mountain.",
     "author": "John Muir",
-    "category": "NATURE"
+    "role": "Naturalist & conservationist",
+    "primary_category": "NATURE",
+    "categories": ["NATURE", "COURAGE"]
   },
   {
     "id": 88,
     "text": "Sunset is still my favorite color, and rainbow is second.",
     "author": "Mattie Stepanek",
-    "category": "NATURE"
+    "role": "Poet & peace advocate",
+    "primary_category": "NATURE",
+    "categories": ["NATURE", "GRATITUDE"]
   },
   {
     "id": 89,
     "text": "The poetry of earth is never dead.",
     "author": "John Keats",
-    "category": "NATURE"
+    "role": "Romantic poet",
+    "primary_category": "NATURE",
+    "categories": ["NATURE", "POETRY"]
   },
   {
     "id": 90,
     "text": "Live in each season as it passes; breathe the air, drink the drink, taste the fruit.",
     "author": "Henry David Thoreau",
-    "category": "NATURE"
+    "role": "Essayist & naturalist",
+    "primary_category": "NATURE",
+    "categories": ["NATURE", "MINDFULNESS"]
   },
   {
     "id": 91,
     "text": "The ocean stirs the heart, inspires the imagination, and brings eternal joy to the soul.",
     "author": "Sylvia Earle",
-    "category": "NATURE"
+    "role": "Marine biologist & explorer",
+    "primary_category": "NATURE",
+    "categories": ["NATURE", "GRATITUDE"]
   },
   {
     "id": 92,
     "text": "Come forth into the light of things, let Nature be your teacher.",
     "author": "William Wordsworth",
-    "category": "NATURE"
+    "role": "Romantic poet",
+    "primary_category": "NATURE",
+    "categories": ["NATURE", "WISDOM"]
   },
   {
     "id": 93,
     "text": "The sky, the world, the air, the earth — they are all within you.",
     "author": "Rumi",
-    "category": "NATURE"
+    "role": "Sufi mystic & poet",
+    "primary_category": "NATURE",
+    "categories": ["NATURE", "MINDFULNESS"]
   },
   {
     "id": 94,
     "text": "To forget how to dig the earth and tend the soil is to forget ourselves.",
     "author": "Mahatma Gandhi",
-    "category": "NATURE"
+    "role": "Independence leader",
+    "primary_category": "NATURE",
+    "categories": ["NATURE", "WISDOM"]
   },
   {
     "id": 95,
     "text": "Nature does not hurry, yet everything is accomplished.",
     "author": "Lao Tzu",
-    "category": "NATURE"
+    "role": "Ancient Chinese philosopher",
+    "primary_category": "NATURE",
+    "categories": ["NATURE", "WISDOM"]
+  },
+  {
+    "id": 96,
+    "text": "The beautiful thing about learning is that no one can take it away from you.",
+    "author": "B.B. King",
+    "role": "Blues musician",
+    "primary_category": "GROWTH",
+    "categories": ["GROWTH", "WISDOM"]
+  },
+  {
+    "id": 97,
+    "text": "We are what we repeatedly do. Excellence, then, is not an act, but a habit.",
+    "author": "Aristotle",
+    "role": "Classical philosopher",
+    "primary_category": "GROWTH",
+    "categories": ["GROWTH", "WISDOM"]
+  },
+  {
+    "id": 98,
+    "text": "The only way to grow is to challenge yourself beyond what you think you can do.",
+    "author": "Robin Sharma",
+    "role": "Leadership author",
+    "primary_category": "GROWTH",
+    "categories": ["GROWTH", "COURAGE"]
+  },
+  {
+    "id": 99,
+    "text": "Growth is the only evidence of life.",
+    "author": "John Henry Newman",
+    "role": "Theologian & educator",
+    "primary_category": "GROWTH",
+    "categories": ["GROWTH"]
+  },
+  {
+    "id": 100,
+    "text": "The mind, once stretched by a new idea, never returns to its original dimensions.",
+    "author": "Oliver Wendell Holmes",
+    "role": "Physician & poet",
+    "primary_category": "GROWTH",
+    "categories": ["GROWTH", "WISDOM"]
+  },
+  {
+    "id": 101,
+    "text": "Anyone who stops learning is old, whether at twenty or eighty.",
+    "author": "Henry Ford",
+    "role": "Industrialist & founder of Ford Motor Company",
+    "primary_category": "GROWTH",
+    "categories": ["GROWTH", "WISDOM"]
+  },
+  {
+    "id": 102,
+    "text": "Personal growth is not a matter of learning new information but of unlearning old limits.",
+    "author": "Alan Cohen",
+    "role": "Author & spiritual teacher",
+    "primary_category": "GROWTH",
+    "categories": ["GROWTH", "HEALING"]
+  },
+  {
+    "id": 103,
+    "text": "The only person you are destined to become is the person you decide to be.",
+    "author": "Ralph Waldo Emerson",
+    "role": "Essayist & philosopher",
+    "primary_category": "GROWTH",
+    "categories": ["GROWTH", "COURAGE"]
+  },
+  {
+    "id": 104,
+    "text": "Lack of activity shrinks all the faculties of the mind, whereas in contrast, exercise keeps them sharp and fit.",
+    "author": "Aristotle",
+    "role": "Classical philosopher",
+    "primary_category": "GROWTH",
+    "categories": ["GROWTH"]
+  },
+  {
+    "id": 105,
+    "text": "The greatest glory in living lies not in never falling, but in rising every time we fall.",
+    "author": "Nelson Mandela",
+    "role": "Anti-apartheid leader & president",
+    "primary_category": "GROWTH",
+    "categories": ["GROWTH", "COURAGE"]
+  },
+  {
+    "id": 106,
+    "text": "Out of your vulnerabilities will come your strength.",
+    "author": "Sigmund Freud",
+    "role": "Neurologist & founder of psychoanalysis",
+    "primary_category": "HEALING",
+    "categories": ["HEALING", "COURAGE"]
+  },
+  {
+    "id": 107,
+    "text": "Healing takes courage, and we all have courage, even if we have to dig a little to find it.",
+    "author": "Tori Amos",
+    "role": "Singer-songwriter",
+    "primary_category": "HEALING",
+    "categories": ["HEALING", "COURAGE"]
+  },
+  {
+    "id": 108,
+    "text": "The wound is the place where the light enters you.",
+    "author": "Rumi",
+    "role": "Sufi mystic & poet",
+    "primary_category": "HEALING",
+    "categories": ["HEALING", "WISDOM"]
+  },
+  {
+    "id": 109,
+    "text": "Self-care is not self-indulgence, it is self-preservation.",
+    "author": "Audre Lorde",
+    "role": "Writer & civil rights activist",
+    "primary_category": "HEALING",
+    "categories": ["HEALING", "LOVE"]
+  },
+  {
+    "id": 110,
+    "text": "You can't go back and change the beginning, but you can start where you are and change the ending.",
+    "author": "C.S. Lewis",
+    "role": "Author & theologian",
+    "primary_category": "HEALING",
+    "categories": ["HEALING", "GROWTH"]
+  },
+  {
+    "id": 111,
+    "text": "Healing is an art. It takes time, it takes practice. It takes love.",
+    "author": "Maza Dohta",
+    "role": "Healing practitioner",
+    "primary_category": "HEALING",
+    "categories": ["HEALING", "LOVE"]
+  },
+  {
+    "id": 112,
+    "text": "The greatest healing therapy is friendship and love.",
+    "author": "Hubert H. Humphrey",
+    "role": "U.S. Vice President & senator",
+    "primary_category": "HEALING",
+    "categories": ["HEALING", "LOVE"]
+  },
+  {
+    "id": 113,
+    "text": "To heal is to make happy.",
+    "author": "Paramhansa Yogananda",
+    "role": "Yogi & spiritual teacher",
+    "primary_category": "HEALING",
+    "categories": ["HEALING", "GRATITUDE"]
+  },
+  {
+    "id": 114,
+    "text": "Our sorrows and wounds are healed only when we touch them with compassion.",
+    "author": "Buddha",
+    "role": "Spiritual teacher",
+    "primary_category": "HEALING",
+    "categories": ["HEALING", "LOVE"]
+  },
+  {
+    "id": 115,
+    "text": "Rest is not idleness, and to lie sometimes on the grass under trees is by no means a waste of time.",
+    "author": "John Lubbock",
+    "role": "Naturalist & banker",
+    "primary_category": "HEALING",
+    "categories": ["HEALING", "NATURE"]
+  },
+  {
+    "id": 116,
+    "text": "Gratitude turns what we have into enough.",
+    "author": "Melody Beattie",
+    "role": "Author & counselor",
+    "primary_category": "GRATITUDE",
+    "categories": ["GRATITUDE", "MINDFULNESS"]
+  },
+  {
+    "id": 117,
+    "text": "Appreciation is a wonderful thing. It makes what is excellent in others belong to us as well.",
+    "author": "Voltaire",
+    "role": "Writer & philosopher",
+    "primary_category": "GRATITUDE",
+    "categories": ["GRATITUDE", "WISDOM"]
+  },
+  {
+    "id": 118,
+    "text": "When you are grateful, fear disappears and abundance appears.",
+    "author": "Tony Robbins",
+    "role": "Life coach & author",
+    "primary_category": "GRATITUDE",
+    "categories": ["GRATITUDE", "COURAGE"]
+  },
+  {
+    "id": 119,
+    "text": "The more grateful I am, the more beauty I see.",
+    "author": "Mary Davis",
+    "role": "Author",
+    "primary_category": "GRATITUDE",
+    "categories": ["GRATITUDE", "NATURE"]
+  },
+  {
+    "id": 120,
+    "text": "Gratitude is the fairest blossom which springs from the soul.",
+    "author": "Henry Ward Beecher",
+    "role": "Clergyman & abolitionist",
+    "primary_category": "GRATITUDE",
+    "categories": ["GRATITUDE", "LOVE"]
+  },
+  {
+    "id": 121,
+    "text": "Enjoy the little things, for one day you may look back and realize they were the big things.",
+    "author": "Robert Brault",
+    "role": "Author",
+    "primary_category": "GRATITUDE",
+    "categories": ["GRATITUDE", "MINDFULNESS"]
+  },
+  {
+    "id": 122,
+    "text": "Cultivate the habit of being grateful for every good thing that comes to you.",
+    "author": "Ralph Waldo Emerson",
+    "role": "Essayist & philosopher",
+    "primary_category": "GRATITUDE",
+    "categories": ["GRATITUDE", "GROWTH"]
+  },
+  {
+    "id": 123,
+    "text": "When I started counting my blessings, my whole life turned around.",
+    "author": "Willie Nelson",
+    "role": "Country music singer & songwriter",
+    "primary_category": "GRATITUDE",
+    "categories": ["GRATITUDE", "HEALING"]
+  },
+  {
+    "id": 124,
+    "text": "Gratitude is not only the greatest of virtues, but the parent of all others.",
+    "author": "Cicero",
+    "role": "Roman statesman & philosopher",
+    "primary_category": "GRATITUDE",
+    "categories": ["GRATITUDE", "WISDOM"]
+  },
+  {
+    "id": 125,
+    "text": "We can always find something to be thankful for, and those things are the seeds of our happiness.",
+    "author": "Dalai Lama",
+    "role": "Tibetan spiritual leader",
+    "primary_category": "GRATITUDE",
+    "categories": ["GRATITUDE", "MINDFULNESS"]
   }
 ]

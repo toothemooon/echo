@@ -1,134 +1,128 @@
-# ECHO
+# Echo — Daily Quote Generator
 
-ECHO 是一款以每日语录、正念阅读和个人收藏为核心的 iPhone 应用。项目目前处于早期开发阶段，首要目标是高质量复刻设计稿中的单屏阅读体验，再逐步加入交互、数据持久化和更多内容页面。
+A zen-minimalist iOS reading experience built with **Expo**, **React Native**, and **SQLite**. Typography-forward, gesture-driven, and designed with generous whitespace to create a calm, tactile paper-like experience.
 
-## 当前状态
+## Features
 
-- 已完成：Expo 项目初始化、字体与图标依赖准备。
-- 进行中：静态首页的视觉复刻。
-- 尚未实现：页面交互、收藏、历史记录、数据持久化和云端功能。
+- **125 curated quotes** across 8 categories, each with author identity
+- **Multi-category system** — quotes tagged with multiple categories, one primary for display
+- **Smart navigation** — left/right arrows with fade+slide animation, browse history stack
+- **Bookmark & Share** — save quotes to collection, share via native share sheet
+- **History sheet** — spring-physics bottom sheet showing saved quotes
+- **Dark mode** — full light/dark theme with system preference detection
+- **Category preferences** — choose which categories appear in your daily quotes
+- **Settings** — appearance, personalization, notifications, languages, feedback, about
+- **SQLite storage** — on-device database with auto-sync from bundled JSON on every launch
 
-## 技术栈
+## Design System
 
-- [Expo](https://expo.dev/) 57
-- [React Native](https://reactnative.dev/) 0.86
-- [React](https://react.dev/) 19
-- [TypeScript](https://www.typescriptlang.org/)
-- Expo Font
-- Cormorant Garamond
-- Expo Vector Icons
+| Element     | Value                                          |
+| ----------- | ---------------------------------------------- |
+| Quote Font  | Playfair Display Italic (serif)                |
+| UI Font     | System sans-serif (uppercase + letter-spacing) |
+| Light BG    | `#E5E0D8` warm beige                           |
+| Dark BG     | `#1A1A18` matte black                          |
+| Accent      | `#8FAE8B` sage green                           |
+| Paper grain | SVG noise at 2.5% opacity                      |
 
-## 快速开始
+## 8 Categories
 
-### 1. 安装依赖
+| Category    | Color     | Description            |
+| ----------- | --------- | ---------------------- |
+| Mindfulness | `#8FAE8B` | 正念 · 当下 · 觉察     |
+| Wisdom      | `#C9A96E` | 哲学 · 人生智慧        |
+| Courage     | `#A0B4C8` | 勇气 · 行动 · 坚持     |
+| Love        | `#D4A0A0` | 爱 · 关系 · 慈悲       |
+| Nature      | `#7BA88E` | 自然 · 四季 · 宁静     |
+| Growth      | `#B8A8C8` | 成长 · 学习 · 自我提升 |
+| Healing     | `#A8C5B8` | 疗愈 · 内在修复 · 重生 |
+| Gratitude   | `#C8B89A` | 感恩 · 知足 · 珍惜     |
 
-```bash
-npm install
+Each quote supports **multiple category tags** and has a **primary category** for home display.
+
+## Tech Stack
+
+| Layer       | Technology                                               |
+| ----------- | -------------------------------------------------------- |
+| Framework   | Expo SDK 57 + expo-router                                |
+| UI          | React 19 / React Native 0.86                             |
+| Styling     | NativeWind v4 (Tailwind CSS for RN)                      |
+| Database    | expo-sqlite (WAL mode)                                   |
+| Preferences | @react-native-async-storage/async-storage                |
+| Fonts       | @expo-google-fonts/cormorant-garamond + Playfair Display |
+| Icons       | @expo/vector-icons (Ionicons)                            |
+| Animations  | react-native Animated API                                |
+
+## Project Structure
+
 ```
-
-### 2. 启动 Expo 开发服务器
-
-```bash
-npm start
-```
-
-### 3. 在 iOS 模拟器中运行
-
-```bash
-npm run ios
-```
-
-也可以在 Expo 开发服务器运行后按 `i` 打开 iOS 模拟器。
-
-## 项目结构
-
-```text
 ECHO/
-├── App.tsx             # 应用根组件与首页入口
-├── index.ts            # Expo 应用注册入口
-├── app.json            # Expo 与平台配置
-├── assets/             # 应用图标、启动图等静态资源
-├── package.json        # 依赖与开发命令
-└── src/                # 计划中的业务代码目录
-    ├── components/     # 首页及通用 UI 组件
-    ├── data/           # 本地语录数据与相关类型
-    └── theme.ts        # 明暗主题颜色与设计常量
+├── src/
+│   ├── app/                          # (unused — using registerRootComponent)
+│   ├── components/
+│   │   ├── Header.tsx                # TODAY + date + theme toggle + menu
+│   │   ├── QuoteCard.tsx             # Category + guillemet + quote + author + role
+│   │   ├── PaginationDots.tsx        # Fixed 5-dot indicator
+│   │   ├── ActionBar.tsx             # Nav + bookmark + share + history
+│   │   └── HistorySheet.tsx          # Bottom sheet for saved quotes
+│   ├── screens/
+│   │   ├── SettingsScreen.tsx        # Settings page
+│   │   └── PersonalizationScreen.tsx # Category preference picker
+│   ├── constants/
+│   │   ├── colors.ts                 # Light/dark color tokens
+│   │   └── categories.ts             # 8 categories + color mapping
+│   ├── database/
+│   │   ├── database.ts               # SQLite init + schema
+│   │   ├── quotes.ts                 # CRUD + sync + random queries
+│   │   ├── seed.ts                   # JSON → SQLite sync on launch
+│   │   └── preferences.ts            # AsyncStorage category prefs
+│   └── data/
+│       └── quotes.ts                 # Legacy (unused)
+├── assets/
+│   ├── quotes.json                   # 125 quotes with roles + multi-categories
+│   └── images/                       # App icons, splash
+├── App.tsx                           # Root — state management + page routing
+├── app.json                          # Expo config
+└── package.json
 ```
 
-> `src/` 是后续开发阶段采用的目标结构，相关目录和文件将在实现对应功能时逐步创建。
+## Database Architecture
 
-## 开发原则
+**Schema:**
 
-- 第一阶段优先适配 iPhone 竖屏和 iOS 安全区域。
-- 浅色与深色主题共享统一的颜色和间距定义。
-- 页面拆分为职责清晰的小组件，避免将所有逻辑集中在根组件。
-- 先完成静态视觉，再逐步接入交互和数据能力。
-- 每个阶段只标记实际完成的功能，不将规划内容描述为现有能力。
+```sql
+quotes (id, text, author, role, primary_category, created_at)
+quote_categories (quote_id, category)  -- junction table
+```
 
-## Roadmap
+**Sync strategy:** Every launch, `syncDatabase()` upserts all quotes from `quotes.json` using stable IDs with `ON CONFLICT DO UPDATE`. New quotes are inserted, modified quotes are updated, old data is preserved, saved quotes are untouched.
 
-### 阶段 1：静态首页（当前阶段）
+## Navigation
 
-- [ ] 复刻首页整体布局与视觉层级
-- [ ] 接入 Cormorant Garamond 引文字体
-- [ ] 使用矢量图标还原页面控件
-- [ ] 建立浅色与深色主题配色
-- [ ] 适配 iPhone 安全区域和常见竖屏尺寸
+| Page            | Entry                       |
+| --------------- | --------------------------- |
+| Home            | Default — quotes + gestures |
+| Settings        | Header ⋯ button             |
+| Personalization | Settings → Categories       |
 
-### 阶段 2：单屏交互
+## Getting Started
 
-- [ ] 实现浅色与深色主题切换
-- [ ] 实现上一条、下一条语录切换
-- [ ] 同步更新分页指示器状态
-- [ ] 实现语录收藏状态
-- [ ] 接入 iOS 原生分享面板
+```bash
+cd ECHO
+npm install
+npx expo prebuild --clean
+npx expo run:ios
+```
 
-### 阶段 3：历史与收藏
+## Scripts
 
-- [ ] 新增浏览历史列表
-- [ ] 新增收藏列表
-- [ ] 支持查看语录详情
-- [ ] 完成加载、空状态和无结果状态
+| Command           | Description           |
+| ----------------- | --------------------- |
+| `npm start`       | Start Expo dev server |
+| `npm run ios`     | Start on iOS          |
+| `npm run android` | Start on Android      |
+| `npm run web`     | Start on web          |
 
-### 阶段 4：本地数据
+## License
 
-- [ ] 持久化收藏内容
-- [ ] 保存浏览历史
-- [ ] 保存主题偏好
-- [ ] 恢复上次阅读位置
-
-### 阶段 5：内容系统
-
-- [ ] 扩充语录内容与数据结构
-- [ ] 增加分类浏览
-- [ ] 增加搜索与筛选
-- [ ] 实现每日推荐逻辑
-
-### 阶段 6：品质完善
-
-- [ ] 完善无障碍标签与可点击区域
-- [ ] 添加页面和状态切换动画
-- [ ] 补充错误处理与降级表现
-- [ ] 添加单元测试和关键交互测试
-- [ ] 验证多种尺寸的 iPhone
-
-### 阶段 7：发布准备
-
-- [ ] 完成应用图标与启动页资源
-- [ ] 准备隐私说明和 App Store 文案
-- [ ] 配置版本号与生产构建
-- [ ] 完成 TestFlight 测试
-- [ ] 提交 App Store 审核
-
-### 阶段 8：可选云端能力
-
-以下能力不纳入首个本地 MVP：
-
-- [ ] 用户账户
-- [ ] 跨设备数据同步
-- [ ] 远程内容更新
-- [ ] 每日阅读通知
-
-## MVP 完成标准
-
-首个本地 MVP 应能够在 iPhone 上稳定运行，支持语录浏览、主题切换、收藏、分享、历史记录和本地数据恢复，并通过常见 iPhone 竖屏尺寸的基础验证。
+See [LICENSE](./LICENSE) for details.
