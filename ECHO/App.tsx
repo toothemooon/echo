@@ -1,17 +1,22 @@
-import { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { useState, useEffect, useRef } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  Animated,
+  Alert,
+  Dimensions,
+} from "react-native";
 import { StatusBar } from "expo-status-bar";
 import {
   useFonts,
   CormorantGaramond_400Regular_Italic,
 } from "@expo-google-fonts/cormorant-garamond";
 import { Ionicons } from "@expo/vector-icons";
+import { QUOTES, Quote } from "./src/data/quotes";
 
-const QUOTE = {
-  text: "The present moment is the only moment available to us, and it is the door to all moments.",
-  author: "Thich Nhat Hanh",
-  category: "MINDFULNESS",
-};
+const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const COLORS = {
   light: {
@@ -25,6 +30,10 @@ const COLORS = {
     btnBg: "#DDD9D4",
     btnIcon: "#8A8680",
     menuIcon: "#9A9690",
+    sheetBg: "#EAE6DF",
+    sheetHandle: "#D0CECC",
+    sheetTitle: "#2C2A26",
+    sheetEmpty: "#B5B0AA",
   },
   dark: {
     background: "#1A1A18",
@@ -37,11 +46,25 @@ const COLORS = {
     btnBg: "#2A2A28",
     btnIcon: "#8A8884",
     menuIcon: "#7A7874",
+    sheetBg: "#252523",
+    sheetHandle: "#3A3A38",
+    sheetTitle: "#E8E6E2",
+    sheetEmpty: "#5A5854",
   },
 };
 
 export default function App() {
   const [isDark, setIsDark] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [savedQuotes, setSavedQuotes] = useState<Quote[]>([]);
+  const [historyVisible, setHistoryVisible] = useState(false);
+
+  // Animation values
+  const fadeAnim = useRef(new Animated.Value(1)).current;
+  const slideAnim = useRef(new Animated.Value(0)).current;
+  const sheetAnim = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
+  const backdropAnim = useRef(new Animated.Value(0)).current;
+
   const [fontsLoaded] = useFonts({
     CormorantGaramond_400Regular_Italic,
   });
@@ -55,6 +78,99 @@ export default function App() {
 
   const c = isDark ? COLORS.dark : COLORS.light;
   const statusBar = isDark ? "light" : "dark";
+  const currentQuote = QUOTES[currentIndex];
+  const isSaved = savedQuotes.some((q) => q.id === currentQuote.id);
+
+  // ── Quote Transition Animation ──
+  const animateQuote = (direction: "left" | "right") => {
+    const toSlide = direction === "left" ? -60 : 60;
+
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: toSlide,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      // Update index
+      setCurrentIndex((prev) => {
+        if (direction === "right") {
+          return prev < QUOTES.length - 1 ? prev + 1 : 0;
+        } else {
+          return prev > 0 ? prev - 1 : QUOTES.length - 1;
+        }
+      });
+
+      // Reset position to opposite side
+      slideAnim.setValue(-toSlide);
+      fadeAnim.setValue(0);
+
+      // Animate in
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(slideAnim, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    });
+  };
+
+  const goNext = () => animateQuote("right");
+  const goPrev = () => animateQuote("left");
+
+  // ── Bookmark ──
+  const toggleBookmark = () => {
+    if (isSaved) {
+      setSavedQuotes((prev) => prev.filter((q) => q.id !== currentQuote.id));
+    } else {
+      setSavedQuotes((prev) => [...prev, currentQuote]);
+    }
+  };
+
+  // ── History Sheet ──
+  const openHistory = () => {
+    setHistoryVisible(true);
+    Animated.parallel([
+      Animated.spring(sheetAnim, {
+        toValue: 0,
+        useNativeDriver: true,
+        damping: 18,
+        stiffness: 120,
+      }),
+      Animated.timing(backdropAnim, {
+        toValue: 1,
+        duration: 250,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
+
+  const closeHistory = () => {
+    Animated.parallel([
+      Animated.spring(sheetAnim, {
+        toValue: SCREEN_HEIGHT,
+        useNativeDriver: true,
+        damping: 18,
+        stiffness: 120,
+      }),
+      Animated.timing(backdropAnim, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+    ]).start(() => setHistoryVisible(false));
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: c.background }]}>
@@ -89,12 +205,20 @@ export default function App() {
       <View style={[styles.divider, { backgroundColor: c.divider }]} />
 
       {/* ── Quote Section ── */}
-      <View style={styles.quoteSection}>
+      <Animated.View
+        style={[
+          styles.quoteSection,
+          {
+            opacity: fadeAnim,
+            transform: [{ translateX: slideAnim }],
+          },
+        ]}
+      >
         {/* Category */}
         <View style={styles.categoryRow}>
           <View style={[styles.categoryDot, { backgroundColor: c.dot }]} />
           <Text style={[styles.label, { color: c.label, fontSize: 13 }]}>
-            {QUOTE.category}
+            {currentQuote.category}
           </Text>
         </View>
 
@@ -102,24 +226,28 @@ export default function App() {
         <Text style={[styles.guillemet, { color: c.dot }]}>{"\u201C"}</Text>
 
         {/* Quote Text */}
-        <Text style={[styles.quoteText, { color: c.text }]}>{QUOTE.text}</Text>
+        <Text style={[styles.quoteText, { color: c.text }]}>
+          {currentQuote.text}
+        </Text>
 
         {/* Author */}
         <Text style={[styles.author, { color: c.author }]}>
-          — {QUOTE.author}
+          — {currentQuote.author}
         </Text>
-      </View>
+      </Animated.View>
 
       {/* ── Bottom Section ── */}
       <View style={styles.bottomSection}>
         {/* Pagination Dots */}
         <View style={styles.dotsRow}>
-          {[0, 1, 2, 3, 4].map((i) => (
+          {QUOTES.map((_, i) => (
             <View
               key={i}
               style={[
-                i === 0 ? styles.dotActive : styles.dotInactive,
-                { backgroundColor: i === 0 ? c.dot : c.inactiveDot },
+                i === currentIndex ? styles.dotActive : styles.dotInactive,
+                {
+                  backgroundColor: i === currentIndex ? c.dot : c.inactiveDot,
+                },
               ]}
             />
           ))}
@@ -127,28 +255,159 @@ export default function App() {
 
         {/* Action Buttons */}
         <View style={styles.actionRow}>
-          <Pressable style={[styles.actionBtn, { backgroundColor: c.btnBg }]}>
+          <Pressable
+            style={[styles.actionBtn, { backgroundColor: c.btnBg }]}
+            onPress={goPrev}
+          >
             <Ionicons name="chevron-back" size={20} color={c.btnIcon} />
           </Pressable>
-          <Pressable style={[styles.actionBtn, { backgroundColor: c.btnBg }]}>
-            <Ionicons name="bookmark-outline" size={20} color={c.btnIcon} />
+
+          <Pressable
+            style={[styles.actionBtn, { backgroundColor: c.btnBg }]}
+            onPress={toggleBookmark}
+          >
+            <Ionicons
+              name={isSaved ? "bookmark" : "bookmark-outline"}
+              size={20}
+              color={isSaved ? c.label : c.btnIcon}
+            />
           </Pressable>
-          <Pressable style={[styles.actionBtn, { backgroundColor: c.btnBg }]}>
+
+          <Pressable
+            style={[styles.actionBtn, { backgroundColor: c.btnBg }]}
+            onPress={() => Alert.alert("Share", "Share feature coming soon!")}
+          >
             <Ionicons name="share-outline" size={20} color={c.btnIcon} />
           </Pressable>
-          <Pressable style={[styles.actionBtn, { backgroundColor: c.btnBg }]}>
+
+          <Pressable
+            style={[styles.actionBtn, { backgroundColor: c.btnBg }]}
+            onPress={goNext}
+          >
             <Ionicons name="chevron-forward" size={20} color={c.btnIcon} />
           </Pressable>
         </View>
 
         {/* History */}
-        <View style={styles.historyRow}>
+        <Pressable style={styles.historyRow} onPress={openHistory}>
           <Text style={[styles.label, { color: c.menuIcon, fontSize: 12 }]}>
             HISTORY
           </Text>
           <Ionicons name="chevron-down" size={16} color={c.menuIcon} />
-        </View>
+        </Pressable>
       </View>
+
+      {/* ── History Modal ── */}
+      {historyVisible && (
+        <>
+          {/* Backdrop */}
+          <Animated.View
+            style={[
+              styles.backdrop,
+              {
+                opacity: backdropAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0, 0.4],
+                }),
+              },
+            ]}
+          >
+            <Pressable style={StyleSheet.absoluteFill} onPress={closeHistory} />
+          </Animated.View>
+
+          {/* Sheet */}
+          <Animated.View
+            style={[
+              styles.sheet,
+              {
+                backgroundColor: c.sheetBg,
+                transform: [{ translateY: sheetAnim }],
+              },
+            ]}
+          >
+            {/* Handle */}
+            <View style={styles.sheetHandleContainer}>
+              <View
+                style={[styles.sheetHandle, { backgroundColor: c.sheetHandle }]}
+              />
+            </View>
+
+            {/* Sheet Header */}
+            <View style={styles.sheetHeader}>
+              <Text
+                style={[
+                  styles.sheetTitle,
+                  {
+                    color: c.sheetTitle,
+                    fontFamily: "CormorantGaramond_400Regular_Italic",
+                  },
+                ]}
+              >
+                Saved Quotes
+              </Text>
+              <Pressable onPress={closeHistory}>
+                <Text style={[styles.doneBtn, { color: c.label }]}>Done</Text>
+              </Pressable>
+            </View>
+
+            {/* Divider */}
+            <View
+              style={[styles.sheetDivider, { backgroundColor: c.divider }]}
+            />
+
+            {/* Content */}
+            {savedQuotes.length === 0 ? (
+              <View style={styles.sheetEmptyContainer}>
+                <Text
+                  style={[
+                    styles.sheetEmptyText,
+                    {
+                      color: c.sheetEmpty,
+                      fontFamily: "CormorantGaramond_400Regular_Italic",
+                    },
+                  ]}
+                >
+                  No saved quotes yet.
+                </Text>
+                <Text
+                  style={[
+                    styles.sheetEmptyText,
+                    {
+                      color: c.sheetEmpty,
+                      fontFamily: "CormorantGaramond_400Regular_Italic",
+                    },
+                  ]}
+                >
+                  Bookmark ones that speak to you.
+                </Text>
+              </View>
+            ) : (
+              <View style={styles.sheetList}>
+                {savedQuotes.map((q) => (
+                  <View key={q.id} style={styles.savedQuoteItem}>
+                    <Text
+                      style={[
+                        styles.savedQuoteText,
+                        {
+                          color: c.text,
+                          fontFamily: "CormorantGaramond_400Regular_Italic",
+                        },
+                      ]}
+                    >
+                      "{q.text}"
+                    </Text>
+                    <Text
+                      style={[styles.savedQuoteAuthor, { color: c.author }]}
+                    >
+                      — {q.author}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            )}
+          </Animated.View>
+        </>
+      )}
     </View>
   );
 }
@@ -259,5 +518,81 @@ const styles = StyleSheet.create({
   historyRow: {
     alignItems: "center",
     gap: 2,
+  },
+
+  // ── Modal ──
+  backdrop: {
+    ...StyleSheet.absoluteFill,
+    backgroundColor: "#000",
+    zIndex: 10,
+  },
+  sheet: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: SCREEN_HEIGHT * 0.7,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    zIndex: 20,
+    paddingBottom: 40,
+  },
+  sheetHandleContainer: {
+    alignItems: "center",
+    paddingTop: 10,
+    paddingBottom: 6,
+  },
+  sheetHandle: {
+    width: 36,
+    height: 4,
+    borderRadius: 2,
+  },
+  sheetHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+  },
+  sheetTitle: {
+    fontSize: 26,
+    fontWeight: "700",
+  },
+  doneBtn: {
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  sheetDivider: {
+    height: StyleSheet.hairlineWidth,
+    marginHorizontal: 24,
+  },
+  sheetEmptyContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 4,
+  },
+  sheetEmptyText: {
+    fontSize: 18,
+    fontStyle: "italic",
+    textAlign: "center",
+  },
+  sheetList: {
+    flex: 1,
+    paddingTop: 20,
+    paddingHorizontal: 24,
+  },
+  savedQuoteItem: {
+    marginBottom: 24,
+  },
+  savedQuoteText: {
+    fontSize: 20,
+    lineHeight: 28,
+    fontStyle: "italic",
+    marginBottom: 6,
+  },
+  savedQuoteAuthor: {
+    fontSize: 14,
+    textAlign: "right",
   },
 });
