@@ -19,14 +19,16 @@ import {
 import {
   getPreferredCategories,
   setPreferredCategories,
+  getTheme,
+  setTheme,
 } from "./src/database/preferences";
 import { syncDatabase } from "./src/database/seed";
 import Header from "./src/components/Header";
 import QuoteCard from "./src/components/QuoteCard";
-import PaginationDots from "./src/components/PaginationDots";
 import ActionBar from "./src/components/ActionBar";
 import HistorySheet from "./src/components/HistorySheet";
 import ShareCard from "./src/components/ShareCard";
+import ShareScreen from "./src/screens/ShareScreen";
 import SettingsScreen from "./src/screens/SettingsScreen";
 import PersonalizationScreen from "./src/screens/PersonalizationScreen";
 import ThemeScreen from "./src/screens/ThemeScreen";
@@ -49,6 +51,8 @@ export default function App() {
   const [quoteCount, setQuoteCount] = useState(0);
   const [savedQuotes, setSavedQuotes] = useState<Quote[]>([]);
   const [historyVisible, setHistoryVisible] = useState(false);
+  const [shareVisible, setShareVisible] = useState(false);
+  const [reminderEnabled, setReminderEnabled] = useState(false);
   const [currentPage, setCurrentPage] = useState<
     "home" | "settings" | "personalization" | "theme"
   >("home");
@@ -74,8 +78,14 @@ export default function App() {
   // Initialize database, seed data, load first quote
   useEffect(() => {
     async function init() {
-      const colorScheme = require("react-native").Appearance?.getColorScheme();
-      if (colorScheme === "dark") setIsDark(true);
+      const savedTheme = await getTheme();
+      if (savedTheme) {
+        setIsDark(savedTheme === "dark");
+      } else {
+        const colorScheme =
+          require("react-native").Appearance?.getColorScheme();
+        if (colorScheme === "dark") setIsDark(true);
+      }
 
       await syncDatabase();
 
@@ -99,6 +109,11 @@ export default function App() {
     init();
   }, []);
 
+  const persistTheme = (dark: boolean) => {
+    setIsDark(dark);
+    setTheme(dark ? "dark" : "light");
+  };
+
   if (!fontsLoaded || !dbReady) return null;
 
   const c = isDark ? COLORS.dark : COLORS.light;
@@ -116,7 +131,6 @@ export default function App() {
 
     const toSlide = direction === "left" ? -60 : 60;
 
-    // Phase 1: Fade out + slide out
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 0,
@@ -129,14 +143,10 @@ export default function App() {
         useNativeDriver: true,
       }),
     ]).start(() => {
-      // Update state AFTER fade-out completes (no overlap)
       setHistoryIndex(newIndex);
-
-      // Reset position to opposite side
       slideAnim.setValue(-toSlide);
       fadeAnim.setValue(0);
 
-      // Phase 2: Fade in + slide in
       Animated.parallel([
         Animated.timing(fadeAnim, {
           toValue: 1,
@@ -211,33 +221,8 @@ export default function App() {
     animateToQuote(historyIndex - 1, "left");
   };
 
-  // ── Share: Text vs Image ──
-  const handleShare = () => {
-    Alert.alert("Share Quote", "How would you like to share?", [
-      {
-        text: "Share as Text",
-        onPress: shareAsText,
-      },
-      {
-        text: "Share as Image",
-        onPress: shareAsImage,
-      },
-      {
-        text: "Cancel",
-        style: "cancel",
-      },
-    ]);
-  };
-
-  const shareAsText = async () => {
-    try {
-      await Share.share({
-        message: `"${currentQuote.text}"\n— ${currentQuote.author}`,
-      });
-    } catch (_error) {
-      // User cancelled
-    }
-  };
+  // ── Share ──
+  const handleShare = () => setShareVisible(true);
 
   const shareAsImage = async () => {
     try {
@@ -246,12 +231,13 @@ export default function App() {
         quality: 1,
         result: "tmpfile",
       });
-      await Share.share({
+      const { Share: RNShare } = require("react-native");
+      await RNShare.share({
         url: uri,
         message: `"${currentQuote.text}"\n— ${currentQuote.author}\n\nShared from Echo`,
       });
     } catch (_error) {
-      Alert.alert("Error", "Failed to generate image. Please try text share.");
+      Alert.alert("Error", "Failed to generate image.");
     }
   };
 
@@ -315,7 +301,7 @@ export default function App() {
       <ThemeScreen
         colors={c}
         isDark={isDark}
-        onToggleTheme={() => setIsDark(!isDark)}
+        onToggleTheme={() => persistTheme(!isDark)}
         onBack={() => setCurrentPage("settings")}
       />
     );
@@ -337,6 +323,8 @@ export default function App() {
       <SettingsScreen
         colors={c}
         isDark={isDark}
+        reminderEnabled={reminderEnabled}
+        onToggleReminder={() => setReminderEnabled((v) => !v)}
         onBack={() => setCurrentPage("home")}
         onOpenPersonalization={() => setCurrentPage("personalization")}
         onOpenTheme={() => setCurrentPage("theme")}
@@ -360,7 +348,7 @@ export default function App() {
       <Header
         colors={c}
         isDark={isDark}
-        onToggleTheme={() => setIsDark(!isDark)}
+        onToggleTheme={() => persistTheme(!isDark)}
         onMenu={() => setCurrentPage("settings")}
       />
 
@@ -372,8 +360,6 @@ export default function App() {
       />
 
       <View style={{ alignItems: "center" }}>
-        <PaginationDots total={5} activeIndex={historyIndex % 5} colors={c} />
-
         <ActionBar
           colors={c}
           isSaved={isSaved}
@@ -392,6 +378,19 @@ export default function App() {
         sheetAnim={sheetAnim}
         backdropAnim={backdropAnim}
         onClose={closeHistory}
+        onRemoveQuote={handleRemoveQuote}
+        onSelectQuote={handleSelectQuote}
+      />
+
+      <ShareScreen
+        visible={shareVisible}
+        quote={currentQuote}
+        colors={c}
+        onClose={() => setShareVisible(false)}
+        onShareAsImage={() => {
+          setShareVisible(false);
+          shareAsImage();
+        }}
       />
 
       {/* Offscreen ShareCard for image capture */}

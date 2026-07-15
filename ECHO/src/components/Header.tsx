@@ -9,6 +9,13 @@ interface HeaderProps {
   onMenu: () => void;
 }
 
+const today = new Date();
+const dayName = today.toLocaleDateString("en-US", { weekday: "long" });
+const monthDay = today.toLocaleDateString("en-US", {
+  month: "long",
+  day: "numeric",
+});
+
 export default function Header({
   colors,
   isDark,
@@ -21,7 +28,7 @@ export default function Header({
         <View>
           <Text style={[styles.label, { color: colors.label }]}>TODAY</Text>
           <Text style={[styles.date, { color: colors.author }]}>
-            Tuesday, July 14
+            {dayName}, {monthDay}
           </Text>
         </View>
         <View style={styles.headerRight}>

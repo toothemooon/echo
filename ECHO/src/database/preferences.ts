@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CATEGORIES, Category } from "../constants/categories";
 
 const PREFS_KEY = "@echo/preferred_categories";
+const THEME_KEY = "@echo/theme";
 
 /**
  * Get user's preferred categories.
@@ -30,4 +31,25 @@ export async function setPreferredCategories(
   categories: Category[],
 ): Promise<void> {
   await AsyncStorage.setItem(PREFS_KEY, JSON.stringify(categories));
+}
+
+/**
+ * Get user's theme preference.
+ * Returns "light" | "dark" | null (null = use system default).
+ */
+export async function getTheme(): Promise<"light" | "dark" | null> {
+  try {
+    const value = await AsyncStorage.getItem(THEME_KEY);
+    if (value === "light" || value === "dark") return value;
+  } catch (_error) {
+    // Fall through
+  }
+  return null;
+}
+
+/**
+ * Save user's theme preference.
+ */
+export async function setTheme(theme: "light" | "dark"): Promise<void> {
+  await AsyncStorage.setItem(THEME_KEY, theme);
 }

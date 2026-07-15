@@ -15,6 +15,8 @@ import { COLORS } from "../constants/colors";
 interface SettingsScreenProps {
   colors: (typeof COLORS)["light"];
   isDark: boolean;
+  reminderEnabled: boolean;
+  onToggleReminder: () => void;
   onBack: () => void;
   onOpenPersonalization: () => void;
   onOpenTheme: () => void;
@@ -41,6 +43,8 @@ async function safeOpenURL(url: string) {
 export default function SettingsScreen({
   colors,
   isDark,
+  reminderEnabled,
+  onToggleReminder,
   onBack,
   onOpenPersonalization,
   onOpenTheme,
@@ -153,8 +157,8 @@ export default function SettingsScreen({
               </Text>
             </View>
             <Switch
-              value={false}
-              onValueChange={() => {}}
+              value={reminderEnabled}
+              onValueChange={onToggleReminder}
               trackColor={{ false: colors.inactiveDot, true: colors.label }}
               thumbColor="#fff"
             />
