@@ -82,9 +82,9 @@ export default function SettingsScreen({
       <View style={[styles.divider, { backgroundColor: colors.divider }]} />
 
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* ── Appearance ── */}
+        {/* ── Preference (Theme + Categories + Language) ── */}
         <Text style={[styles.sectionTitle, { color: colors.label }]}>
-          APPEARANCE
+          PREFERENCE
         </Text>
         <View style={[styles.card, { backgroundColor: colors.btnBg }]}>
           <Pressable style={styles.cardRow} onPress={onOpenTheme}>
@@ -109,13 +109,11 @@ export default function SettingsScreen({
               />
             </View>
           </Pressable>
-        </View>
 
-        {/* ── Personalization ── */}
-        <Text style={[styles.sectionTitle, { color: colors.label }]}>
-          PERSONALIZATION
-        </Text>
-        <View style={[styles.card, { backgroundColor: colors.btnBg }]}>
+          <View
+            style={[styles.cardDivider, { backgroundColor: colors.divider }]}
+          />
+
           <Pressable style={styles.cardRow} onPress={onOpenPersonalization}>
             <View style={styles.cardLeft}>
               <Ionicons
@@ -138,6 +136,53 @@ export default function SettingsScreen({
               />
             </View>
           </Pressable>
+
+          <View
+            style={[styles.cardDivider, { backgroundColor: colors.divider }]}
+          />
+
+          <View style={styles.cardRow}>
+            <View style={styles.cardLeft}>
+              <Ionicons name="globe-outline" size={20} color={colors.btnIcon} />
+              <Text style={[styles.cardLabel, { color: colors.text }]}>
+                Interface Language
+              </Text>
+            </View>
+            <View style={styles.cardRight}>
+              <Text style={[styles.cardValue, { color: colors.author }]}>
+                English
+              </Text>
+              <Ionicons
+                name="chevron-forward"
+                size={16}
+                color={colors.btnIcon}
+              />
+            </View>
+          </View>
+        </View>
+
+        {/* ── Widgets ── */}
+        <Text style={[styles.sectionTitle, { color: colors.label }]}>
+          WIDGETS
+        </Text>
+        <View style={[styles.card, { backgroundColor: colors.btnBg }]}>
+          <View style={styles.cardRow}>
+            <View style={styles.cardLeft}>
+              <Ionicons
+                name="phone-portrait-outline"
+                size={20}
+                color={colors.btnIcon}
+              />
+              <Text style={[styles.cardLabel, { color: colors.text }]}>
+                Widget Settings
+              </Text>
+            </View>
+            <Text
+              style={[styles.cardValue, { color: colors.author, opacity: 0.5 }]}
+            >
+              Coming Soon
+            </Text>
+          </View>
         </View>
 
         {/* ── Notifications ── */}
@@ -186,54 +231,6 @@ export default function SettingsScreen({
               />
             </View>
           </Pressable>
-        </View>
-
-        {/* ── Languages ── */}
-        <Text style={[styles.sectionTitle, { color: colors.label }]}>
-          LANGUAGES
-        </Text>
-        <View style={[styles.card, { backgroundColor: colors.btnBg }]}>
-          <View style={styles.cardRow}>
-            <View style={styles.cardLeft}>
-              <Ionicons name="globe-outline" size={20} color={colors.btnIcon} />
-              <Text style={[styles.cardLabel, { color: colors.text }]}>
-                Interface Language
-              </Text>
-            </View>
-            <View style={styles.cardRight}>
-              <Text style={[styles.cardValue, { color: colors.author }]}>
-                English
-              </Text>
-              <Ionicons
-                name="chevron-forward"
-                size={16}
-                color={colors.btnIcon}
-              />
-            </View>
-          </View>
-
-          <View
-            style={[styles.cardDivider, { backgroundColor: colors.divider }]}
-          />
-
-          <View style={[styles.cardRow, { opacity: 0.5 }]}>
-            <View style={styles.cardLeft}>
-              <Ionicons name="book-outline" size={20} color={colors.btnIcon} />
-              <Text style={[styles.cardLabel, { color: colors.text }]}>
-                Quote Language
-              </Text>
-            </View>
-            <View style={styles.cardRight}>
-              <Text style={[styles.cardValue, { color: colors.author }]}>
-                English
-              </Text>
-              <Ionicons
-                name="chevron-forward"
-                size={16}
-                color={colors.btnIcon}
-              />
-            </View>
-          </View>
         </View>
 
         {/* ── Feedback ── */}

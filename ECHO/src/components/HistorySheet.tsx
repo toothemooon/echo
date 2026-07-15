@@ -5,7 +5,9 @@ import {
   Animated,
   StyleSheet,
   Dimensions,
+  ScrollView,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/colors";
 import { Quote } from "../database/quotes";
 
@@ -18,6 +20,7 @@ interface HistorySheetProps {
   sheetAnim: Animated.Value;
   backdropAnim: Animated.Value;
   onClose: () => void;
+  onRemove: (quoteId: number) => void;
 }
 
 export default function HistorySheet({
@@ -27,6 +30,7 @@ export default function HistorySheet({
   sheetAnim,
   backdropAnim,
   onClose,
+  onRemove,
 }: HistorySheetProps) {
   if (!visible) return null;
 
@@ -114,9 +118,24 @@ export default function HistorySheet({
             </Text>
           </View>
         ) : (
-          <View style={styles.list}>
+          <ScrollView style={styles.list} showsVerticalScrollIndicator={false}>
             {savedQuotes.map((q) => (
-              <View key={q.id} style={styles.savedItem}>
+              <View
+                key={q.id}
+                style={[styles.savedItem, { backgroundColor: colors.btnBg }]}
+              >
+                {/* Delete button */}
+                <Pressable
+                  style={styles.deleteBtn}
+                  onPress={() => onRemove(q.id)}
+                >
+                  <Ionicons
+                    name="close-circle"
+                    size={20}
+                    color={colors.menuIcon}
+                  />
+                </Pressable>
+
                 <Text
                   style={[
                     styles.savedText,
@@ -133,7 +152,7 @@ export default function HistorySheet({
                 </Text>
               </View>
             ))}
-          </View>
+          </ScrollView>
         )}
       </Animated.View>
     </>
@@ -203,13 +222,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   savedItem: {
-    marginBottom: 24,
+    marginBottom: 12,
+    borderRadius: 12,
+    padding: 16,
+    position: "relative",
+  },
+  deleteBtn: {
+    position: "absolute",
+    top: 12,
+    right: 12,
+    zIndex: 1,
   },
   savedText: {
     fontSize: 20,
     lineHeight: 28,
     fontStyle: "italic",
     marginBottom: 6,
+    paddingRight: 28,
   },
   savedAuthor: {
     fontSize: 14,

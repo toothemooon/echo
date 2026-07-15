@@ -262,6 +262,11 @@ export default function App() {
     }
   };
 
+  const handleRemoveSaved = async (quoteId: number) => {
+    await removeSavedQuote(quoteId);
+    setSavedQuotes((prev) => prev.filter((q) => q.id !== quoteId));
+  };
+
   const openHistory = () => {
     setHistoryVisible(true);
     Animated.parallel([
@@ -378,8 +383,7 @@ export default function App() {
         sheetAnim={sheetAnim}
         backdropAnim={backdropAnim}
         onClose={closeHistory}
-        onRemoveQuote={handleRemoveQuote}
-        onSelectQuote={handleSelectQuote}
+        onRemove={handleRemoveSaved}
       />
 
       <ShareScreen
