@@ -13,7 +13,7 @@ import { Quote } from "../database/quotes";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
-interface HistorySheetProps {
+type Props = {
   visible: boolean;
   savedQuotes: Quote[];
   colors: (typeof COLORS)["light"];
@@ -21,18 +21,10 @@ interface HistorySheetProps {
   backdropAnim: Animated.Value;
   onClose: () => void;
   onRemove: (quoteId: number) => void;
-}
+};
 
-export default function HistorySheet({
-  visible,
-  savedQuotes,
-  colors,
-  sheetAnim,
-  backdropAnim,
-  onClose,
-  onRemove,
-}: HistorySheetProps) {
-  if (!visible) return null;
+export default function HistorySheet(props: Props) {
+  if (!props.visible) return null;
 
   return (
     <>
@@ -41,14 +33,14 @@ export default function HistorySheet({
         style={[
           styles.backdrop,
           {
-            opacity: backdropAnim.interpolate({
+            opacity: props.backdropAnim.interpolate({
               inputRange: [0, 1],
               outputRange: [0, 0.4],
             }),
           },
         ]}
       >
-        <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
+        <Pressable style={StyleSheet.absoluteFill} onPress={props.onClose} />
       </Animated.View>
 
       {/* Sheet */}
@@ -56,15 +48,18 @@ export default function HistorySheet({
         style={[
           styles.sheet,
           {
-            backgroundColor: colors.sheetBg,
-            transform: [{ translateY: sheetAnim }],
+            backgroundColor: props.colors.sheetBg,
+            transform: [{ translateY: props.sheetAnim }],
           },
         ]}
       >
         {/* Handle */}
         <View style={styles.handleContainer}>
           <View
-            style={[styles.handle, { backgroundColor: colors.sheetHandle }]}
+            style={[
+              styles.handle,
+              { backgroundColor: props.colors.sheetHandle },
+            ]}
           />
         </View>
 
@@ -74,31 +69,36 @@ export default function HistorySheet({
             style={[
               styles.sheetTitle,
               {
-                color: colors.sheetTitle,
+                color: props.colors.sheetTitle,
                 fontFamily: "CormorantGaramond_400Regular_Italic",
               },
             ]}
           >
             Saved Quotes
           </Text>
-          <Pressable onPress={onClose}>
-            <Text style={[styles.doneBtn, { color: colors.label }]}>Done</Text>
+          <Pressable onPress={props.onClose}>
+            <Text style={[styles.doneBtn, { color: props.colors.label }]}>
+              Done
+            </Text>
           </Pressable>
         </View>
 
         {/* Divider */}
         <View
-          style={[styles.sheetDivider, { backgroundColor: colors.divider }]}
+          style={[
+            styles.sheetDivider,
+            { backgroundColor: props.colors.divider },
+          ]}
         />
 
         {/* Content */}
-        {savedQuotes.length === 0 ? (
+        {props.savedQuotes.length === 0 ? (
           <View style={styles.emptyContainer}>
             <Text
               style={[
                 styles.emptyText,
                 {
-                  color: colors.sheetEmpty,
+                  color: props.colors.sheetEmpty,
                   fontFamily: "CormorantGaramond_400Regular_Italic",
                 },
               ]}
@@ -109,7 +109,7 @@ export default function HistorySheet({
               style={[
                 styles.emptyText,
                 {
-                  color: colors.sheetEmpty,
+                  color: props.colors.sheetEmpty,
                   fontFamily: "CormorantGaramond_400Regular_Italic",
                 },
               ]}
@@ -119,20 +119,23 @@ export default function HistorySheet({
           </View>
         ) : (
           <ScrollView style={styles.list} showsVerticalScrollIndicator={false}>
-            {savedQuotes.map((q) => (
+            {props.savedQuotes.map((q) => (
               <View
                 key={q.id}
-                style={[styles.savedItem, { backgroundColor: colors.btnBg }]}
+                style={[
+                  styles.savedItem,
+                  { backgroundColor: props.colors.btnBg },
+                ]}
               >
                 {/* Delete button */}
                 <Pressable
                   style={styles.deleteBtn}
-                  onPress={() => onRemove(q.id)}
+                  onPress={() => props.onRemove(q.id)}
                 >
                   <Ionicons
                     name="close-circle"
                     size={20}
-                    color={colors.menuIcon}
+                    color={props.colors.menuIcon}
                   />
                 </Pressable>
 
@@ -140,14 +143,16 @@ export default function HistorySheet({
                   style={[
                     styles.savedText,
                     {
-                      color: colors.text,
+                      color: props.colors.text,
                       fontFamily: "CormorantGaramond_400Regular_Italic",
                     },
                   ]}
                 >
                   "{q.text}"
                 </Text>
-                <Text style={[styles.savedAuthor, { color: colors.author }]}>
+                <Text
+                  style={[styles.savedAuthor, { color: props.colors.author }]}
+                >
                   — {q.author}
                 </Text>
               </View>

@@ -2,7 +2,7 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/colors";
 
-interface ActionBarProps {
+type Props = {
   colors: (typeof COLORS)["light"];
   isSaved: boolean;
   onPrev?: () => void;
@@ -10,17 +10,9 @@ interface ActionBarProps {
   onBookmark: () => void;
   onShare: () => void;
   onHistory: () => void;
-}
+};
 
-export default function ActionBar({
-  colors,
-  isSaved,
-  onPrev,
-  onNext,
-  onBookmark,
-  onShare,
-  onHistory,
-}: ActionBarProps) {
+export default function ActionBar(props: Props) {
   return (
     <View style={styles.container}>
       {/* Action Buttons */}
@@ -28,45 +20,60 @@ export default function ActionBar({
         <Pressable
           style={[
             styles.actionBtn,
-            { backgroundColor: colors.btnBg, opacity: onPrev ? 1 : 0.4 },
+            {
+              backgroundColor: props.colors.btnBg,
+              opacity: props.onPrev ? 1 : 0.4,
+            },
           ]}
-          onPress={onPrev ?? (() => {})}
-        >
-          <Ionicons name="chevron-back" size={20} color={colors.btnIcon} />
-        </Pressable>
-
-        <Pressable
-          style={[styles.actionBtn, { backgroundColor: colors.btnBg }]}
-          onPress={onBookmark}
+          onPress={props.onPrev ?? (() => {})}
         >
           <Ionicons
-            name={isSaved ? "bookmark" : "bookmark-outline"}
+            name="chevron-back"
             size={20}
-            color={isSaved ? colors.label : colors.btnIcon}
+            color={props.colors.btnIcon}
           />
         </Pressable>
 
         <Pressable
-          style={[styles.actionBtn, { backgroundColor: colors.btnBg }]}
-          onPress={onShare}
+          style={[styles.actionBtn, { backgroundColor: props.colors.btnBg }]}
+          onPress={props.onBookmark}
         >
-          <Ionicons name="share-outline" size={20} color={colors.btnIcon} />
+          <Ionicons
+            name={props.isSaved ? "bookmark" : "bookmark-outline"}
+            size={20}
+            color={props.isSaved ? props.colors.label : props.colors.btnIcon}
+          />
         </Pressable>
 
         <Pressable
-          style={[styles.actionBtn, { backgroundColor: colors.btnBg }]}
-          onPress={onNext}
+          style={[styles.actionBtn, { backgroundColor: props.colors.btnBg }]}
+          onPress={props.onShare}
         >
-          <Ionicons name="chevron-forward" size={20} color={colors.btnIcon} />
+          <Ionicons
+            name="share-outline"
+            size={20}
+            color={props.colors.btnIcon}
+          />
+        </Pressable>
+
+        <Pressable
+          style={[styles.actionBtn, { backgroundColor: props.colors.btnBg }]}
+          onPress={props.onNext}
+        >
+          <Ionicons
+            name="chevron-forward"
+            size={20}
+            color={props.colors.btnIcon}
+          />
         </Pressable>
       </View>
 
       {/* History */}
-      <Pressable style={styles.historyRow} onPress={onHistory}>
-        <Text style={[styles.historyLabel, { color: colors.menuIcon }]}>
+      <Pressable style={styles.historyRow} onPress={props.onHistory}>
+        <Text style={[styles.historyLabel, { color: props.colors.menuIcon }]}>
           HISTORY
         </Text>
-        <Ionicons name="chevron-down" size={16} color={colors.menuIcon} />
+        <Ionicons name="chevron-down" size={16} color={props.colors.menuIcon} />
       </Pressable>
     </View>
   );

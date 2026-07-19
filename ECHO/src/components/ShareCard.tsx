@@ -6,22 +6,22 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const CARD_WIDTH = SCREEN_WIDTH - 64;
 const CARD_HEIGHT = 400;
 
-interface ShareCardProps {
+type Props = {
   quote: Quote;
   colors: (typeof COLORS)["light"];
-}
+};
 
 /**
  * A styled quote card for image capture via react-native-view-shot.
  * Not rendered in the main UI — used offscreen for screenshot generation.
  */
-export default function ShareCard({ quote, colors }: ShareCardProps) {
+export default function ShareCard(props: Props) {
   return (
     <View
       style={[
         styles.card,
         {
-          backgroundColor: colors.background,
+          backgroundColor: props.colors.background,
           width: CARD_WIDTH,
           height: CARD_HEIGHT,
         },
@@ -29,27 +29,29 @@ export default function ShareCard({ quote, colors }: ShareCardProps) {
     >
       {/* Category */}
       <View style={styles.categoryRow}>
-        <View style={[styles.dot, { backgroundColor: colors.dot }]} />
-        <Text style={[styles.category, { color: colors.label }]}>
-          {quote.primary_category}
+        <View style={[styles.dot, { backgroundColor: props.colors.dot }]} />
+        <Text style={[styles.category, { color: props.colors.label }]}>
+          {props.quote.primary_category}
         </Text>
       </View>
 
       {/* Guillemet */}
-      <Text style={[styles.guillemet, { color: colors.dot }]}>{"\u201C"}</Text>
+      <Text style={[styles.guillemet, { color: props.colors.dot }]}>
+        {"\u201C"}
+      </Text>
 
       {/* Quote */}
-      <Text style={[styles.quoteText, { color: colors.text }]}>
-        {quote.text}
+      <Text style={[styles.quoteText, { color: props.colors.text }]}>
+        {props.quote.text}
       </Text>
 
       {/* Author */}
-      <Text style={[styles.author, { color: colors.author }]}>
-        — {quote.author}
+      <Text style={[styles.author, { color: props.colors.author }]}>
+        — {props.quote.author}
       </Text>
 
       {/* App branding */}
-      <Text style={[styles.branding, { color: colors.inactiveDot }]}>
+      <Text style={[styles.branding, { color: props.colors.inactiveDot }]}>
         Echo · Daily Quotes
       </Text>
     </View>

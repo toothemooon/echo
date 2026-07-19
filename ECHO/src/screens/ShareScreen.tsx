@@ -15,24 +15,18 @@ import { Quote } from "../database/quotes";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
-interface ShareScreenProps {
+type Props = {
   visible: boolean;
   quote: Quote;
   colors: (typeof COLORS)["light"];
   onClose: () => void;
   onShareAsImage: () => void;
-}
+};
 
-export default function ShareScreen({
-  visible,
-  quote,
-  colors,
-  onClose,
-  onShareAsImage,
-}: ShareScreenProps) {
-  if (!visible) return null;
+export default function ShareScreen(props: Props) {
+  if (!props.visible) return null;
 
-  const shareText = `"${quote.text}"\n— ${quote.author}\n\nShared from Echo`;
+  const shareText = `"${props.quote.text}"\n— ${props.quote.author}\n\nShared from Echo`;
 
   const handleCopyText = async () => {
     await setStringAsync(shareText);
@@ -61,7 +55,7 @@ export default function ShareScreen({
     {
       icon: "image-outline" as const,
       label: "Share as Image",
-      onPress: onShareAsImage,
+      onPress: props.onShareAsImage,
     },
     {
       icon: "share-outline" as const,
@@ -83,14 +77,17 @@ export default function ShareScreen({
   return (
     <View style={StyleSheet.absoluteFill}>
       {/* Backdrop */}
-      <Pressable style={styles.backdrop} onPress={onClose} />
+      <Pressable style={styles.backdrop} onPress={props.onClose} />
 
       {/* Sheet */}
-      <View style={[styles.sheet, { backgroundColor: colors.sheetBg }]}>
+      <View style={[styles.sheet, { backgroundColor: props.colors.sheetBg }]}>
         {/* Handle */}
         <View style={styles.handleContainer}>
           <View
-            style={[styles.handle, { backgroundColor: colors.sheetHandle }]}
+            style={[
+              styles.handle,
+              { backgroundColor: props.colors.sheetHandle },
+            ]}
           />
         </View>
 
@@ -100,37 +97,42 @@ export default function ShareScreen({
             style={[
               styles.sheetTitle,
               {
-                color: colors.sheetTitle,
+                color: props.colors.sheetTitle,
                 fontFamily: "CormorantGaramond_400Regular_Italic",
               },
             ]}
           >
             Share Quote
           </Text>
-          <Pressable onPress={onClose}>
-            <Ionicons name="close" size={24} color={colors.btnIcon} />
+          <Pressable onPress={props.onClose}>
+            <Ionicons name="close" size={24} color={props.colors.btnIcon} />
           </Pressable>
         </View>
 
         <View
-          style={[styles.sheetDivider, { backgroundColor: colors.divider }]}
+          style={[
+            styles.sheetDivider,
+            { backgroundColor: props.colors.divider },
+          ]}
         />
 
         {/* Quote Preview */}
-        <View style={[styles.preview, { backgroundColor: colors.background }]}>
+        <View
+          style={[styles.preview, { backgroundColor: props.colors.background }]}
+        >
           <Text
             style={[
               styles.previewText,
               {
-                color: colors.text,
+                color: props.colors.text,
                 fontFamily: "CormorantGaramond_400Regular_Italic",
               },
             ]}
           >
-            "{quote.text}"
+            "{props.quote.text}"
           </Text>
-          <Text style={[styles.previewAuthor, { color: colors.author }]}>
-            — {quote.author}
+          <Text style={[styles.previewAuthor, { color: props.colors.author }]}>
+            — {props.quote.author}
           </Text>
         </View>
 
@@ -144,24 +146,30 @@ export default function ShareScreen({
               key={opt.label}
               style={[
                 styles.optionRow,
-                { backgroundColor: colors.btnBg },
+                { backgroundColor: props.colors.btnBg },
                 index < options.length - 1 && {
                   borderBottomWidth: StyleSheet.hairlineWidth,
-                  borderBottomColor: colors.divider,
+                  borderBottomColor: props.colors.divider,
                 },
               ]}
               onPress={opt.onPress}
             >
               <View style={styles.optionLeft}>
-                <Ionicons name={opt.icon} size={22} color={colors.btnIcon} />
-                <Text style={[styles.optionLabel, { color: colors.text }]}>
+                <Ionicons
+                  name={opt.icon}
+                  size={22}
+                  color={props.colors.btnIcon}
+                />
+                <Text
+                  style={[styles.optionLabel, { color: props.colors.text }]}
+                >
                   {opt.label}
                 </Text>
               </View>
               <Ionicons
                 name="chevron-forward"
                 size={16}
-                color={colors.btnIcon}
+                color={props.colors.btnIcon}
               />
             </Pressable>
           ))}

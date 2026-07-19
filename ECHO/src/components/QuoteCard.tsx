@@ -2,54 +2,53 @@ import { View, Text, Animated, StyleSheet } from "react-native";
 import { COLORS } from "../constants/colors";
 import { Quote } from "../database/quotes";
 
-interface QuoteCardProps {
+type Props = {
   quote: Quote;
   colors: (typeof COLORS)["light"];
   fadeAnim: Animated.Value;
   slideAnim: Animated.Value;
-}
+};
 
-export default function QuoteCard({
-  quote,
-  colors,
-  fadeAnim,
-  slideAnim,
-}: QuoteCardProps) {
+export default function QuoteCard(props: Props) {
   return (
     <Animated.View
       style={[
         styles.container,
         {
-          opacity: fadeAnim,
-          transform: [{ translateX: slideAnim }],
+          opacity: props.fadeAnim,
+          transform: [{ translateX: props.slideAnim }],
         },
       ]}
     >
       {/* Category */}
       <View style={styles.categoryRow}>
-        <View style={[styles.categoryDot, { backgroundColor: colors.dot }]} />
-        <Text style={[styles.label, { color: colors.label }]}>
-          {quote.primary_category}
+        <View
+          style={[styles.categoryDot, { backgroundColor: props.colors.dot }]}
+        />
+        <Text style={[styles.label, { color: props.colors.label }]}>
+          {props.quote.primary_category}
         </Text>
       </View>
 
       {/* Guillemet */}
-      <Text style={[styles.guillemet, { color: colors.dot }]}>{"\u201C"}</Text>
+      <Text style={[styles.guillemet, { color: props.colors.dot }]}>
+        {"\u201C"}
+      </Text>
 
       {/* Quote Text */}
-      <Text style={[styles.quoteText, { color: colors.text }]}>
-        {quote.text}
+      <Text style={[styles.quoteText, { color: props.colors.text }]}>
+        {props.quote.text}
       </Text>
 
       {/* Author */}
-      <Text style={[styles.author, { color: colors.author }]}>
-        — {quote.author}
+      <Text style={[styles.author, { color: props.colors.author }]}>
+        — {props.quote.author}
       </Text>
 
       {/* Role */}
-      {quote.role ? (
-        <Text style={[styles.role, { color: colors.roleText }]}>
-          {quote.role}
+      {props.quote.role ? (
+        <Text style={[styles.role, { color: props.colors.roleText }]}>
+          {props.quote.role}
         </Text>
       ) : null}
     </Animated.View>

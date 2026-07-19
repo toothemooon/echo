@@ -3,41 +3,44 @@ import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/colors";
 import { CATEGORIES, CATEGORY_COLORS, Category } from "../constants/categories";
 
-interface PersonalizationScreenProps {
+type Props = {
   colors: (typeof COLORS)["light"];
   preferredCategories: Category[];
   onToggleCategory: (category: Category) => void;
   onBack: () => void;
-}
+};
 
-export default function PersonalizationScreen({
-  colors,
-  preferredCategories,
-  onToggleCategory,
-  onBack,
-}: PersonalizationScreenProps) {
+export default function PersonalizationScreen(props: Props) {
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View
+      style={[styles.container, { backgroundColor: props.colors.background }]}
+    >
       {/* Header */}
       <View style={styles.header}>
         <Pressable
-          style={[styles.backBtn, { backgroundColor: colors.btnBg }]}
-          onPress={onBack}
+          style={[styles.backBtn, { backgroundColor: props.colors.btnBg }]}
+          onPress={props.onBack}
         >
-          <Ionicons name="chevron-back" size={20} color={colors.btnIcon} />
+          <Ionicons
+            name="chevron-back"
+            size={20}
+            color={props.colors.btnIcon}
+          />
         </Pressable>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>
+        <Text style={[styles.headerTitle, { color: props.colors.text }]}>
           PERSONALIZATION
         </Text>
         <View style={{ width: 40 }} />
       </View>
 
-      <View style={[styles.divider, { backgroundColor: colors.divider }]} />
+      <View
+        style={[styles.divider, { backgroundColor: props.colors.divider }]}
+      />
 
       {/* Category List */}
-      <View style={[styles.card, { backgroundColor: colors.btnBg }]}>
+      <View style={[styles.card, { backgroundColor: props.colors.btnBg }]}>
         {CATEGORIES.map((cat, index) => {
-          const isActive = preferredCategories.includes(cat);
+          const isActive = props.preferredCategories.includes(cat);
           const catColor = CATEGORY_COLORS[cat];
           const isLast = index === CATEGORIES.length - 1;
           return (
@@ -47,16 +50,16 @@ export default function PersonalizationScreen({
                 styles.cardRow,
                 !isLast && {
                   borderBottomWidth: StyleSheet.hairlineWidth,
-                  borderBottomColor: colors.divider,
+                  borderBottomColor: props.colors.divider,
                 },
               ]}
-              onPress={() => onToggleCategory(cat)}
+              onPress={() => props.onToggleCategory(cat)}
             >
               <View style={styles.cardLeft}>
                 <View
                   style={[styles.categoryDot, { backgroundColor: catColor }]}
                 />
-                <Text style={[styles.cardLabel, { color: colors.text }]}>
+                <Text style={[styles.cardLabel, { color: props.colors.text }]}>
                   {cat.charAt(0) + cat.slice(1).toLowerCase()}
                 </Text>
               </View>
@@ -64,7 +67,7 @@ export default function PersonalizationScreen({
                 style={[
                   styles.checkbox,
                   {
-                    borderColor: isActive ? catColor : colors.inactiveDot,
+                    borderColor: isActive ? catColor : props.colors.inactiveDot,
                     backgroundColor: isActive ? catColor : "transparent",
                   },
                 ]}
@@ -79,7 +82,7 @@ export default function PersonalizationScreen({
       </View>
 
       {/* Hint */}
-      <Text style={[styles.hint, { color: colors.inactiveDot }]}>
+      <Text style={[styles.hint, { color: props.colors.inactiveDot }]}>
         Daily quotes will be mixed from your selected categories.
       </Text>
     </View>

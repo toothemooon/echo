@@ -2,12 +2,12 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/colors";
 
-interface HeaderProps {
+type Props = {
   colors: (typeof COLORS)["light"];
   isDark: boolean;
   onToggleTheme: () => void;
   onMenu: () => void;
-}
+};
 
 const today = new Date();
 const dayName = today.toLocaleDateString("en-US", { weekday: "long" });
@@ -16,45 +16,44 @@ const monthDay = today.toLocaleDateString("en-US", {
   day: "numeric",
 });
 
-export default function Header({
-  colors,
-  isDark,
-  onToggleTheme,
-  onMenu,
-}: HeaderProps) {
+export default function Header(props: Props) {
   return (
     <>
       <View style={styles.header}>
         <View>
-          <Text style={[styles.label, { color: colors.label }]}>TODAY</Text>
-          <Text style={[styles.date, { color: colors.author }]}>
+          <Text style={[styles.label, { color: props.colors.label }]}>
+            TODAY
+          </Text>
+          <Text style={[styles.date, { color: props.colors.author }]}>
             {dayName}, {monthDay}
           </Text>
         </View>
         <View style={styles.headerRight}>
           <Pressable
-            style={[styles.iconBtn, { backgroundColor: colors.btnBg }]}
-            onPress={onToggleTheme}
+            style={[styles.iconBtn, { backgroundColor: props.colors.btnBg }]}
+            onPress={props.onToggleTheme}
           >
             <Ionicons
-              name={isDark ? "sunny-outline" : "moon-outline"}
+              name={props.isDark ? "sunny-outline" : "moon-outline"}
               size={18}
-              color={colors.btnIcon}
+              color={props.colors.btnIcon}
             />
           </Pressable>
           <Pressable
-            style={[styles.iconBtn, { backgroundColor: colors.btnBg }]}
-            onPress={onMenu}
+            style={[styles.iconBtn, { backgroundColor: props.colors.btnBg }]}
+            onPress={props.onMenu}
           >
             <Ionicons
               name="ellipsis-horizontal"
               size={18}
-              color={colors.btnIcon}
+              color={props.colors.btnIcon}
             />
           </Pressable>
         </View>
       </View>
-      <View style={[styles.divider, { backgroundColor: colors.divider }]} />
+      <View
+        style={[styles.divider, { backgroundColor: props.colors.divider }]}
+      />
     </>
   );
 }

@@ -2,44 +2,49 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/colors";
 
-interface ThemeScreenProps {
+type Props = {
   colors: (typeof COLORS)["light"];
   isDark: boolean;
   onToggleTheme: () => void;
   onBack: () => void;
-}
+};
 
 const THEMES = [
   { key: "light" as const, label: "Light", icon: "sunny-outline" as const },
   { key: "dark" as const, label: "Dark", icon: "moon-outline" as const },
 ];
 
-export default function ThemeScreen({
-  colors,
-  isDark,
-  onToggleTheme,
-  onBack,
-}: ThemeScreenProps) {
-  const currentTheme = isDark ? "dark" : "light";
+export default function ThemeScreen(props: Props) {
+  const currentTheme = props.isDark ? "dark" : "light";
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View
+      style={[styles.container, { backgroundColor: props.colors.background }]}
+    >
       {/* Header */}
       <View style={styles.header}>
         <Pressable
-          style={[styles.backBtn, { backgroundColor: colors.btnBg }]}
-          onPress={onBack}
+          style={[styles.backBtn, { backgroundColor: props.colors.btnBg }]}
+          onPress={props.onBack}
         >
-          <Ionicons name="chevron-back" size={20} color={colors.btnIcon} />
+          <Ionicons
+            name="chevron-back"
+            size={20}
+            color={props.colors.btnIcon}
+          />
         </Pressable>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>THEME</Text>
+        <Text style={[styles.headerTitle, { color: props.colors.text }]}>
+          THEME
+        </Text>
         <View style={{ width: 40 }} />
       </View>
 
-      <View style={[styles.divider, { backgroundColor: colors.divider }]} />
+      <View
+        style={[styles.divider, { backgroundColor: props.colors.divider }]}
+      />
 
       {/* Theme Options */}
-      <View style={[styles.card, { backgroundColor: colors.btnBg }]}>
+      <View style={[styles.card, { backgroundColor: props.colors.btnBg }]}>
         {THEMES.map((theme, index) => {
           const isActive = currentTheme === theme.key;
           const isLast = index === THEMES.length - 1;
@@ -50,22 +55,32 @@ export default function ThemeScreen({
                 styles.cardRow,
                 !isLast && {
                   borderBottomWidth: StyleSheet.hairlineWidth,
-                  borderBottomColor: colors.divider,
+                  borderBottomColor: props.colors.divider,
                 },
               ]}
               onPress={() => {
-                if (theme.key === "dark" && !isDark) onToggleTheme();
-                if (theme.key === "light" && isDark) onToggleTheme();
+                if (theme.key === "dark" && !props.isDark)
+                  props.onToggleTheme();
+                if (theme.key === "light" && props.isDark)
+                  props.onToggleTheme();
               }}
             >
               <View style={styles.cardLeft}>
-                <Ionicons name={theme.icon} size={20} color={colors.btnIcon} />
-                <Text style={[styles.cardLabel, { color: colors.text }]}>
+                <Ionicons
+                  name={theme.icon}
+                  size={20}
+                  color={props.colors.btnIcon}
+                />
+                <Text style={[styles.cardLabel, { color: props.colors.text }]}>
                   {theme.label}
                 </Text>
               </View>
               {isActive && (
-                <Ionicons name="checkmark" size={20} color={colors.label} />
+                <Ionicons
+                  name="checkmark"
+                  size={20}
+                  color={props.colors.label}
+                />
               )}
             </Pressable>
           );
