@@ -1,6 +1,6 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { COLORS } from "../constants/colors";
+import { COLORS } from "../../constants/colors";
 
 type Props = {
   colors: (typeof COLORS)["light"];

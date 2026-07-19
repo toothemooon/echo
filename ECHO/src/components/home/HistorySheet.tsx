@@ -8,8 +8,8 @@ import {
   ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { COLORS } from "../constants/colors";
-import { Quote } from "../database/quotes";
+import { COLORS } from "../../constants/colors";
+import { Quote } from "../../database/quotes";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 

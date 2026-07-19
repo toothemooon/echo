@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef } from "react";
-import { View, Animated, Dimensions, Share, Alert } from "react-native";
+import { View, Animated, Dimensions, Alert } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { captureRef } from "react-native-view-shot";
 import {
   useFonts,
   CormorantGaramond_400Regular_Italic,
 } from "@expo-google-fonts/cormorant-garamond";
-import { COLORS } from "./src/constants/colors";
-import { CATEGORIES, Category } from "./src/constants/categories";
+import { COLORS } from "../constants/colors";
+import { CATEGORIES, Category } from "../constants/categories";
 import {
   Quote,
   getRandomQuote,
@@ -15,24 +15,29 @@ import {
   getSavedQuotes,
   addSavedQuote,
   removeSavedQuote,
-} from "./src/database/quotes";
+} from "../database/quotes";
 import {
   getPreferredCategories,
   setPreferredCategories,
   getTheme,
   setTheme,
-} from "./src/database/preferences";
-import { syncDatabase } from "./src/database/seed";
-import Header from "./src/components/Header";
-import QuoteCard from "./src/components/QuoteCard";
-import ActionBar from "./src/components/ActionBar";
-import HistorySheet from "./src/components/HistorySheet";
-import ShareCard from "./src/components/ShareCard";
-import ShareScreen from "./src/screens/ShareScreen";
-import SettingsScreen from "./src/screens/SettingsScreen";
-import PersonalizationScreen from "./src/screens/PersonalizationScreen";
-import ThemeScreen from "./src/screens/ThemeScreen";
+} from "../database/preferences";
+import { syncDatabase } from "../database/seed";
 
+// Home 组件
+import Header from "../components/home/Header";
+import QuoteCard from "../components/home/QuoteCard";
+import ActionBar from "../components/home/ActionBar";
+import HistorySheet from "../components/home/HistorySheet";
+import ShareCard from "../components/home/ShareCard";
+import ShareSheet from "../components/home/ShareSheet";
+
+// 页面组件
+import SettingsScreen from "../screens/SettingsScreen";
+import PersonalizationScreen from "../screens/PersonalizationScreen";
+import ThemeScreen from "../screens/ThemeScreen";
+
+// ── 常量 ──
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const PLACEHOLDER_QUOTE: Quote = {
@@ -44,38 +49,44 @@ const PLACEHOLDER_QUOTE: Quote = {
   categories: [],
 };
 
-export default function App() {
-  const [isDark, setIsDark] = useState(false);
-  const [quoteHistory, setQuoteHistory] = useState<Quote[]>([]);
-  const [historyIndex, setHistoryIndex] = useState(-1);
-  const [quoteCount, setQuoteCount] = useState(0);
-  const [savedQuotes, setSavedQuotes] = useState<Quote[]>([]);
-  const [historyVisible, setHistoryVisible] = useState(false);
-  const [shareVisible, setShareVisible] = useState(false);
-  const [reminderEnabled, setReminderEnabled] = useState(false);
-  const [currentPage, setCurrentPage] = useState<
-    "home" | "settings" | "personalization" | "theme"
-  >("home");
-  const [preferredCategories, setPreferredCategoriesState] = useState<
-    Category[]
-  >([...CATEGORIES]);
-  const [dbReady, setDbReady] = useState(false);
+type Page = "home" | "settings" | "theme" | "personalization";
 
-  // Animation values
-  const fadeAnim = useRef(new Animated.Value(1)).current;
-  const slideAnim = useRef(new Animated.Value(0)).current;
-  const sheetAnim = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
-  const backdropAnim = useRef(new Animated.Value(0)).current;
-
-  // Refs
-  const isAnimating = useRef(false);
-  const shareCardRef = useRef<View>(null);
-
+// ══════════════════════════════════════════════════════
+//  ECHO — 唯一路由页面
+//  职责：持有全部 State，条件渲染，Props 向下传递
+//  数据流：State → Props → 子组件 → 回调 Props → 修改 State
+// ══════════════════════════════════════════════════════
+export default function Index() {
   const [fontsLoaded] = useFonts({
     CormorantGaramond_400Regular_Italic,
   });
 
-  // Initialize database, seed data, load first quote
+  // ── 跨页面 State ──
+  const [currentPage, setCurrentPage] = useState<Page>("home");
+  const [isDark, setIsDark] = useState(false);
+  const [preferredCategories, setPreferredCategoriesState] = useState<
+    Category[]
+  >([...CATEGORIES]);
+  const [savedQuotes, setSavedQuotes] = useState<Quote[]>([]);
+  const [reminderEnabled, setReminderEnabled] = useState(false);
+  const [dbReady, setDbReady] = useState(false);
+
+  // ── Home State ──
+  const [quoteHistory, setQuoteHistory] = useState<Quote[]>([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
+  const [quoteCount, setQuoteCount] = useState(0);
+  const [historyVisible, setHistoryVisible] = useState(false);
+  const [shareVisible, setShareVisible] = useState(false);
+
+  // ── useRef 动画和组件引用 ──
+  const fadeAnim = useRef(new Animated.Value(1)).current;
+  const slideAnim = useRef(new Animated.Value(0)).current;
+  const sheetAnim = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
+  const backdropAnim = useRef(new Animated.Value(0)).current;
+  const isAnimating = useRef(false);
+  const shareCardRef = useRef<View>(null);
+
+  // ── useEffect 初始化 ──
   useEffect(() => {
     async function init() {
       const savedTheme = await getTheme();
@@ -109,22 +120,66 @@ export default function App() {
     init();
   }, []);
 
+  // ── 主题 ──
   const persistTheme = (dark: boolean) => {
     setIsDark(dark);
     setTheme(dark ? "dark" : "light");
   };
 
-  if (!fontsLoaded || !dbReady) return null;
+  // ── 分类 ──
+  const toggleCategory = (cat: Category) => {
+    setPreferredCategoriesState((prev) => {
+      const next = prev.includes(cat)
+        ? prev.filter((c) => c !== cat)
+        : [...prev, cat];
+      if (next.length === 0) return prev;
+      setPreferredCategories(next);
+      return next;
+    });
+  };
 
-  const c = isDark ? COLORS.dark : COLORS.light;
-  const statusBar = isDark ? "light" : "dark";
-  const currentQuote =
-    historyIndex >= 0 ? quoteHistory[historyIndex] : PLACEHOLDER_QUOTE;
-  const isSaved = savedQuotes.some((q) => q.id === currentQuote.id);
-  const canGoPrev = historyIndex > 0;
-  const canGoNext = historyIndex < quoteHistory.length - 1;
+  // ── 收藏 ──
+  const toggleBookmark = async () => {
+    const currentQuote =
+      historyIndex >= 0 ? quoteHistory[historyIndex] : PLACEHOLDER_QUOTE;
+    const isSaved = savedQuotes.some((q) => q.id === currentQuote.id);
+    if (isSaved) {
+      await removeSavedQuote(currentQuote.id);
+      setSavedQuotes((prev) => prev.filter((q) => q.id !== currentQuote.id));
+    } else {
+      await addSavedQuote(currentQuote.id);
+      setSavedQuotes((prev) => [...prev, currentQuote]);
+    }
+  };
 
-  // ── Quote Transition Animation ──
+  const handleRemoveSaved = async (quoteId: number) => {
+    await removeSavedQuote(quoteId);
+    setSavedQuotes((prev) => prev.filter((q) => q.id !== quoteId));
+  };
+
+  // ── 分享 ──
+  const handleShare = () => setShareVisible(true);
+
+  const shareAsImage = async () => {
+    const currentQuote =
+      historyIndex >= 0 ? quoteHistory[historyIndex] : PLACEHOLDER_QUOTE;
+    try {
+      const uri = await captureRef(shareCardRef, {
+        format: "png",
+        quality: 1,
+        result: "tmpfile",
+      });
+      const { Share: RNShare } = require("react-native");
+      await RNShare.share({
+        url: uri,
+        message: `"${currentQuote.text}"\n— ${currentQuote.author}\n\nShared from Echo`,
+      });
+    } catch (_error) {
+      Alert.alert("Error", "Failed to generate image.");
+    }
+  };
+
+  // ── 动画 ──
   const animateToQuote = (newIndex: number, direction: "left" | "right") => {
     if (isAnimating.current) return;
     isAnimating.current = true;
@@ -164,9 +219,9 @@ export default function App() {
     });
   };
 
-  // ── Handlers ──
   const goNext = () => {
     if (isAnimating.current) return;
+    const canGoNext = historyIndex < quoteHistory.length - 1;
 
     if (canGoNext) {
       animateToQuote(historyIndex + 1, "right");
@@ -217,56 +272,11 @@ export default function App() {
   };
 
   const goPrev = () => {
-    if (isAnimating.current || !canGoPrev) return;
+    if (isAnimating.current || historyIndex <= 0) return;
     animateToQuote(historyIndex - 1, "left");
   };
 
-  // ── Share ──
-  const handleShare = () => setShareVisible(true);
-
-  const shareAsImage = async () => {
-    try {
-      const uri = await captureRef(shareCardRef, {
-        format: "png",
-        quality: 1,
-        result: "tmpfile",
-      });
-      const { Share: RNShare } = require("react-native");
-      await RNShare.share({
-        url: uri,
-        message: `"${currentQuote.text}"\n— ${currentQuote.author}\n\nShared from Echo`,
-      });
-    } catch (_error) {
-      Alert.alert("Error", "Failed to generate image.");
-    }
-  };
-
-  const toggleCategory = (cat: Category) => {
-    setPreferredCategoriesState((prev) => {
-      const next = prev.includes(cat)
-        ? prev.filter((c) => c !== cat)
-        : [...prev, cat];
-      if (next.length === 0) return prev;
-      setPreferredCategories(next);
-      return next;
-    });
-  };
-
-  const toggleBookmark = async () => {
-    if (isSaved) {
-      await removeSavedQuote(currentQuote.id);
-      setSavedQuotes((prev) => prev.filter((q) => q.id !== currentQuote.id));
-    } else {
-      await addSavedQuote(currentQuote.id);
-      setSavedQuotes((prev) => [...prev, currentQuote]);
-    }
-  };
-
-  const handleRemoveSaved = async (quoteId: number) => {
-    await removeSavedQuote(quoteId);
-    setSavedQuotes((prev) => prev.filter((q) => q.id !== quoteId));
-  };
-
+  // ── 历史弹窗 ──
   const openHistory = () => {
     setHistoryVisible(true);
     Animated.parallel([
@@ -300,11 +310,20 @@ export default function App() {
     ]).start(() => setHistoryVisible(false));
   };
 
-  // ── Page routing ──
+  // ── 派生值 ──
+  if (!fontsLoaded || !dbReady) return null;
+
+  const colors = isDark ? COLORS.dark : COLORS.light;
+  const currentQuote =
+    historyIndex >= 0 ? quoteHistory[historyIndex] : PLACEHOLDER_QUOTE;
+  const isSaved = savedQuotes.some((q) => q.id === currentQuote.id);
+  const canGoPrev = historyIndex > 0;
+
+  // ── 页面路由（currentPage 条件渲染） ──
   if (currentPage === "theme") {
     return (
       <ThemeScreen
-        colors={c}
+        colors={colors}
         isDark={isDark}
         onToggleTheme={() => persistTheme(!isDark)}
         onBack={() => setCurrentPage("settings")}
@@ -315,7 +334,7 @@ export default function App() {
   if (currentPage === "personalization") {
     return (
       <PersonalizationScreen
-        colors={c}
+        colors={colors}
         preferredCategories={preferredCategories}
         onToggleCategory={toggleCategory}
         onBack={() => setCurrentPage("settings")}
@@ -326,7 +345,7 @@ export default function App() {
   if (currentPage === "settings") {
     return (
       <SettingsScreen
-        colors={c}
+        colors={colors}
         isDark={isDark}
         reminderEnabled={reminderEnabled}
         onToggleReminder={() => setReminderEnabled((v) => !v)}
@@ -338,20 +357,21 @@ export default function App() {
     );
   }
 
+  // ── Home 页面 ──
   return (
     <View
       style={{
         flex: 1,
-        backgroundColor: c.background,
+        backgroundColor: colors.background,
         paddingTop: 60,
         paddingHorizontal: 32,
         paddingBottom: 40,
       }}
     >
-      <StatusBar style={statusBar} />
+      <StatusBar style={isDark ? "light" : "dark"} animated />
 
       <Header
-        colors={c}
+        colors={colors}
         isDark={isDark}
         onToggleTheme={() => persistTheme(!isDark)}
         onMenu={() => setCurrentPage("settings")}
@@ -359,14 +379,14 @@ export default function App() {
 
       <QuoteCard
         quote={currentQuote}
-        colors={c}
+        colors={colors}
         fadeAnim={fadeAnim}
         slideAnim={slideAnim}
       />
 
       <View style={{ alignItems: "center" }}>
         <ActionBar
-          colors={c}
+          colors={colors}
           isSaved={isSaved}
           onPrev={canGoPrev ? goPrev : undefined}
           onNext={goNext}
@@ -379,17 +399,17 @@ export default function App() {
       <HistorySheet
         visible={historyVisible}
         savedQuotes={savedQuotes}
-        colors={c}
+        colors={colors}
         sheetAnim={sheetAnim}
         backdropAnim={backdropAnim}
         onClose={closeHistory}
         onRemove={handleRemoveSaved}
       />
 
-      <ShareScreen
+      <ShareSheet
         visible={shareVisible}
         quote={currentQuote}
-        colors={c}
+        colors={colors}
         onClose={() => setShareVisible(false)}
         onShareAsImage={() => {
           setShareVisible(false);
@@ -397,7 +417,7 @@ export default function App() {
         }}
       />
 
-      {/* Offscreen ShareCard for image capture */}
+      {/* 离屏 ShareCard，用于 react-native-view-shot 截图 */}
       <View
         ref={shareCardRef}
         style={{
@@ -408,7 +428,7 @@ export default function App() {
         }}
         collapsable={false}
       >
-        <ShareCard quote={currentQuote} colors={c} />
+        <ShareCard quote={currentQuote} colors={colors} />
       </View>
     </View>
   );

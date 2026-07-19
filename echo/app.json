@@ -3,6 +3,7 @@
     "name": "ECHO",
     "slug": "ECHO",
     "version": "1.0.0",
+    "scheme": "echo",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -35,7 +36,9 @@
           "icon": "./assets/icon.png",
           "color": "#8FAE8B"
         }
-      ]
+      ],
+
+      "expo-router"
     ]
   }
 }

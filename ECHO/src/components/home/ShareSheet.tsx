@@ -10,12 +10,12 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { setStringAsync } from "expo-clipboard";
 import * as Linking from "expo-linking";
-import { COLORS } from "../constants/colors";
-import { Quote } from "../database/quotes";
+import { COLORS } from "../../constants/colors";
+import { Quote } from "../../database/quotes";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
-type Props = {
+type ShareSheetProps = {
   visible: boolean;
   quote: Quote;
   colors: (typeof COLORS)["light"];
@@ -23,7 +23,7 @@ type Props = {
   onShareAsImage: () => void;
 };
 
-export default function ShareScreen(props: Props) {
+export default function ShareSheet(props: ShareSheetProps) {
   if (!props.visible) return null;
 
   const shareText = `"${props.quote.text}"\n— ${props.quote.author}\n\nShared from Echo`;
