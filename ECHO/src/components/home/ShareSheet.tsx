@@ -15,6 +15,12 @@ import { Quote } from "../../database/quotes";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
+// ══════════════════════════════════════════════
+//  ShareSheet — 分享选项底部弹窗
+//  提供复制文字、分享图片、系统分享、Twitter、WhatsApp
+// ══════════════════════════════════════════════
+
+// ── Props ──
 type ShareSheetProps = {
   visible: boolean;
   quote: Quote;
@@ -24,6 +30,7 @@ type ShareSheetProps = {
 };
 
 export default function ShareSheet(props: ShareSheetProps) {
+  // ── 未显示时直接返回 ──
   if (!props.visible) return null;
 
   const shareText = `"${props.quote.text}"\n— ${props.quote.author}\n\nShared from Echo`;

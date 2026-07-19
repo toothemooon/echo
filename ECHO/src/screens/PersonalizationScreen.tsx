@@ -3,6 +3,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/colors";
 import { CATEGORIES, CATEGORY_COLORS, Category } from "../constants/categories";
 
+// ══════════════════════════════════════════════
+//  PersonalizationScreen — 类别偏好选择器
+//  展示 8 个类别，用户勾选后影响每日名言推荐
+// ══════════════════════════════════════════════
+
+// ── Props ──
 type Props = {
   colors: (typeof COLORS)["light"];
   preferredCategories: Category[];
@@ -89,6 +95,7 @@ export default function PersonalizationScreen(props: Props) {
   );
 }
 
+// ── 样式 ──
 const styles = StyleSheet.create({
   container: {
     flex: 1,

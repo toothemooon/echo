@@ -23,6 +23,15 @@ type Props = {
   preferredCount: number;
 };
 
+// ══════════════════════════════════════════════
+//  SettingsScreen — 设置页面
+//  分区展示：Preference / Widgets / Notifications / Feedback / About
+//  通过 props 接收状态和回调，不直接修改 State
+// ══════════════════════════════════════════════
+
+// ── Props ──
+
+// ── 常量 ──
 const FEEDBACK_EMAIL = "mailto:feedback@echo.app?subject=Echo%20Feedback";
 const PRIVACY_URL = "https://echo.app/privacy";
 const TERMS_URL = "https://echo.app/terms";
@@ -366,6 +375,7 @@ export default function SettingsScreen(props: Props) {
   );
 }
 
+// ── 样式 ──
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -6,6 +6,13 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const CARD_WIDTH = SCREEN_WIDTH - 64;
 const CARD_HEIGHT = 400;
 
+// ══════════════════════════════════════════════
+//  ShareCard — 离屏分享卡片
+//  不在 UI 中显示，用于 react-native-view-shot 截图
+//  截图后生成分享图片
+// ══════════════════════════════════════════════
+
+// ── Props ──
 type Props = {
   quote: Quote;
   colors: (typeof COLORS)["light"];

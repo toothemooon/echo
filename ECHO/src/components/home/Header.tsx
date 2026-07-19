@@ -2,6 +2,12 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../../constants/colors";
 
+// ══════════════════════════════════════════════
+//  Header — 顶部导航栏
+//  显示 TODAY + 日期，提供主题切换和菜单入口
+// ══════════════════════════════════════════════
+
+// ── Props ──
 type Props = {
   colors: (typeof COLORS)["light"];
   isDark: boolean;
@@ -9,6 +15,7 @@ type Props = {
   onMenu: () => void;
 };
 
+// ── 日期计算（模块级常量） ──
 const today = new Date();
 const dayName = today.toLocaleDateString("en-US", { weekday: "long" });
 const monthDay = today.toLocaleDateString("en-US", {
@@ -19,6 +26,7 @@ const monthDay = today.toLocaleDateString("en-US", {
 export default function Header(props: Props) {
   return (
     <>
+      {/* 顶部行：左侧日期，右侧按钮 */}
       <View style={styles.header}>
         <View>
           <Text style={[styles.label, { color: props.colors.label }]}>
@@ -51,6 +59,7 @@ export default function Header(props: Props) {
           </Pressable>
         </View>
       </View>
+      {/* 分割线 */}
       <View
         style={[styles.divider, { backgroundColor: props.colors.divider }]}
       />
@@ -58,6 +67,7 @@ export default function Header(props: Props) {
   );
 }
 
+// ── 样式 ──
 const styles = StyleSheet.create({
   header: {
     flexDirection: "row",

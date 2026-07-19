@@ -2,6 +2,13 @@ import { View, Text, Animated, StyleSheet } from "react-native";
 import { COLORS } from "../../constants/colors";
 import { Quote } from "../../database/quotes";
 
+// ══════════════════════════════════════════════
+//  QuoteCard — 名言卡片展示
+//  展示类别、引号、名言内容、作者和角色
+//  支持 fade + slide 动画（由父组件传入 Animated.Value）
+// ══════════════════════════════════════════════
+
+// ── Props ──
 type Props = {
   quote: Quote;
   colors: (typeof COLORS)["light"];
@@ -55,6 +62,7 @@ export default function QuoteCard(props: Props) {
   );
 }
 
+// ── 样式 ──
 const styles = StyleSheet.create({
   container: {
     flex: 1,

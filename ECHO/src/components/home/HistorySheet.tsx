@@ -13,6 +13,13 @@ import { Quote } from "../../database/quotes";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
+// ══════════════════════════════════════════════
+//  HistorySheet — 收藏名言底部弹窗
+//  Spring 物理动画弹窗，展示已收藏的名言列表
+//  支持删除操作
+// ══════════════════════════════════════════════
+
+// ── Props ──
 type Props = {
   visible: boolean;
   savedQuotes: Quote[];
@@ -24,6 +31,7 @@ type Props = {
 };
 
 export default function HistorySheet(props: Props) {
+  // ── 未显示时直接返回 ──
   if (!props.visible) return null;
 
   return (

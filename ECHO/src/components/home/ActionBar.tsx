@@ -2,6 +2,12 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../../constants/colors";
 
+// ══════════════════════════════════════════════
+//  ActionBar — 操作按钮栏
+//  提供前进/后退、收藏、分享、历史记录入口
+// ══════════════════════════════════════════════
+
+// ── Props ──
 type Props = {
   colors: (typeof COLORS)["light"];
   isSaved: boolean;
@@ -79,6 +85,7 @@ export default function ActionBar(props: Props) {
   );
 }
 
+// ── 样式 ──
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",

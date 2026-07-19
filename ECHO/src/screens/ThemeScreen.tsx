@@ -2,6 +2,12 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/colors";
 
+// ══════════════════════════════════════════════
+//  ThemeScreen — 主题选择器
+//  提供 Light / Dark 两个选项，切换后立即生效
+// ══════════════════════════════════════════════
+
+// ── Props ──
 type Props = {
   colors: (typeof COLORS)["light"];
   isDark: boolean;
@@ -90,6 +96,7 @@ export default function ThemeScreen(props: Props) {
   );
 }
 
+// ── 样式 ──
 const styles = StyleSheet.create({
   container: {
     flex: 1,
