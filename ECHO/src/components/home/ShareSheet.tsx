@@ -11,7 +11,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { setStringAsync } from "expo-clipboard";
 import * as Linking from "expo-linking";
 import { COLORS } from "../../constants/colors";
-import { Quote } from "../../database/quotes";
+import type { Quote } from "../../data/quotes";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -21,7 +21,7 @@ const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 // ══════════════════════════════════════════════
 
 // ── Props ──
-type ShareSheetProps = {
+type Props = {
   visible: boolean;
   quote: Quote;
   colors: typeof COLORS.light;
@@ -29,7 +29,7 @@ type ShareSheetProps = {
   onShareAsImage: () => void;
 };
 
-export default function ShareSheet(props: ShareSheetProps) {
+export default function ShareSheet(props: Props) {
   // ── 未显示时直接返回 ──
   if (!props.visible) return null;
 

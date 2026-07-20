@@ -1,282 +1,331 @@
 # ECHO 项目学习笔记
 
----
-
 ## 1. 项目整体用途
 
-**ECHO** 是一款每日名言 App，核心体验是：**打开 App → 看到一条精美排版的名言 → 左右滑动浏览更多 → 收藏喜欢的 → 分享给朋友**。
+**ECHO** 是一款每日格言 App，核心体验是：**打开 App → 阅读一条精美排版的格言 → 左右切换 → 收藏喜欢的内容 → 分享给朋友**。
 
----
+数据层遵循一个清晰边界：App 内置内容来自只读 JSON，查询逻辑由 TypeScript 模块负责，用户设置和收藏由 AsyncStorage 持久化，界面即时状态由 React State 管理。
 
 ## 2. 技术栈
 
-| 类别        | 技术                              | 作用                       |
-| ----------- | --------------------------------- | -------------------------- |
-| **框架**    | Expo SDK 57                       | 跨平台构建工具             |
-| **UI 框架** | React 19 / React Native 0.86      | 原生 UI 渲染               |
-| **语言**    | TypeScript                        | 类型安全                   |
-| **数据库**  | expo-sqlite (SQLite)              | 存储 160 条名言            |
-| **持久化**  | AsyncStorage                      | 存储用户偏好（主题、类别） |
-| **字体**    | Cormorant Garamond (Google Fonts) | 衬线字体，营造优雅感       |
-| **截图**    | react-native-view-shot            | 生成分享图片               |
-| **剪贴板**  | expo-clipboard                    | 复制文字                   |
-| **链接**    | expo-linking                      | 打开外部链接               |
+| 类别 | 技术 | 作用 |
+| ---- | ---- | ---- |
+| 框架 | Expo SDK 57 | 跨平台构建和原生能力 |
+| UI | React 19 / React Native 0.86 | 原生 UI 渲染 |
+| 语言 | TypeScript | 类型安全和数据验证 |
+| 内置内容 | `assets/quotes.json` | 唯一的内置格言数据源 |
+| 用户持久化 | AsyncStorage | 保存主题、类别偏好和收藏快照 |
+| 字体 | Cormorant Garamond | 格言衬线字体 |
+| 截图 | `react-native-view-shot` | 生成分享图片 |
+| 剪贴板 | `expo-clipboard` | 复制文字 |
+| 链接 | `expo-linking` | 打开外部分享链接 |
+| 通知 | `expo-notifications` | 本地提醒 |
 
----
+## 3. 目录结构
 
-## 3. 目录结构（当前）
-
-```
+```text
 ECHO/
 ├── src/
 │   ├── app/
-│   │   ├── _layout.tsx              # 根 Stack（headerShown: false）
-│   │   └── index.tsx                # ⭐ 唯一路由：全部 State + 条件渲染
-│   ├── components/
-│   │   └── home/                    # Home 页面专用组件
-│   │       ├── Header.tsx           # 顶部：TODAY + 日期 + 主题切换 + 菜单
-│   │       ├── QuoteCard.tsx        # 名言卡片展示
-│   │       ├── ActionBar.tsx        # 操作栏：导航 + 收藏 + 分享 + 历史
-│   │       ├── HistorySheet.tsx     # 底部弹窗：已收藏名言列表
-│   │       ├── ShareSheet.tsx       # 底部弹窗：分享选项
-│   │       └── ShareCard.tsx        # 离屏卡片：截图生成分享图片
+│   │   ├── _layout.tsx               # 根 Stack（headerShown: false）
+│   │   └── index.tsx                 # 全部运行时 State + 条件渲染
+│   ├── components/home/
+│   │   ├── Header.tsx                # 日期、主题切换、菜单入口
+│   │   ├── QuoteCard.tsx             # 主类别、格言、作者、身份展示
+│   │   ├── ActionBar.tsx             # 前后切换、收藏、分享、收藏列表
+│   │   ├── HistorySheet.tsx          # 已收藏格言列表 Bottom Sheet
+│   │   ├── ShareSheet.tsx            # 分享选项 Bottom Sheet
+│   │   └── ShareCard.tsx             # 用于生成分享图片的离屏卡片
 │   ├── screens/
-│   │   ├── SettingsScreen.tsx       # 设置页
-│   │   ├── ThemeScreen.tsx          # 主题选择器
-│   │   └── PersonalizationScreen.tsx # 类别选择器
+│   │   ├── SettingsScreen.tsx        # 设置页
+│   │   ├── ThemeScreen.tsx           # 主题选择器
+│   │   └── PersonalizationScreen.tsx # 类别偏好选择器
 │   ├── constants/
-│   │   ├── colors.ts                # 明暗主题颜色 token（各 15 个）
-│   │   └── categories.ts            # 8 个类别 + 类别颜色映射
-│   └── database/
-│       ├── database.ts              # SQLite 初始化 + Schema
-│       ├── quotes.ts                # 名言 CRUD + 随机查询 + 收藏
-│       ├── seed.ts                  # JSON → SQLite 同步
-│       └── preferences.ts           # AsyncStorage：类别偏好 + 主题
+│   │   ├── colors.ts                 # 明暗主题颜色 token
+│   │   └── categories.ts             # Category 类型、8 个类别和颜色
+│   ├── data/
+│   │   └── quotes.ts                 # Quote 类型、JSON 验证和同步查询
+│   ├── storage/
+│   │   ├── preferences.ts            # 主题与类别偏好持久化
+│   │   └── savedQuotes.ts            # 完整收藏快照持久化
+│   └── services/
+│       └── notifications.ts          # 本地通知与通知格言选择
 ├── assets/
-│   └── quotes.json                  # 160 条名言数据源
-├── App.tsx                          # ← 已删除
-└── package.json
+│   └── quotes.json                   # 160 条内置格言的唯一来源
+├── app.json                          # Expo 配置
+├── package.json                      # 依赖和脚本
+└── tsconfig.json                     # TypeScript 配置
 ```
 
----
-
-## 4. 架构图
+## 4. 整体架构
 
 ### App 启动流程
 
-```
-index.ts 加载 → 注册 App 组件
+```text
+expo-router/entry
   │
   ▼
-_index.tsx (Expo Router 根布局)
-  │  只有 <Stack headerShown={false} />
-  │
+_layout.tsx
+  │  渲染 <Stack screenOptions={{ headerShown: false }} />
   ▼
-index.tsx (唯一路由页面)
+index.tsx
   │
-  ├── useFonts() 加载字体（Hook，顶层调用）
+  ├── useFonts() 加载字体
   │
-  ├── useEffect init() 初始化：
-  │   ① getTheme() → 恢复主题
-  │   ② syncDatabase() → JSON → SQLite 同步
-  │   ③ getPreferredCategories() → 恢复类别偏好
-  │   ④ getSavedQuotes() → 恢复收藏
-  │   ⑤ getQuoteCount() → 统计总数
-  │   ⑥ getRandomQuote() → 加载第一条名言
-  │   ⑦ setDbReady(true) → 允许渲染
+  ├── 初始化用户数据
+  │   ├── getTheme()                 → 恢复主题或使用系统主题
+  │   ├── getPreferredCategories()   → 恢复类别偏好
+  │   └── getSavedQuotes()           → 恢复完整收藏快照
   │
-  ├── currentPage 条件渲染：
-  │   "home"           → Header + QuoteCard + ActionBar + 弹窗
-  │   "settings"       → SettingsScreen
-  │   "theme"          → ThemeScreen
-  │   "personalization" → PersonalizationScreen
+  ├── getRandomQuote(categories)     → 从内置 JSON 同步选择首条格言
   │
-  └── Props 向下传递给所有子组件
+  ├── 初始化 quoteHistory 和 historyIndex
+  │
+  └── 初始化完成且字体就绪后渲染当前页面
 ```
 
-### 数据流
+主题、类别偏好和收藏可以并行读取。内置格言已经随 App 打包，不需要在启动时复制、导入或建立第二份内容副本。
 
-```
-index.tsx (State: isDark, currentPage, preferredCategories, savedQuotes, ...)
+### 页面与 Props 数据流
+
+```text
+index.tsx
+  │  State: currentPage, isDark, preferredCategories,
+  │         savedQuotes, quoteHistory, historyIndex, sheet 状态等
   │
-  ├──→ <Header props={...} />
-  │      → onMenu={() => setCurrentPage("settings")}
-  │
-  ├──→ <SettingsScreen props={...} />
-  │      → onBack={() => setCurrentPage("home")}
-  │      → onOpenTheme={() => setCurrentPage("theme")}
-  │
-  └──→ <ThemeScreen props={...} />
-         → onToggleTheme() → 修改 isDark → 全局颜色更新
+  ├── home
+  │   └── Header + QuoteCard + ActionBar + HistorySheet + ShareSheet
+  ├── settings
+  │   └── SettingsScreen
+  ├── theme
+  │   └── ThemeScreen
+  └── personalization
+      └── PersonalizationScreen
+
+State → props.xxx → 子组件 → callback prop → index.tsx 更新 State
 ```
 
----
+`index.tsx` 是 UI 状态的协调者。组件通过 props 接收数据并触发回调，不直接读写持久化模块。页面切换由 `currentPage` 控制，原有导航、动画和 Bottom Sheet 行为保持独立于数据存储。
+
+组件统一采用以下 Props 写法：
+
+```tsx
+type Props = {
+  isDark: boolean;
+  onBack: () => void;
+};
+
+export default function ThemeScreen(props: Props) {
+  // 在函数体内通过 props.isDark、props.onBack 访问
+}
+```
+
+参数位置不解构 `props`，所有组件的 Props 类型都命名为 `Props`。
 
 ## 5. 数据存储架构
 
-```
-┌─────────────────────────────────────────────────────┐
-│                  数据存储模型                         │
-├─────────────────────────────────────────────────────┤
-│                                                      │
-│  ① 静态 JSON（只读）                                  │
-│     assets/quotes.json                               │
-│     → 160 条名言，每次启动同步到 SQLite                │
-│                                                      │
-│  ② SQLite（持久化）                                   │
-│     echo.db                                          │
-│     ├─ quotes (160条名言)                             │
-│     ├─ quote_categories (多对多关系)                  │
-│     └─ saved_quotes (用户收藏)                        │
-│                                                      │
-│  ③ AsyncStorage（持久化，轻量）                       │
-│     @echo/preferred_categories → 用户选的类别          │
-│     @echo/theme → "light" | "dark"                   │
-│                                                      │
-│  ④ React State（内存，重启丢失）                       │
-│     currentPage → 当前页面                            │
-│     quoteHistory → 浏览历史栈                         │
-│     historyIndex → 当前位置                           │
-│     savedQuotes → 收藏列表（内存副本）                 │
-│     isDark → 当前主题                                 │
-│                                                      │
-└─────────────────────────────────────────────────────┘
+```text
+┌────────────────────────────────────────────────────────────┐
+│                    ECHO 数据分层                            │
+├────────────────────────────────────────────────────────────┤
+│  ① 内置内容（只读，随版本发布）                              │
+│     assets/quotes.json                                     │
+│     └── 每条格言只出现一次，通过 categories 支持多类别       │
+│                                                            │
+│  ② TypeScript 数据模块（同步读取）                           │
+│     src/data/quotes.ts                                     │
+│     ├── 验证 Quote 字段、类别、主类别和唯一 ID               │
+│     ├── 按 ID 查询、按多个类别筛选                           │
+│     └── 安全随机选择和空结果回退                             │
+│                                                            │
+│  ③ AsyncStorage（跨重启）                                   │
+│     @echo/theme                 → "light" | "dark"         │
+│     @echo/preferred_categories → Category[]                │
+│     @echo/saved_quotes          → SavedQuoteRecord[]        │
+│                                                            │
+│  ④ React State（仅当前运行）                                 │
+│     currentPage、当前格言、Sheet 状态、主题和偏好内存副本     │
+│     quoteHistory、historyIndex → 左右切换使用的浏览栈         │
+│     savedQuotes                → 收藏列表的 UI 内存副本       │
+└────────────────────────────────────────────────────────────┘
 ```
 
----
+### 5.1 内置格言与 TypeScript 查询层
 
-## 6. 数据库 Schema 详解
+`assets/quotes.json` 是唯一的内置格言内容源。每条格言具有以下字段：
 
-### 表 1：`quotes`（名言表）
-
-| 字段               | 类型          | 说明                            |
-| ------------------ | ------------- | ------------------------------- |
-| `id`               | INTEGER PK    | 名言 ID（与 JSON 中的 id 对应） |
-| `text`             | TEXT NOT NULL | 名言内容                        |
-| `author`           | TEXT NOT NULL | 作者                            |
-| `role`             | TEXT NOT NULL | 作者角色                        |
-| `primary_category` | TEXT NOT NULL | 主类别                          |
-| `created_at`       | TEXT          | 创建时间                        |
-
-### 表 2：`quote_categories`（名言-类别关联表）
-
-| 字段       | 类型                   | 说明     |
-| ---------- | ---------------------- | -------- |
-| `quote_id` | INTEGER FK → quotes.id | 名言 ID  |
-| `category` | TEXT                   | 类别名   |
-| **PK**     | `(quote_id, category)` | 联合主键 |
-
-### 表 3：`saved_quotes`（收藏表）
-
-| 字段       | 类型                      | 说明     |
-| ---------- | ------------------------- | -------- |
-| `quote_id` | INTEGER PK FK → quotes.id | 名言 ID  |
-| `saved_at` | TEXT                      | 收藏时间 |
-
----
-
-## 7. 最重要的 10 个文件
-
-| #   | 文件                              | 职责                               | 为什么重要             |
-| --- | --------------------------------- | ---------------------------------- | ---------------------- |
-| 1   | **index.tsx**                     | 全部 State + 条件渲染 + Props 传递 | 理解它就理解了整个 App |
-| 2   | **database/quotes.ts**            | 名言 CRUD + 随机查询               | 核心数据操作层         |
-| 3   | **database/database.ts**          | SQLite 初始化 + Schema             | 数据库的入口           |
-| 4   | **database/seed.ts**              | JSON → SQLite 同步                 | 每次启动的数据源       |
-| 5   | **database/preferences.ts**       | AsyncStorage 读写                  | 用户偏好持久化         |
-| 6   | **constants/colors.ts**           | 颜色 token 定义                    | 全局样式基础           |
-| 7   | **constants/categories.ts**       | 8 个类别 + 颜色映射                | 类别系统定义           |
-| 8   | **components/home/Header.tsx**    | 顶部导航栏                         | 用户交互的入口         |
-| 9   | **components/home/QuoteCard.tsx** | 名言卡片展示                       | 用户看到的核心 UI      |
-| 10  | **components/home/ActionBar.tsx** | 操作按钮栏                         | 用户操作的入口         |
-
----
-
-## 8. 主要业务流程
-
-### 流程 1：App 第一次启动
-
-```
-1. index.ts → registerRootComponent(App)
-2. _layout.tsx → <Stack headerShown={false} />
-3. index.tsx 执行:
-   ① useFonts() → 加载字体
-   ② useEffect init():
-      - getTheme() → 无数据 → 使用系统主题
-      - syncDatabase() → CREATE 表 + INSERT 160 条名言
-      - getPreferredCategories() → 无数据 → 返回全部 8 个类别
-      - getSavedQuotes() → 无数据 → 返回 []
-      - getRandomQuote() → 随机选一条
-   ③ setDbReady(true) → 渲染页面
+```ts
+type Quote = {
+  id: number | string;
+  text: string;
+  author: string;
+  role: string;
+  primary_category: Category;
+  categories: Category[];
+};
 ```
 
-### 流程 2：用户点击"下一条"
+`src/data/quotes.ts` 导入并验证 JSON，然后提供只读同步接口：
 
-```
-1. 用户点击 [▶] → ActionBar.props.onNext
-2. index.tsx goNext():
-   - 如果有历史记录 → animateToQuote(index+1, "right")
-   - 如果没有 → getRandomQuote(preferredCategories)
-     → SQLite: SELECT ... ORDER BY RANDOM() LIMIT 1
-     → 新名言加入 quoteHistory 数组
-3. 动画：当前卡片淡出+左移 → 新卡片淡入+右移
-4. QuoteCard 重新渲染
+```ts
+getAllQuotes(): Quote[];
+getQuoteById(id: number | string): Quote | undefined;
+getQuotesByCategories(categories: Category[]): Quote[];
+getRandomQuote(
+  categories?: Category[],
+  excludedIds?: Array<number | string>,
+): Quote | null;
 ```
 
-### 流程 3：用户收藏名言
+分类筛选采用“任一标签命中”：只要格言的 `categories` 包含一个用户所选类别，就可以进入候选集合。空分类或筛选无结果时回退到全部格言；排除 ID 后候选为空时忽略排除列表重试；只有整个内置集合为空时才返回 `null`。
 
+### 5.2 用户偏好
+
+`src/storage/preferences.ts` 负责两个现有 key：
+
+| Key | 内容 | 读取规则 |
+| --- | ---- | -------- |
+| `@echo/theme` | `light` 或 `dark` | 非法值回退为 `null`，由 App 使用系统主题 |
+| `@echo/preferred_categories` | 类别数组 | 过滤未知值、去重；无有效类别时回退全部类别 |
+
+每次读取都处理 `null`、解析失败和不合法结构。每次写入先规范化数据，写失败时 Promise 会拒绝，并在开发环境输出不含用户内容的警告。
+
+### 5.3 收藏快照
+
+收藏不能只记录 ID，因为未来版本可能替换部分内置格言。保存格式为：
+
+```ts
+type SavedQuoteRecord = {
+  quote: Quote;
+  savedAt: string;
+};
 ```
-1. 用户点击 [🔖] → ActionBar.props.onBookmark
-2. index.tsx toggleBookmark():
-   - 如果已收藏 → removeSavedQuote(id) → SQLite DELETE
-   - 如果未收藏 → addSavedQuote(id) → SQLite INSERT
-   → 更新 savedQuotes State
-3. ActionBar 重新渲染，图标变化
+
+这意味着用户收藏某条格言时，会保存当时完整的文字、作者、身份、主类别和全部类别。即使后续版本从 `quotes.json` 删除该条内容，收藏列表仍可以展示原快照。
+
+`src/storage/savedQuotes.ts` 的职责包括：
+
+- 按 quote ID 防止重复收藏。
+- 按 `savedAt` 从新到旧返回。
+- 删除时只移除目标 ID。
+- 写操作串行执行，避免快速连续点击互相覆盖。
+- 读取时验证顶层数组和每条记录；单条损坏不影响其他合法收藏。
+- 整体无法解析时安全返回空数组，不让本地损坏导致 App 崩溃。
+- 写入前再次验证完整记录数组。
+
+### 5.4 “History”的两个含义
+
+- `quoteHistory` 和 `historyIndex` 是左右切换使用的运行时浏览栈，只放在 React State，重启后清空。
+- `HistorySheet` 的名字沿用现有 UI，但它实际展示的是跨重启保存的收藏列表。
+
+二者产品行为不同，不能因为名称相似而把运行时浏览栈也持久化。
+
+## 6. 主要业务流程
+
+### 流程 1：首次启动
+
+```text
+1. Expo Router 加载根布局和 index.tsx
+2. useFonts() 加载 Cormorant Garamond
+3. 初始化函数读取主题、类别偏好和收藏
+4. 缺少已保存主题时使用系统明暗模式
+5. 缺少有效类别偏好时使用全部 8 个类别
+6. getRandomQuote(preferredCategories) 同步选择首条内置格言
+7. 把首条格言写入 quoteHistory，并将 historyIndex 设为 0
+8. 初始化就绪后渲染页面
+```
+
+### 流程 2：用户点击“下一条”
+
+```text
+1. ActionBar 调用 onNext
+2. 如果浏览栈中已有后一条：historyIndex + 1
+3. 否则：getRandomQuote(preferredCategories) 选择新格言
+4. 将新格言追加到 quoteHistory，并更新 historyIndex
+5. 当前卡片淡出并滑动，新卡片淡入并滑回
+```
+
+类别偏好只影响之后选择的新格言，不重写已经浏览过的栈。
+
+### 流程 3：用户收藏或取消收藏
+
+```text
+收藏：
+1. ActionBar 调用 onBookmark
+2. saveQuote(currentQuote) 保存完整快照和当前 ISO 时间
+3. 成功后把当前 Quote 放到 savedQuotes State 顶部
+
+取消收藏：
+1. removeSavedQuote(currentQuote.id) 只删除目标记录
+2. savedQuotes State 同步过滤目标 ID
+3. ActionBar 与 HistorySheet 立即重新渲染
 ```
 
 ### 流程 4：切换主题
 
-```
-1. 用户点击 [☀️/🌙] → Header.props.onToggleTheme
-2. index.tsx persistTheme():
-   - setIsDark(!isDark) → React State 更新
-   - setTheme("dark") → AsyncStorage 持久化
-3. const colors = isDark ? COLORS.dark : COLORS.light
-4. 所有使用 colors 的组件重新渲染
+```text
+1. Header 或 ThemeScreen 触发主题回调
+2. setIsDark() 立即更新 React State
+3. setTheme("light" | "dark") 持久化选择
+4. colors 派生值变化，所有使用 colors 的组件重新渲染
 ```
 
----
+### 流程 5：修改偏好类别
 
-## 9. 推荐的学习顺序
-
-```
-第 1 步：constants/colors.ts        ← 最基础，无依赖
-第 2 步：constants/categories.ts    ← 无依赖
-第 3 步：database/database.ts       ← 依赖 expo-sqlite
-第 4 步：database/quotes.ts         ← 依赖 database.ts
-第 5 步：database/seed.ts           ← 依赖 quotes.ts + quotes.json
-第 6 步：database/preferences.ts    ← 依赖 async-storage
-第 7 步：components/home/QuoteCard.tsx ← 依赖 colors.ts, quotes.ts
-第 8 步：components/home/Header.tsx  ← 依赖 colors.ts
-第 9 步：components/home/ActionBar.tsx ← 依赖 colors.ts
-第 10 步：screens/*.tsx              ← 通过 props 接收数据
-第 11 步：app/index.tsx              ← 整合所有模块
+```text
+1. PersonalizationScreen 触发类别回调
+2. index.tsx 更新 preferredCategories State
+3. setPreferredCategories() 持久化规范化后的类别数组
+4. 下一次产生新格言时使用新的类别集合筛选
 ```
 
----
+## 7. 最重要的 10 个文件
 
-## 已知问题
+| # | 文件 | 职责 | 学习重点 |
+| - | ---- | ---- | -------- |
+| 1 | `src/app/index.tsx` | 全部运行时 State、页面协调和回调 | 理解完整 UI 数据流 |
+| 2 | `assets/quotes.json` | 唯一内置内容源 | Quote 字段和多类别模型 |
+| 3 | `src/data/quotes.ts` | 验证、筛选、查询和随机选择 | 只读数据层与安全回退 |
+| 4 | `src/storage/savedQuotes.ts` | 收藏快照持久化 | 数据校验、去重、排序和串行写入 |
+| 5 | `src/storage/preferences.ts` | 主题和类别偏好持久化 | 小型设置数据的容错读取 |
+| 6 | `src/constants/categories.ts` | 类别类型、值和颜色 | JSON 与 UI 共用的合法类别集合 |
+| 7 | `src/constants/colors.ts` | 颜色 token | 明暗主题的视觉基础 |
+| 8 | `src/components/home/QuoteCard.tsx` | 格言卡片 | 主类别和文本展示 |
+| 9 | `src/components/home/ActionBar.tsx` | 主要操作入口 | props 回调如何回到 index.tsx |
+| 10 | `src/services/notifications.ts` | 本地提醒 | 如何复用同步格言查询层 |
 
-### 数据库每次启动都 DROP 重建
+## 8. 推荐学习顺序
 
-**文件**：`src/database/database.ts`
+```text
+第 1 步：constants/categories.ts       ← 先理解合法类别集合
+第 2 步：assets/quotes.json            ← 理解 Quote 内容结构
+第 3 步：data/quotes.ts                ← 学习验证、筛选和安全回退
+第 4 步：storage/preferences.ts        ← 学习简单设置持久化
+第 5 步：storage/savedQuotes.ts        ← 学习完整快照和容错读取
+第 6 步：constants/colors.ts           ← 理解主题 token
+第 7 步：components/home/QuoteCard.tsx ← 查看数据如何显示
+第 8 步：components/home/ActionBar.tsx ← 查看用户事件如何上报
+第 9 步：screens/*.tsx                 ← 查看页面如何通过 props 工作
+第 10 步：services/notifications.ts    ← 查看其他功能如何复用数据层
+第 11 步：app/index.tsx                ← 最后串联初始化、State 和交互
+```
 
-每次启动都会 `DROP TABLE IF EXISTS quotes` 和 `quote_categories`，然后重新从 JSON 同步。因为名言数据是只读的，这样做可以确保数据始终最新。
+## 9. 内容维护约定
 
-**当前状态**：暂不修复，仅记录。
+- 每个格言 ID 永久稳定；旧 ID 即使被删除，也不能分配给新内容。
+- 新格言必须使用从未出现过的新 ID。
+- 同一条格言不按类别复制到多个文件；它只存在于单一 `quotes.json` 中。
+- `categories` 可以包含多个合法类别，`primary_category` 必须是其中之一。
+- `quotes.json` 只保存内置内容，不保存主题、偏好或收藏。
+- AsyncStorage 不保存整份内置格言集合，只保存用户数据和收藏快照。
+- 当前单文件结构足以支持数千条内容；出现明确的性能需求前不提前拆分。
 
----
+单个当前版本只能检查 ID 是否唯一，无法自动证明某个已删除 ID 从未在历史版本中使用。因此，发布新内容时必须通过内容维护流程记录已用 ID，并把“永不复用”作为发布检查项。
 
-## 废弃代码
+## 10. 错误处理原则
 
-- `src/services/` — 空目录（或仅含未使用的文件）
+- 所有 AsyncStorage 读取都使用 `try/catch`，处理空值和 JSON 解析失败。
+- 不信任本地读取结果；先验证数组、对象和字段，再交给 UI。
+- 损坏数据使用合理默认值，不能阻止 App 启动。
+- 开发环境可使用 `console.warn` 说明操作名称和错误类型，但不输出用户保存的内容。
+- 所有写入接口返回 `Promise<void>`，调用处可以等待成功后再更新对应 State。

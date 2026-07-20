@@ -1,6 +1,6 @@
 import { View, Text, Animated, StyleSheet } from "react-native";
 import { COLORS } from "../../constants/colors";
-import { Quote } from "../../database/quotes";
+import type { Quote } from "../../data/quotes";
 
 // ══════════════════════════════════════════════
 //  QuoteCard — 名言卡片展示

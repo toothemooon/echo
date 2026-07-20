@@ -1,6 +1,7 @@
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
-import { Alert, Linking, AppState } from "react-native";
+import { Alert, Linking } from "react-native";
+import { getRandomQuote } from "../data/quotes";
 
 /**
  * Configure notification appearance when app is in foreground.
@@ -85,8 +86,7 @@ export async function scheduleDailyReminder(
   await Notifications.cancelAllScheduledNotificationsAsync();
 
   // Pick a random quote for the notification body
-  const { getRandomQuote } = require("../database/quotes");
-  const quote = await getRandomQuote();
+  const quote = getRandomQuote([]);
 
   const body = quote
     ? `"${quote.text}"\n— ${quote.author}`

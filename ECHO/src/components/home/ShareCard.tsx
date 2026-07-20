@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { COLORS } from "../../constants/colors";
-import { Quote } from "../../database/quotes";
+import type { Quote } from "../../data/quotes";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const CARD_WIDTH = SCREEN_WIDTH - 64;

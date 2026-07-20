@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../../constants/colors";
-import { Quote } from "../../database/quotes";
+import type { Quote } from "../../data/quotes";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -27,7 +27,7 @@ type Props = {
   sheetAnim: Animated.Value;
   backdropAnim: Animated.Value;
   onClose: () => void;
-  onRemove: (quoteId: number) => void;
+  onRemove: (quoteId: Quote["id"]) => void;
 };
 
 export default function HistorySheet(props: Props) {

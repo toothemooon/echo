@@ -8,20 +8,18 @@ import {
 } from "@expo-google-fonts/cormorant-garamond";
 import { COLORS } from "../constants/colors";
 import { CATEGORIES, Category } from "../constants/categories";
-import {
-  Quote,
-  getRandomQuote,
-  getSavedQuotes,
-  addSavedQuote,
-  removeSavedQuote,
-} from "../database/quotes";
+import { getRandomQuote, type Quote } from "../data/quotes";
 import {
   getPreferredCategories,
   setPreferredCategories as savePreferredCategories,
   getTheme,
   setTheme,
-} from "../database/preferences";
-import { syncDatabase } from "../database/seed";
+} from "../storage/preferences";
+import {
+  getSavedQuotes,
+  removeSavedQuote,
+  saveQuote,
+} from "../storage/savedQuotes";
 
 // Home 组件
 import Header from "../components/home/Header";
@@ -38,15 +36,6 @@ import ThemeScreen from "../screens/ThemeScreen";
 
 // ── 常量 ──
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
-
-const PLACEHOLDER_QUOTE: Quote = {
-  id: 0,
-  text: "Loading...",
-  author: "",
-  role: "",
-  primary_category: "",
-  categories: [],
-};
 
 type Page = "home" | "settings" | "theme" | "personalization";
 
@@ -68,7 +57,7 @@ export default function Index() {
   ]);
   const [savedQuotes, setSavedQuotes] = useState<Quote[]>([]);
   const [reminderEnabled, setReminderEnabled] = useState(false);
-  const [dbReady, setDbReady] = useState(false);
+  const [initializationReady, setInitializationReady] = useState(false);
 
   // ── Home State ──
   const [quoteHistory, setQuoteHistory] = useState<Quote[]>([]);
@@ -87,36 +76,44 @@ export default function Index() {
   // ── useEffect 初始化 ──
   useEffect(() => {
     async function init() {
-      const savedTheme = await getTheme();
-      const shouldUseDarkTheme = savedTheme
-        ? savedTheme === "dark"
-        : Appearance.getColorScheme() === "dark";
-      setIsDark(shouldUseDarkTheme);
+      try {
+        const [savedTheme, prefs, savedRecords] = await Promise.all([
+          getTheme(),
+          getPreferredCategories(),
+          getSavedQuotes(),
+        ]);
 
-      await syncDatabase();
+        const shouldUseDarkTheme = savedTheme
+          ? savedTheme === "dark"
+          : Appearance.getColorScheme() === "dark";
+        setIsDark(shouldUseDarkTheme);
+        setPreferredCategories(prefs);
+        setSavedQuotes(savedRecords.map((record) => record.quote));
 
-      const prefs = await getPreferredCategories();
-      setPreferredCategories(prefs);
-
-      const saved = await getSavedQuotes();
-      setSavedQuotes(saved);
-
-      const firstQuote = await getRandomQuote(prefs);
-      if (firstQuote) {
-        setQuoteHistory([firstQuote]);
-        setHistoryIndex(0);
+        const firstQuote = getRandomQuote(prefs);
+        if (firstQuote) {
+          setQuoteHistory([firstQuote]);
+          setHistoryIndex(0);
+        }
+      } catch (error) {
+        if (__DEV__) {
+          console.warn(
+            "Failed to initialize local app data.",
+            error instanceof Error ? error.message : "Unknown error",
+          );
+        }
+      } finally {
+        setInitializationReady(true);
       }
-
-      setDbReady(true);
     }
     init();
   }, []);
 
   // ── 派生值（统一计算一次） ──
-  if (!fontsLoaded || !dbReady) return null;
+  const currentQuote = quoteHistory[historyIndex] ?? null;
+  if (!fontsLoaded || !initializationReady || !currentQuote) return null;
 
   const colors = isDark ? COLORS.dark : COLORS.light;
-  const currentQuote = quoteHistory[historyIndex] ?? PLACEHOLDER_QUOTE;
   const isSaved = savedQuotes.some((q) => q.id === currentQuote.id);
   const canGoPrev = historyIndex > 0;
 
@@ -124,7 +121,7 @@ export default function Index() {
   const toggleTheme = () => {
     const nextIsDark = !isDark;
     setIsDark(nextIsDark);
-    setTheme(nextIsDark ? "dark" : "light");
+    void setTheme(nextIsDark ? "dark" : "light").catch(() => undefined);
   };
 
   // ── 分类 ──
@@ -134,25 +131,42 @@ export default function Index() {
         ? previous.filter((c) => c !== category)
         : [...previous, category];
       if (next.length === 0) return previous;
-      savePreferredCategories(next);
+      void savePreferredCategories(next).catch(() => undefined);
       return next;
     });
   };
 
   // ── 收藏 ──
   const toggleBookmark = async () => {
-    if (isSaved) {
-      await removeSavedQuote(currentQuote.id);
-      setSavedQuotes((prev) => prev.filter((q) => q.id !== currentQuote.id));
-    } else {
-      await addSavedQuote(currentQuote.id);
-      setSavedQuotes((prev) => [...prev, currentQuote]);
+    try {
+      if (isSaved) {
+        await removeSavedQuote(currentQuote.id);
+        setSavedQuotes((prev) =>
+          prev.filter((q) => q.id !== currentQuote.id),
+        );
+      } else {
+        await saveQuote(currentQuote);
+        setSavedQuotes((prev) => [
+          currentQuote,
+          ...prev.filter((q) => q.id !== currentQuote.id),
+        ]);
+      }
+    } catch (_error) {
+      if (__DEV__) {
+        console.warn("Bookmark state was not updated because saving failed.");
+      }
     }
   };
 
-  const handleRemoveSaved = async (quoteId: number) => {
-    await removeSavedQuote(quoteId);
-    setSavedQuotes((prev) => prev.filter((q) => q.id !== quoteId));
+  const handleRemoveSaved = async (quoteId: Quote["id"]) => {
+    try {
+      await removeSavedQuote(quoteId);
+      setSavedQuotes((prev) => prev.filter((q) => q.id !== quoteId));
+    } catch (_error) {
+      if (__DEV__) {
+        console.warn("Saved quote was not removed because saving failed.");
+      }
+    }
   };
 
   // ── 分享 ──
@@ -227,12 +241,11 @@ export default function Index() {
         setHistoryIndex((prev) => prev + 1);
       });
     } else {
-      getRandomQuote(preferredCategories).then((newQuote) => {
-        if (!newQuote) return;
-        runQuoteTransition("right", () => {
-          setQuoteHistory((prev) => [...prev, newQuote]);
-          setHistoryIndex((prev) => prev + 1);
-        });
+      const newQuote = getRandomQuote(preferredCategories);
+      if (!newQuote) return;
+      runQuoteTransition("right", () => {
+        setQuoteHistory((prev) => [...prev, newQuote]);
+        setHistoryIndex((prev) => prev + 1);
       });
     }
   };
