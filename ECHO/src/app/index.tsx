@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { View, Animated, Dimensions, Alert } from "react-native";
+import { View, Animated, Dimensions, Alert, Appearance } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { captureRef } from "react-native-view-shot";
 import {
@@ -11,14 +11,13 @@ import { CATEGORIES, Category } from "../constants/categories";
 import {
   Quote,
   getRandomQuote,
-  getQuoteCount,
   getSavedQuotes,
   addSavedQuote,
   removeSavedQuote,
 } from "../database/quotes";
 import {
   getPreferredCategories,
-  setPreferredCategories,
+  setPreferredCategories as savePreferredCategories,
   getTheme,
   setTheme,
 } from "../database/preferences";
@@ -64,9 +63,9 @@ export default function Index() {
   // ── 跨页面 State ──
   const [currentPage, setCurrentPage] = useState<Page>("home");
   const [isDark, setIsDark] = useState(false);
-  const [preferredCategories, setPreferredCategoriesState] = useState<
-    Category[]
-  >([...CATEGORIES]);
+  const [preferredCategories, setPreferredCategories] = useState<Category[]>([
+    ...CATEGORIES,
+  ]);
   const [savedQuotes, setSavedQuotes] = useState<Quote[]>([]);
   const [reminderEnabled, setReminderEnabled] = useState(false);
   const [dbReady, setDbReady] = useState(false);
@@ -74,7 +73,6 @@ export default function Index() {
   // ── Home State ──
   const [quoteHistory, setQuoteHistory] = useState<Quote[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
-  const [quoteCount, setQuoteCount] = useState(0);
   const [historyVisible, setHistoryVisible] = useState(false);
   const [shareVisible, setShareVisible] = useState(false);
 
@@ -90,24 +88,18 @@ export default function Index() {
   useEffect(() => {
     async function init() {
       const savedTheme = await getTheme();
-      if (savedTheme) {
-        setIsDark(savedTheme === "dark");
-      } else {
-        const colorScheme =
-          require("react-native").Appearance?.getColorScheme();
-        if (colorScheme === "dark") setIsDark(true);
-      }
+      const shouldUseDarkTheme = savedTheme
+        ? savedTheme === "dark"
+        : Appearance.getColorScheme() === "dark";
+      setIsDark(shouldUseDarkTheme);
 
       await syncDatabase();
 
       const prefs = await getPreferredCategories();
-      setPreferredCategoriesState(prefs);
+      setPreferredCategories(prefs);
 
       const saved = await getSavedQuotes();
       setSavedQuotes(saved);
-
-      const count = await getQuoteCount();
-      setQuoteCount(count);
 
       const firstQuote = await getRandomQuote(prefs);
       if (firstQuote) {
@@ -120,29 +112,35 @@ export default function Index() {
     init();
   }, []);
 
+  // ── 派生值（统一计算一次） ──
+  if (!fontsLoaded || !dbReady) return null;
+
+  const colors = isDark ? COLORS.dark : COLORS.light;
+  const currentQuote = quoteHistory[historyIndex] ?? PLACEHOLDER_QUOTE;
+  const isSaved = savedQuotes.some((q) => q.id === currentQuote.id);
+  const canGoPrev = historyIndex > 0;
+
   // ── 主题 ──
-  const persistTheme = (dark: boolean) => {
-    setIsDark(dark);
-    setTheme(dark ? "dark" : "light");
+  const toggleTheme = () => {
+    const nextIsDark = !isDark;
+    setIsDark(nextIsDark);
+    setTheme(nextIsDark ? "dark" : "light");
   };
 
   // ── 分类 ──
-  const toggleCategory = (cat: Category) => {
-    setPreferredCategoriesState((prev) => {
-      const next = prev.includes(cat)
-        ? prev.filter((c) => c !== cat)
-        : [...prev, cat];
-      if (next.length === 0) return prev;
-      setPreferredCategories(next);
+  const toggleCategory = (category: Category) => {
+    setPreferredCategories((previous) => {
+      const next = previous.includes(category)
+        ? previous.filter((c) => c !== category)
+        : [...previous, category];
+      if (next.length === 0) return previous;
+      savePreferredCategories(next);
       return next;
     });
   };
 
   // ── 收藏 ──
   const toggleBookmark = async () => {
-    const currentQuote =
-      historyIndex >= 0 ? quoteHistory[historyIndex] : PLACEHOLDER_QUOTE;
-    const isSaved = savedQuotes.some((q) => q.id === currentQuote.id);
     if (isSaved) {
       await removeSavedQuote(currentQuote.id);
       setSavedQuotes((prev) => prev.filter((q) => q.id !== currentQuote.id));
@@ -158,11 +156,7 @@ export default function Index() {
   };
 
   // ── 分享 ──
-  const handleShare = () => setShareVisible(true);
-
   const shareAsImage = async () => {
-    const currentQuote =
-      historyIndex >= 0 ? quoteHistory[historyIndex] : PLACEHOLDER_QUOTE;
     try {
       const uri = await captureRef(shareCardRef, {
         format: "png",
@@ -179,12 +173,15 @@ export default function Index() {
     }
   };
 
-  // ── 动画 ──
-  const animateToQuote = (newIndex: number, direction: "left" | "right") => {
+  // ── 统一动画函数 ──
+  const runQuoteTransition = (
+    direction: "left" | "right",
+    updateQuote: () => void,
+  ) => {
     if (isAnimating.current) return;
     isAnimating.current = true;
 
-    const toSlide = direction === "left" ? -60 : 60;
+    const offset = direction === "left" ? -60 : 60;
 
     Animated.parallel([
       Animated.timing(fadeAnim, {
@@ -193,13 +190,14 @@ export default function Index() {
         useNativeDriver: true,
       }),
       Animated.timing(slideAnim, {
-        toValue: toSlide,
+        toValue: offset,
         duration: 200,
         useNativeDriver: true,
       }),
     ]).start(() => {
-      setHistoryIndex(newIndex);
-      slideAnim.setValue(-toSlide);
+      updateQuote();
+
+      slideAnim.setValue(-offset);
       fadeAnim.setValue(0);
 
       Animated.parallel([
@@ -219,61 +217,31 @@ export default function Index() {
     });
   };
 
+  // ── 名言导航 ──
   const goNext = () => {
     if (isAnimating.current) return;
     const canGoNext = historyIndex < quoteHistory.length - 1;
 
     if (canGoNext) {
-      animateToQuote(historyIndex + 1, "right");
+      runQuoteTransition("right", () => {
+        setHistoryIndex((prev) => prev + 1);
+      });
     } else {
-      isAnimating.current = true;
       getRandomQuote(preferredCategories).then((newQuote) => {
-        if (!newQuote) {
-          isAnimating.current = false;
-          return;
-        }
-        const toSlide = 60;
-
-        Animated.parallel([
-          Animated.timing(fadeAnim, {
-            toValue: 0,
-            duration: 200,
-            useNativeDriver: true,
-          }),
-          Animated.timing(slideAnim, {
-            toValue: toSlide,
-            duration: 200,
-            useNativeDriver: true,
-          }),
-        ]).start(() => {
+        if (!newQuote) return;
+        runQuoteTransition("right", () => {
           setQuoteHistory((prev) => [...prev, newQuote]);
           setHistoryIndex((prev) => prev + 1);
-
-          slideAnim.setValue(-toSlide);
-          fadeAnim.setValue(0);
-
-          Animated.parallel([
-            Animated.timing(fadeAnim, {
-              toValue: 1,
-              duration: 300,
-              useNativeDriver: true,
-            }),
-            Animated.timing(slideAnim, {
-              toValue: 0,
-              duration: 300,
-              useNativeDriver: true,
-            }),
-          ]).start(() => {
-            isAnimating.current = false;
-          });
         });
       });
     }
   };
 
   const goPrev = () => {
-    if (isAnimating.current || historyIndex <= 0) return;
-    animateToQuote(historyIndex - 1, "left");
+    if (historyIndex <= 0) return;
+    runQuoteTransition("left", () => {
+      setHistoryIndex((prev) => prev - 1);
+    });
   };
 
   // ── 历史弹窗 ──
@@ -310,22 +278,13 @@ export default function Index() {
     ]).start(() => setHistoryVisible(false));
   };
 
-  // ── 派生值 ──
-  if (!fontsLoaded || !dbReady) return null;
-
-  const colors = isDark ? COLORS.dark : COLORS.light;
-  const currentQuote =
-    historyIndex >= 0 ? quoteHistory[historyIndex] : PLACEHOLDER_QUOTE;
-  const isSaved = savedQuotes.some((q) => q.id === currentQuote.id);
-  const canGoPrev = historyIndex > 0;
-
   // ── 页面路由（currentPage 条件渲染） ──
   if (currentPage === "theme") {
     return (
       <ThemeScreen
         colors={colors}
         isDark={isDark}
-        onToggleTheme={() => persistTheme(!isDark)}
+        onToggleTheme={toggleTheme}
         onBack={() => setCurrentPage("settings")}
       />
     );
@@ -373,7 +332,7 @@ export default function Index() {
       <Header
         colors={colors}
         isDark={isDark}
-        onToggleTheme={() => persistTheme(!isDark)}
+        onToggleTheme={toggleTheme}
         onMenu={() => setCurrentPage("settings")}
       />
 
@@ -391,7 +350,7 @@ export default function Index() {
           onPrev={canGoPrev ? goPrev : undefined}
           onNext={goNext}
           onBookmark={toggleBookmark}
-          onShare={handleShare}
+          onShare={() => setShareVisible(true)}
           onHistory={openHistory}
         />
       </View>

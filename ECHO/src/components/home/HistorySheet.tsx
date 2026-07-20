@@ -23,7 +23,7 @@ const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 type Props = {
   visible: boolean;
   savedQuotes: Quote[];
-  colors: (typeof COLORS)["light"];
+  colors: typeof COLORS.light;
   sheetAnim: Animated.Value;
   backdropAnim: Animated.Value;
   onClose: () => void;

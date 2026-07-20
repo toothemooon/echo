@@ -11,7 +11,7 @@ import { Quote } from "../../database/quotes";
 // ── Props ──
 type Props = {
   quote: Quote;
-  colors: (typeof COLORS)["light"];
+  colors: typeof COLORS.light;
   fadeAnim: Animated.Value;
   slideAnim: Animated.Value;
 };

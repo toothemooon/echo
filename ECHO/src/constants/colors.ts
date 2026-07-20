@@ -34,5 +34,3 @@ export const COLORS = {
     sheetEmpty: "#5A5854",
   },
 };
-
-export type ColorTokens = keyof typeof COLORS.light;

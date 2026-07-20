@@ -15,7 +15,7 @@ const CARD_HEIGHT = 400;
 // ── Props ──
 type Props = {
   quote: Quote;
-  colors: (typeof COLORS)["light"];
+  colors: typeof COLORS.light;
 };
 
 /**

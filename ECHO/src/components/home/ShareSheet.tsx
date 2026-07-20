@@ -24,7 +24,7 @@ const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 type ShareSheetProps = {
   visible: boolean;
   quote: Quote;
-  colors: (typeof COLORS)["light"];
+  colors: typeof COLORS.light;
   onClose: () => void;
   onShareAsImage: () => void;
 };

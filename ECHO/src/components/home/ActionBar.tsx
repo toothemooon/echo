@@ -9,7 +9,7 @@ import { COLORS } from "../../constants/colors";
 
 // ── Props ──
 type Props = {
-  colors: (typeof COLORS)["light"];
+  colors: typeof COLORS.light;
   isSaved: boolean;
   onPrev?: () => void;
   onNext: () => void;

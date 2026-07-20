@@ -13,7 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/colors";
 
 type Props = {
-  colors: (typeof COLORS)["light"];
+  colors: typeof COLORS.light;
   isDark: boolean;
   reminderEnabled: boolean;
   onToggleReminder: () => void;

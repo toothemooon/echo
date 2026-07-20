@@ -1,4 +1,4 @@
-export const CATEGORIES = [
+export const CATEGORIES: Category[] = [
   "MINDFULNESS",
   "WISDOM",
   "COURAGE",
@@ -7,9 +7,17 @@ export const CATEGORIES = [
   "GROWTH",
   "HEALING",
   "GRATITUDE",
-] as const;
+];
 
-export type Category = (typeof CATEGORIES)[number];
+export type Category =
+  | "MINDFULNESS"
+  | "WISDOM"
+  | "COURAGE"
+  | "LOVE"
+  | "NATURE"
+  | "GROWTH"
+  | "HEALING"
+  | "GRATITUDE";
 
 export const CATEGORY_COLORS: Record<Category, string> = {
   MINDFULNESS: "#8FAE8B",

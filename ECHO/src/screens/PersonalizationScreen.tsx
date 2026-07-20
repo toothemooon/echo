@@ -10,7 +10,7 @@ import { CATEGORIES, CATEGORY_COLORS, Category } from "../constants/categories";
 
 // ── Props ──
 type Props = {
-  colors: (typeof COLORS)["light"];
+  colors: typeof COLORS.light;
   preferredCategories: Category[];
   onToggleCategory: (category: Category) => void;
   onBack: () => void;
