@@ -332,7 +332,7 @@ export default function SettingsScreen(props: Props) {
                 color={props.colors.btnIcon}
               />
               <Text style={[styles.cardLabel, { color: props.colors.text }]}>
-                Privacy Policy ~
+                Privacy Policy
               </Text>
             </View>
             <Ionicons
