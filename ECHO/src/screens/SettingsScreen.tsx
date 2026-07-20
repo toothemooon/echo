@@ -360,7 +360,7 @@ export default function SettingsScreen(props: Props) {
                 color={props.colors.btnIcon}
               />
               <Text style={[styles.cardLabel, { color: props.colors.text }]}>
-                Terms of Service
+                Terms of Service ～
               </Text>
             </View>
             <Ionicons
