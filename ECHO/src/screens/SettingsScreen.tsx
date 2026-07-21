@@ -2,7 +2,6 @@ import {
   View,
   Text,
   Pressable,
-  Switch,
   StyleSheet,
   Linking,
   Alert,
@@ -15,8 +14,6 @@ import { COLORS } from "../constants/colors";
 type Props = {
   colors: typeof COLORS.light;
   isDark: boolean;
-  reminderEnabled: boolean;
-  onToggleReminder: () => void;
   onBack: () => void;
   onOpenPersonalization: () => void;
   onOpenTheme: () => void;
@@ -158,28 +155,6 @@ export default function SettingsScreen(props: Props) {
             ]}
           />
 
-          <View style={styles.cardRow}>
-            <View style={styles.cardLeft}>
-              <Ionicons
-                name="globe-outline"
-                size={20}
-                color={props.colors.btnIcon}
-              />
-              <Text style={[styles.cardLabel, { color: props.colors.text }]}>
-                Interface Language
-              </Text>
-            </View>
-            <View style={styles.cardRight}>
-              <Text style={[styles.cardValue, { color: props.colors.author }]}>
-                English
-              </Text>
-              <Ionicons
-                name="chevron-forward"
-                size={16}
-                color={props.colors.btnIcon}
-              />
-            </View>
-          </View>
         </View>
 
         {/* ── Widgets ── */}
@@ -225,46 +200,15 @@ export default function SettingsScreen(props: Props) {
                 Daily Reminder
               </Text>
             </View>
-            <Switch
-              value={props.reminderEnabled}
-              onValueChange={props.onToggleReminder}
-              trackColor={{
-                false: props.colors.inactiveDot,
-                true: props.colors.label,
-              }}
-              thumbColor="#fff"
-            />
+            <Text
+              style={[
+                styles.cardValue,
+                { color: props.colors.author, opacity: 0.5 },
+              ]}
+            >
+              Coming Soon
+            </Text>
           </View>
-
-          <View
-            style={[
-              styles.cardDivider,
-              { backgroundColor: props.colors.divider },
-            ]}
-          />
-
-          <Pressable style={styles.cardRow}>
-            <View style={styles.cardLeft}>
-              <Ionicons
-                name="moon-outline"
-                size={20}
-                color={props.colors.btnIcon}
-              />
-              <Text style={[styles.cardLabel, { color: props.colors.text }]}>
-                Quiet Hours
-              </Text>
-            </View>
-            <View style={styles.cardRight}>
-              <Text style={[styles.cardValue, { color: props.colors.author }]}>
-                10:00 PM – 7:00 AM
-              </Text>
-              <Ionicons
-                name="chevron-forward"
-                size={16}
-                color={props.colors.btnIcon}
-              />
-            </View>
-          </Pressable>
         </View>
 
         {/* ── Feedback ── */}
