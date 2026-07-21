@@ -5,9 +5,9 @@ import {
   StyleSheet,
   Linking,
   Alert,
-  Share,
   ScrollView,
 } from "react-native";
+import * as Clipboard from "expo-clipboard";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/colors";
 
@@ -17,25 +17,19 @@ type Props = {
   onBack: () => void;
   onOpenPersonalization: () => void;
   onOpenTheme: () => void;
+  onOpenQuoteSettings: () => void;
   preferredCount: number;
 };
 
-// ══════════════════════════════════════════════
-//  SettingsScreen — 设置页面
-//  分区展示：Preference / Widgets / Notifications / Feedback / About
-//  通过 props 接收状态和回调，不直接修改 State
-// ══════════════════════════════════════════════
-
-// ── Props ──
-
-// ── 常量 ──
-const FEEDBACK_EMAIL = "mailto:feedback@echo.app?subject=Echo%20Feedback";
+const FEEDBACK_EMAIL = "abc510433622@gmail.com";
+const APP_STORE_URL = "https://apps.apple.com/app/echo/id0000000000";
 const PRIVACY_URL = "https://echo.app/privacy";
 const TERMS_URL = "https://echo.app/terms";
 
 async function safeOpenURL(url: string) {
   try {
     const canOpen = await Linking.canOpenURL(url);
+
     if (canOpen) {
       await Linking.openURL(url);
     } else {
@@ -48,26 +42,47 @@ async function safeOpenURL(url: string) {
 
 export default function SettingsScreen(props: Props) {
   const handleShareApp = () => {
-    Share.share({
-      message:
-        "Check out Echo — a daily quote generator app!\nhttps://apps.apple.com/app/echo/id0000000000",
-      url: "https://apps.apple.com/app/echo/id0000000000",
-      title: "Echo",
-    });
+    Alert.alert("Share ECHO", APP_STORE_URL, [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Copy Link",
+        onPress: () => {
+          void Clipboard.setStringAsync(APP_STORE_URL);
+        },
+      },
+    ]);
   };
 
   const handleSendFeedback = () => {
-    safeOpenURL(FEEDBACK_EMAIL);
+    Alert.alert("Send Feedback", FEEDBACK_EMAIL, [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Copy Email",
+        onPress: () => {
+          void Clipboard.setStringAsync(FEEDBACK_EMAIL);
+        },
+      },
+    ]);
   };
 
   return (
     <View
-      style={[styles.container, { backgroundColor: props.colors.background }]}
+      style={[
+        styles.container,
+        {
+          backgroundColor: props.colors.background,
+        },
+      ]}
     >
       {/* Header */}
       <View style={styles.header}>
         <Pressable
-          style={[styles.backBtn, { backgroundColor: props.colors.btnBg }]}
+          style={[
+            styles.backBtn,
+            {
+              backgroundColor: props.colors.btnBg,
+            },
+          ]}
           onPress={props.onBack}
         >
           <Ionicons
@@ -76,22 +91,55 @@ export default function SettingsScreen(props: Props) {
             color={props.colors.btnIcon}
           />
         </Pressable>
-        <Text style={[styles.headerTitle, { color: props.colors.text }]}>
+
+        <Text
+          style={[
+            styles.headerTitle,
+            {
+              color: props.colors.text,
+            },
+          ]}
+        >
           SETTINGS
         </Text>
-        <View style={{ width: 40 }} />
+
+        <View style={styles.headerPlaceholder} />
       </View>
 
       <View
-        style={[styles.divider, { backgroundColor: props.colors.divider }]}
+        style={[
+          styles.divider,
+          {
+            backgroundColor: props.colors.divider,
+          },
+        ]}
       />
 
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* ── Preference (Theme + Categories + Language) ── */}
-        <Text style={[styles.sectionTitle, { color: props.colors.label }]}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
+        {/* Preference */}
+        <Text
+          style={[
+            styles.sectionTitle,
+            {
+              color: props.colors.label,
+            },
+          ]}
+        >
           PREFERENCE
         </Text>
-        <View style={[styles.card, { backgroundColor: props.colors.btnBg }]}>
+
+        <View
+          style={[
+            styles.card,
+            {
+              backgroundColor: props.colors.btnBg,
+            },
+          ]}
+        >
+          {/* Theme */}
           <Pressable style={styles.cardRow} onPress={props.onOpenTheme}>
             <View style={styles.cardLeft}>
               <Ionicons
@@ -99,14 +147,31 @@ export default function SettingsScreen(props: Props) {
                 size={20}
                 color={props.colors.btnIcon}
               />
-              <Text style={[styles.cardLabel, { color: props.colors.text }]}>
+
+              <Text
+                style={[
+                  styles.cardLabel,
+                  {
+                    color: props.colors.text,
+                  },
+                ]}
+              >
                 Theme
               </Text>
             </View>
+
             <View style={styles.cardRight}>
-              <Text style={[styles.cardValue, { color: props.colors.author }]}>
+              <Text
+                style={[
+                  styles.cardValue,
+                  {
+                    color: props.colors.author,
+                  },
+                ]}
+              >
                 {props.isDark ? "Dark" : "Light"}
               </Text>
+
               <Ionicons
                 name="chevron-forward"
                 size={16}
@@ -118,10 +183,13 @@ export default function SettingsScreen(props: Props) {
           <View
             style={[
               styles.cardDivider,
-              { backgroundColor: props.colors.divider },
+              {
+                backgroundColor: props.colors.divider,
+              },
             ]}
           />
 
+          {/* Categories */}
           <Pressable
             style={styles.cardRow}
             onPress={props.onOpenPersonalization}
@@ -132,14 +200,31 @@ export default function SettingsScreen(props: Props) {
                 size={20}
                 color={props.colors.btnIcon}
               />
-              <Text style={[styles.cardLabel, { color: props.colors.text }]}>
+
+              <Text
+                style={[
+                  styles.cardLabel,
+                  {
+                    color: props.colors.text,
+                  },
+                ]}
+              >
                 Categories
               </Text>
             </View>
+
             <View style={styles.cardRight}>
-              <Text style={[styles.cardValue, { color: props.colors.author }]}>
+              <Text
+                style={[
+                  styles.cardValue,
+                  {
+                    color: props.colors.author,
+                  },
+                ]}
+              >
                 {props.preferredCount} Selected
               </Text>
+
               <Ionicons
                 name="chevron-forward"
                 size={16}
@@ -151,71 +236,61 @@ export default function SettingsScreen(props: Props) {
           <View
             style={[
               styles.cardDivider,
-              { backgroundColor: props.colors.divider },
+              {
+                backgroundColor: props.colors.divider,
+              },
             ]}
           />
 
-        </View>
-
-        {/* ── Widgets ── */}
-        <Text style={[styles.sectionTitle, { color: props.colors.label }]}>
-          WIDGETS
-        </Text>
-        <View style={[styles.card, { backgroundColor: props.colors.btnBg }]}>
-          <View style={styles.cardRow}>
+          {/* Quote Settings */}
+          <Pressable style={styles.cardRow} onPress={props.onOpenQuoteSettings}>
             <View style={styles.cardLeft}>
               <Ionicons
-                name="phone-portrait-outline"
+                name="text-outline"
                 size={20}
                 color={props.colors.btnIcon}
               />
-              <Text style={[styles.cardLabel, { color: props.colors.text }]}>
-                Widget Settings
+
+              <Text
+                style={[
+                  styles.cardLabel,
+                  {
+                    color: props.colors.text,
+                  },
+                ]}
+              >
+                Quote Settings
               </Text>
             </View>
-            <Text
-              style={[
-                styles.cardValue,
-                { color: props.colors.author, opacity: 0.5 },
-              ]}
-            >
-              Coming Soon
-            </Text>
-          </View>
+
+            <Ionicons
+              name="chevron-forward"
+              size={16}
+              color={props.colors.btnIcon}
+            />
+          </Pressable>
         </View>
 
-        {/* ── Notifications ── */}
-        <Text style={[styles.sectionTitle, { color: props.colors.label }]}>
-          NOTIFICATIONS
-        </Text>
-        <View style={[styles.card, { backgroundColor: props.colors.btnBg }]}>
-          <View style={styles.cardRow}>
-            <View style={styles.cardLeft}>
-              <Ionicons
-                name="notifications-outline"
-                size={20}
-                color={props.colors.btnIcon}
-              />
-              <Text style={[styles.cardLabel, { color: props.colors.text }]}>
-                Daily Reminder
-              </Text>
-            </View>
-            <Text
-              style={[
-                styles.cardValue,
-                { color: props.colors.author, opacity: 0.5 },
-              ]}
-            >
-              Coming Soon
-            </Text>
-          </View>
-        </View>
-
-        {/* ── Feedback ── */}
-        <Text style={[styles.sectionTitle, { color: props.colors.label }]}>
+        {/* Feedback */}
+        <Text
+          style={[
+            styles.sectionTitle,
+            {
+              color: props.colors.label,
+            },
+          ]}
+        >
           FEEDBACK
         </Text>
-        <View style={[styles.card, { backgroundColor: props.colors.btnBg }]}>
+
+        <View
+          style={[
+            styles.card,
+            {
+              backgroundColor: props.colors.btnBg,
+            },
+          ]}
+        >
           <Pressable style={styles.cardRow} onPress={handleSendFeedback}>
             <View style={styles.cardLeft}>
               <Ionicons
@@ -223,10 +298,19 @@ export default function SettingsScreen(props: Props) {
                 size={20}
                 color={props.colors.btnIcon}
               />
-              <Text style={[styles.cardLabel, { color: props.colors.text }]}>
+
+              <Text
+                style={[
+                  styles.cardLabel,
+                  {
+                    color: props.colors.text,
+                  },
+                ]}
+              >
                 Send Feedback
               </Text>
             </View>
+
             <Ionicons
               name="chevron-forward"
               size={16}
@@ -237,7 +321,9 @@ export default function SettingsScreen(props: Props) {
           <View
             style={[
               styles.cardDivider,
-              { backgroundColor: props.colors.divider },
+              {
+                backgroundColor: props.colors.divider,
+              },
             ]}
           />
 
@@ -248,10 +334,19 @@ export default function SettingsScreen(props: Props) {
                 size={20}
                 color={props.colors.btnIcon}
               />
-              <Text style={[styles.cardLabel, { color: props.colors.text }]}>
+
+              <Text
+                style={[
+                  styles.cardLabel,
+                  {
+                    color: props.colors.text,
+                  },
+                ]}
+              >
                 Share App
               </Text>
             </View>
+
             <Ionicons
               name="chevron-forward"
               size={16}
@@ -260,14 +355,31 @@ export default function SettingsScreen(props: Props) {
           </Pressable>
         </View>
 
-        {/* ── About ── */}
-        <Text style={[styles.sectionTitle, { color: props.colors.label }]}>
+        {/* About */}
+        <Text
+          style={[
+            styles.sectionTitle,
+            {
+              color: props.colors.label,
+            },
+          ]}
+        >
           ABOUT
         </Text>
-        <View style={[styles.card, { backgroundColor: props.colors.btnBg }]}>
+
+        <View
+          style={[
+            styles.card,
+            {
+              backgroundColor: props.colors.btnBg,
+            },
+          ]}
+        >
           <Pressable
             style={styles.cardRow}
-            onPress={() => safeOpenURL(PRIVACY_URL)}
+            onPress={() => {
+              void safeOpenURL(PRIVACY_URL);
+            }}
           >
             <View style={styles.cardLeft}>
               <Ionicons
@@ -275,10 +387,19 @@ export default function SettingsScreen(props: Props) {
                 size={20}
                 color={props.colors.btnIcon}
               />
-              <Text style={[styles.cardLabel, { color: props.colors.text }]}>
+
+              <Text
+                style={[
+                  styles.cardLabel,
+                  {
+                    color: props.colors.text,
+                  },
+                ]}
+              >
                 Privacy Policy
               </Text>
             </View>
+
             <Ionicons
               name="chevron-forward"
               size={16}
@@ -289,13 +410,17 @@ export default function SettingsScreen(props: Props) {
           <View
             style={[
               styles.cardDivider,
-              { backgroundColor: props.colors.divider },
+              {
+                backgroundColor: props.colors.divider,
+              },
             ]}
           />
 
           <Pressable
             style={styles.cardRow}
-            onPress={() => safeOpenURL(TERMS_URL)}
+            onPress={() => {
+              void safeOpenURL(TERMS_URL);
+            }}
           >
             <View style={styles.cardLeft}>
               <Ionicons
@@ -303,10 +428,19 @@ export default function SettingsScreen(props: Props) {
                 size={20}
                 color={props.colors.btnIcon}
               />
-              <Text style={[styles.cardLabel, { color: props.colors.text }]}>
+
+              <Text
+                style={[
+                  styles.cardLabel,
+                  {
+                    color: props.colors.text,
+                  },
+                ]}
+              >
                 Terms of Service
               </Text>
             </View>
+
             <Ionicons
               name="chevron-forward"
               size={16}
@@ -319,7 +453,6 @@ export default function SettingsScreen(props: Props) {
   );
 }
 
-// ── 样式 ──
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -331,6 +464,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+  },
+  headerPlaceholder: {
+    width: 40,
   },
   backBtn: {
     width: 40,
@@ -349,6 +485,9 @@ const styles = StyleSheet.create({
     height: StyleSheet.hairlineWidth,
     marginTop: 24,
     marginBottom: 32,
+  },
+  scrollContent: {
+    paddingBottom: 20,
   },
   sectionTitle: {
     fontSize: 12,

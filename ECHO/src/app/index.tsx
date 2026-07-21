@@ -1,21 +1,30 @@
 import { useState, useEffect, useRef } from "react";
 import { View, Animated, Dimensions, Alert, Appearance } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import SplashScreen from "../components/common/SplashScreen";
 import { captureRef } from "react-native-view-shot";
 import {
   useFonts,
   CormorantGaramond_400Regular_Italic,
 } from "@expo-google-fonts/cormorant-garamond";
+
+import SplashScreen from "../components/common/SplashScreen";
 import { COLORS } from "../constants/colors";
-import { CATEGORIES, Category } from "../constants/categories";
+import { CATEGORIES, type Category } from "../constants/categories";
 import { getRandomQuote, type Quote } from "../data/quotes";
+
 import {
   getPreferredCategories,
   setPreferredCategories as savePreferredCategories,
   getTheme,
   setTheme,
+  getQuoteFont,
+  setQuoteFont,
+  getQuoteFontSize,
+  setQuoteFontSize,
+  type QuoteFont,
+  type QuoteFontSize,
 } from "../storage/preferences";
+
 import {
   getSavedQuotes,
   removeSavedQuote,
@@ -34,17 +43,17 @@ import ShareSheet from "../components/home/ShareSheet";
 import SettingsScreen from "../screens/SettingsScreen";
 import PersonalizationScreen from "../screens/PersonalizationScreen";
 import ThemeScreen from "../screens/ThemeScreen";
+import QuoteSettingsScreen from "../screens/QuoteSettingsScreen";
 
-// ── 常量 ──
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
-type Page = "home" | "settings" | "theme" | "personalization";
+type Page =
+  | "home"
+  | "settings"
+  | "theme"
+  | "personalization"
+  | "quote-settings";
 
-// ══════════════════════════════════════════════════════
-//  ECHO — 唯一路由页面
-//  职责：持有全部 State，条件渲染，Props 向下传递
-//  数据流：State → Props → 子组件 → 回调 Props → 修改 State
-// ══════════════════════════════════════════════════════
 export default function Index() {
   const [fontsLoaded] = useFonts({
     CormorantGaramond_400Regular_Italic,
@@ -53,11 +62,18 @@ export default function Index() {
   // ── 跨页面 State ──
   const [currentPage, setCurrentPage] = useState<Page>("home");
   const [isDark, setIsDark] = useState(false);
+
   const [preferredCategories, setPreferredCategories] = useState<Category[]>([
     ...CATEGORIES,
   ]);
+
   const [savedQuotes, setSavedQuotes] = useState<Quote[]>([]);
-  const [reminderEnabled, setReminderEnabled] = useState(false);
+
+  const [quoteFont, setQuoteFontState] = useState<QuoteFont>("elegant");
+
+  const [quoteFontSize, setQuoteFontSizeState] =
+    useState<QuoteFontSize>("medium");
+
   const [initializationReady, setInitializationReady] = useState(false);
 
   // ── Home State ──
@@ -69,7 +85,7 @@ export default function Index() {
   // ── Splash Screen State ──
   const [showSplash, setShowSplash] = useState(true);
 
-  // ── useRef 动画和组件引用 ──
+  // ── 动画和组件引用 ──
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const slideAnim = useRef(new Animated.Value(0)).current;
   const sheetAnim = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
@@ -77,24 +93,36 @@ export default function Index() {
   const isAnimating = useRef(false);
   const shareCardRef = useRef<View>(null);
 
-  // ── useEffect 初始化 ──
+  // ── 初始化 ──
   useEffect(() => {
     async function init() {
       try {
-        const [savedTheme, prefs, savedRecords] = await Promise.all([
+        const [
+          savedTheme,
+          prefs,
+          savedRecords,
+          savedQuoteFont,
+          savedQuoteFontSize,
+        ] = await Promise.all([
           getTheme(),
           getPreferredCategories(),
           getSavedQuotes(),
+          getQuoteFont(),
+          getQuoteFontSize(),
         ]);
 
         const shouldUseDarkTheme = savedTheme
           ? savedTheme === "dark"
           : Appearance.getColorScheme() === "dark";
+
         setIsDark(shouldUseDarkTheme);
         setPreferredCategories(prefs);
         setSavedQuotes(savedRecords.map((record) => record.quote));
+        setQuoteFontState(savedQuoteFont);
+        setQuoteFontSizeState(savedQuoteFontSize);
 
         const firstQuote = getRandomQuote(prefs);
+
         if (firstQuote) {
           setQuoteHistory([firstQuote]);
           setHistoryIndex(0);
@@ -110,14 +138,15 @@ export default function Index() {
         setInitializationReady(true);
       }
     }
-    init();
+
+    void init();
   }, []);
 
-  // ── 派生值（统一计算一次） ──
+  // ── 派生值 ──
   const currentQuote = quoteHistory[historyIndex] ?? null;
 
-  // Splash screen: show while loading
-  if (!fontsLoaded || !initializationReady || !currentQuote) {
+  // ── 启动页 ──
+  if (!fontsLoaded || !initializationReady || !currentQuote || showSplash) {
     return (
       <View
         style={{
@@ -136,25 +165,67 @@ export default function Index() {
   }
 
   const colors = isDark ? COLORS.dark : COLORS.light;
-  const isSaved = savedQuotes.some((q) => q.id === currentQuote.id);
+
+  const isSaved = savedQuotes.some((quote) => quote.id === currentQuote.id);
+
   const canGoPrev = historyIndex > 0;
 
   // ── 主题 ──
   const toggleTheme = () => {
     const nextIsDark = !isDark;
+
     setIsDark(nextIsDark);
-    void setTheme(nextIsDark ? "dark" : "light").catch(() => undefined);
+
+    void setTheme(nextIsDark ? "dark" : "light").catch(() => {
+      if (__DEV__) {
+        console.warn("Failed to save theme.");
+      }
+    });
+  };
+
+  // ── 字体 ──
+  const changeQuoteFont = (font: QuoteFont) => {
+    setQuoteFontState(font);
+
+    void setQuoteFont(font).catch(() => {
+      if (__DEV__) {
+        console.warn("Failed to save quote font.");
+      }
+    });
+  };
+
+  const changeQuoteFontSize = (size: QuoteFontSize) => {
+    setQuoteFontSizeState(size);
+
+    void setQuoteFontSize(size).catch(() => {
+      if (__DEV__) {
+        console.warn("Failed to save quote font size.");
+      }
+    });
   };
 
   // ── 分类 ──
   const toggleCategory = (category: Category) => {
-    setPreferredCategories((previous) => {
-      const next = previous.includes(category)
-        ? previous.filter((c) => c !== category)
-        : [...previous, category];
-      if (next.length === 0) return previous;
-      void savePreferredCategories(next).catch(() => undefined);
-      return next;
+    const next = preferredCategories.includes(category)
+      ? preferredCategories.filter((item) => item !== category)
+      : [...preferredCategories, category];
+
+    if (next.length === 0) {
+      return;
+    }
+
+    setPreferredCategories(next);
+
+    const firstMatchingQuote = getRandomQuote(next);
+    if (firstMatchingQuote) {
+      setQuoteHistory([firstMatchingQuote]);
+      setHistoryIndex(0);
+    }
+
+    void savePreferredCategories(next).catch(() => {
+      if (__DEV__) {
+        console.warn("Failed to save preferred categories.");
+      }
     });
   };
 
@@ -163,12 +234,16 @@ export default function Index() {
     try {
       if (isSaved) {
         await removeSavedQuote(currentQuote.id);
-        setSavedQuotes((prev) => prev.filter((q) => q.id !== currentQuote.id));
+
+        setSavedQuotes((previous) =>
+          previous.filter((quote) => quote.id !== currentQuote.id),
+        );
       } else {
         await saveQuote(currentQuote);
-        setSavedQuotes((prev) => [
+
+        setSavedQuotes((previous) => [
           currentQuote,
-          ...prev.filter((q) => q.id !== currentQuote.id),
+          ...previous.filter((quote) => quote.id !== currentQuote.id),
         ]);
       }
     } catch (_error) {
@@ -181,7 +256,10 @@ export default function Index() {
   const handleRemoveSaved = async (quoteId: Quote["id"]) => {
     try {
       await removeSavedQuote(quoteId);
-      setSavedQuotes((prev) => prev.filter((q) => q.id !== quoteId));
+
+      setSavedQuotes((previous) =>
+        previous.filter((quote) => quote.id !== quoteId),
+      );
     } catch (_error) {
       if (__DEV__) {
         console.warn("Saved quote was not removed because saving failed.");
@@ -197,22 +275,30 @@ export default function Index() {
         quality: 1,
         result: "tmpfile",
       });
+
       const { Share: RNShare } = require("react-native");
+
       await RNShare.share({
         url: uri,
-        message: `"${currentQuote.text}"\n— ${currentQuote.author}\n\nShared from Echo`,
+        message:
+          `"${currentQuote.text}"\n` +
+          `— ${currentQuote.author}\n\n` +
+          "Shared from Echo",
       });
     } catch (_error) {
       Alert.alert("Error", "Failed to generate image.");
     }
   };
 
-  // ── 统一动画函数 ──
+  // ── 名言切换动画 ──
   const runQuoteTransition = (
     direction: "left" | "right",
     updateQuote: () => void,
   ) => {
-    if (isAnimating.current) return;
+    if (isAnimating.current) {
+      return;
+    }
+
     isAnimating.current = true;
 
     const offset = direction === "left" ? -60 : 60;
@@ -251,35 +337,53 @@ export default function Index() {
     });
   };
 
-  // ── 名言导航 ──
+  // ── 下一条名言 ──
   const goNext = () => {
-    if (isAnimating.current) return;
+    if (isAnimating.current) {
+      return;
+    }
+
     const canGoNext = historyIndex < quoteHistory.length - 1;
 
     if (canGoNext) {
       runQuoteTransition("right", () => {
-        setHistoryIndex((prev) => prev + 1);
+        setHistoryIndex((previous) => previous + 1);
       });
-    } else {
-      const newQuote = getRandomQuote(preferredCategories);
-      if (!newQuote) return;
-      runQuoteTransition("right", () => {
-        setQuoteHistory((prev) => [...prev, newQuote]);
-        setHistoryIndex((prev) => prev + 1);
-      });
-    }
-  };
 
-  const goPrev = () => {
-    if (historyIndex <= 0) return;
-    runQuoteTransition("left", () => {
-      setHistoryIndex((prev) => prev - 1);
+      return;
+    }
+
+    const newQuote = getRandomQuote(
+      preferredCategories,
+      quoteHistory.map((quote) => quote.id),
+    );
+
+    if (!newQuote) {
+      return;
+    }
+
+    runQuoteTransition("right", () => {
+      setQuoteHistory((previous) => [...previous, newQuote]);
+
+      setHistoryIndex((previous) => previous + 1);
     });
   };
 
-  // ── 历史弹窗 ──
+  // ── 上一条名言 ──
+  const goPrev = () => {
+    if (historyIndex <= 0) {
+      return;
+    }
+
+    runQuoteTransition("left", () => {
+      setHistoryIndex((previous) => previous - 1);
+    });
+  };
+
+  // ── 打开历史记录 ──
   const openHistory = () => {
     setHistoryVisible(true);
+
     Animated.parallel([
       Animated.spring(sheetAnim, {
         toValue: 0,
@@ -295,6 +399,7 @@ export default function Index() {
     ]).start();
   };
 
+  // ── 关闭历史记录 ──
   const closeHistory = () => {
     Animated.parallel([
       Animated.spring(sheetAnim, {
@@ -308,10 +413,12 @@ export default function Index() {
         duration: 200,
         useNativeDriver: true,
       }),
-    ]).start(() => setHistoryVisible(false));
+    ]).start(() => {
+      setHistoryVisible(false);
+    });
   };
 
-  // ── 页面路由（currentPage 条件渲染） ──
+  // ── Theme 页面 ──
   if (currentPage === "theme") {
     return (
       <ThemeScreen
@@ -323,6 +430,7 @@ export default function Index() {
     );
   }
 
+  // ── Personalization 页面 ──
   if (currentPage === "personalization") {
     return (
       <PersonalizationScreen
@@ -334,16 +442,30 @@ export default function Index() {
     );
   }
 
+  // ── Quote Settings 页面 ──
+  if (currentPage === "quote-settings") {
+    return (
+      <QuoteSettingsScreen
+        colors={colors}
+        quoteFont={quoteFont}
+        quoteFontSize={quoteFontSize}
+        onChangeQuoteFont={changeQuoteFont}
+        onChangeQuoteFontSize={changeQuoteFontSize}
+        onBack={() => setCurrentPage("settings")}
+      />
+    );
+  }
+
+  // ── Settings 页面 ──
   if (currentPage === "settings") {
     return (
       <SettingsScreen
         colors={colors}
         isDark={isDark}
-        reminderEnabled={reminderEnabled}
-        onToggleReminder={() => setReminderEnabled((v) => !v)}
         onBack={() => setCurrentPage("home")}
         onOpenPersonalization={() => setCurrentPage("personalization")}
         onOpenTheme={() => setCurrentPage("theme")}
+        onOpenQuoteSettings={() => setCurrentPage("quote-settings")}
         preferredCount={preferredCategories.length}
       />
     );
@@ -374,6 +496,8 @@ export default function Index() {
         colors={colors}
         fadeAnim={fadeAnim}
         slideAnim={slideAnim}
+        quoteFont={quoteFont}
+        quoteFontSize={quoteFontSize}
       />
 
       <View style={{ alignItems: "center" }}>
@@ -405,11 +529,11 @@ export default function Index() {
         onClose={() => setShareVisible(false)}
         onShareAsImage={() => {
           setShareVisible(false);
-          shareAsImage();
+          void shareAsImage();
         }}
       />
 
-      {/* 离屏 ShareCard，用于 react-native-view-shot 截图 */}
+      {/* 用于生成分享截图，不在屏幕中显示 */}
       <View
         ref={shareCardRef}
         style={{

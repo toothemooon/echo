@@ -140,7 +140,7 @@ export function getQuotesByCategories(categories: Category[]): Quote[] {
   }
 
   const matches = BUILT_IN_QUOTES.filter((quote) =>
-    quote.categories.some((category) => validCategories.has(category)),
+    validCategories.has(quote.primary_category),
   );
 
   return matches.length > 0 ? [...matches] : getAllQuotes();

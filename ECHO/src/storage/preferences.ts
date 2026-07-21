@@ -1,6 +1,12 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CATEGORIES, Category } from "../constants/categories";
 
+const QUOTE_FONT_KEY = "@echo/quote_font";
+const QUOTE_FONT_SIZE_KEY = "@echo/quote_font_size";
+
+export type QuoteFont = "elegant" | "system";
+export type QuoteFontSize = "small" | "medium" | "large";
+
 const PREFS_KEY = "@echo/preferred_categories";
 const THEME_KEY = "@echo/theme";
 
@@ -109,4 +115,43 @@ export async function setTheme(theme: "light" | "dark"): Promise<void> {
     warnInDevelopment("Failed to write theme", error);
     throw error;
   }
+}
+
+export async function getQuoteFont(): Promise<QuoteFont> {
+  try {
+    const value = await AsyncStorage.getItem(QUOTE_FONT_KEY);
+
+    if (value === "elegant" || value === "system") {
+      return value;
+    }
+
+    return "elegant";
+  } catch (error) {
+    warnInDevelopment("Failed to read quote font", error);
+    return "elegant";
+  }
+}
+
+export async function setQuoteFont(font: QuoteFont): Promise<void> {
+  await AsyncStorage.setItem(QUOTE_FONT_KEY, font);
+}
+
+// font
+export async function getQuoteFontSize(): Promise<QuoteFontSize> {
+  try {
+    const value = await AsyncStorage.getItem(QUOTE_FONT_SIZE_KEY);
+
+    if (value === "small" || value === "medium" || value === "large") {
+      return value;
+    }
+
+    return "medium";
+  } catch (error) {
+    warnInDevelopment("Failed to read quote font size", error);
+    return "medium";
+  }
+}
+
+export async function setQuoteFontSize(size: QuoteFontSize): Promise<void> {
+  await AsyncStorage.setItem(QUOTE_FONT_SIZE_KEY, size);
 }

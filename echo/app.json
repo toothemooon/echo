@@ -16,7 +16,11 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.anonymous.ECHO",
       "infoPlist": {
-        "LSApplicationQueriesSchemes": ["itms-apps", "mailto", "market"]
+        "LSApplicationQueriesSchemes": [
+          "itms-apps",
+          "mailto",
+          "market"
+        ]
       }
     },
     "android": {
@@ -34,15 +38,8 @@
     },
     "plugins": [
       "expo-font",
-      [
-        "expo-notifications",
-        {
-          "icon": "./assets/icon.png",
-          "color": "#8FAE8B"
-        }
-      ],
-
-      "expo-router"
+      "expo-router",
+      "expo-asset"
     ]
   }
 }
