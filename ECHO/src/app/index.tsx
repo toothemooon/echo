@@ -21,8 +21,11 @@ import {
   setQuoteFont,
   getQuoteFontSize,
   setQuoteFontSize,
+  getQuoteAnimation,
+  setQuoteAnimation,
   type QuoteFont,
   type QuoteFontSize,
+  type QuoteAnimation,
   type ThemeMode,
 } from "../storage/preferences";
 
@@ -45,6 +48,8 @@ import SettingsScreen from "../screens/SettingsScreen";
 import PersonalizationScreen from "../screens/PersonalizationScreen";
 import ThemeScreen from "../screens/ThemeScreen";
 import QuoteSettingsScreen from "../screens/QuoteSettingsScreen";
+import ArchiveBackground from "../components/common/ArchiveBackground";
+import AnimationSettingsScreen from "../screens/AnimationSettingsScreen";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -53,7 +58,8 @@ type Page =
   | "settings"
   | "theme"
   | "personalization"
-  | "quote-settings";
+  | "quote-settings"
+  | "animation-settings";
 
 export default function Index() {
   const [fontsLoaded] = useFonts({
@@ -75,6 +81,9 @@ export default function Index() {
 
   const [quoteFontSize, setQuoteFontSizeState] =
     useState<QuoteFontSize>("medium");
+
+  const [quoteAnimation, setQuoteAnimationState] =
+    useState<QuoteAnimation>("horizontal");
 
   const [initializationReady, setInitializationReady] = useState(false);
 
@@ -105,12 +114,14 @@ export default function Index() {
           savedRecords,
           savedQuoteFont,
           savedQuoteFontSize,
+          savedQuoteAnimation,
         ] = await Promise.all([
           getTheme(),
           getPreferredCategories(),
           getSavedQuotes(),
           getQuoteFont(),
           getQuoteFontSize(),
+          getQuoteAnimation(),
         ]);
 
         const resolvedTheme: ThemeMode =
@@ -122,6 +133,7 @@ export default function Index() {
         setSavedQuotes(savedRecords.map((record) => record.quote));
         setQuoteFontState(savedQuoteFont);
         setQuoteFontSizeState(savedQuoteFontSize);
+        setQuoteAnimationState(savedQuoteAnimation);
 
         const firstQuote = getRandomQuote(prefs);
 
@@ -202,6 +214,16 @@ export default function Index() {
     void setQuoteFontSize(size).catch(() => {
       if (__DEV__) {
         console.warn("Failed to save quote font size.");
+      }
+    });
+  };
+
+  const changeQuoteAnimation = (animation: QuoteAnimation) => {
+    setQuoteAnimationState(animation);
+
+    void setQuoteAnimation(animation).catch(() => {
+      if (__DEV__) {
+        console.warn("Failed to save quote animation.");
       }
     });
   };
@@ -303,7 +325,20 @@ export default function Index() {
 
     isAnimating.current = true;
 
-    const offset = direction === "left" ? -60 : 60;
+    if (quoteAnimation === "none") {
+      updateQuote();
+      fadeAnim.setValue(1);
+      slideAnim.setValue(0);
+      isAnimating.current = false;
+      return;
+    }
+
+    const offset =
+      quoteAnimation === "horizontal"
+        ? direction === "left"
+          ? -60
+          : 60
+        : 0;
 
     Animated.parallel([
       Animated.timing(fadeAnim, {
@@ -437,6 +472,7 @@ export default function Index() {
     return (
       <PersonalizationScreen
         colors={colors}
+        theme={theme}
         preferredCategories={preferredCategories}
         onToggleCategory={toggleCategory}
         onBack={() => setCurrentPage("settings")}
@@ -449,10 +485,24 @@ export default function Index() {
     return (
       <QuoteSettingsScreen
         colors={colors}
+        theme={theme}
         quoteFont={quoteFont}
         quoteFontSize={quoteFontSize}
         onChangeQuoteFont={changeQuoteFont}
         onChangeQuoteFontSize={changeQuoteFontSize}
+        onBack={() => setCurrentPage("settings")}
+      />
+    );
+  }
+
+  // ── Animation Settings 页面 ──
+  if (currentPage === "animation-settings") {
+    return (
+      <AnimationSettingsScreen
+        colors={colors}
+        theme={theme}
+        animation={quoteAnimation}
+        onChangeAnimation={changeQuoteAnimation}
         onBack={() => setCurrentPage("settings")}
       />
     );
@@ -468,6 +518,8 @@ export default function Index() {
         onOpenPersonalization={() => setCurrentPage("personalization")}
         onOpenTheme={() => setCurrentPage("theme")}
         onOpenQuoteSettings={() => setCurrentPage("quote-settings")}
+        onOpenAnimationSettings={() => setCurrentPage("animation-settings")}
+        quoteAnimation={quoteAnimation}
         preferredCount={preferredCategories.length}
       />
     );
@@ -484,6 +536,7 @@ export default function Index() {
         paddingBottom: 40,
       }}
     >
+      <ArchiveBackground theme={theme} />
       <StatusBar style={isDark ? "light" : "dark"} animated />
 
       <Header

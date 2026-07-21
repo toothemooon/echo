@@ -2,6 +2,8 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/colors";
 import { CATEGORIES, CATEGORY_COLORS, Category } from "../constants/categories";
+import ArchiveBackground from "../components/common/ArchiveBackground";
+import type { ThemeMode } from "../storage/preferences";
 
 // ══════════════════════════════════════════════
 //  PersonalizationScreen — 类别偏好选择器
@@ -11,6 +13,7 @@ import { CATEGORIES, CATEGORY_COLORS, Category } from "../constants/categories";
 // ── Props ──
 type Props = {
   colors: typeof COLORS.light;
+  theme: ThemeMode;
   preferredCategories: Category[];
   onToggleCategory: (category: Category) => void;
   onBack: () => void;
@@ -21,6 +24,7 @@ export default function PersonalizationScreen(props: Props) {
     <View
       style={[styles.container, { backgroundColor: props.colors.background }]}
     >
+      <ArchiveBackground theme={props.theme} />
       {/* Header */}
       <View style={styles.header}>
         <Pressable

@@ -2,6 +2,7 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/colors";
 import type { ThemeMode } from "../storage/preferences";
+import ArchiveBackground from "../components/common/ArchiveBackground";
 
 // ══════════════════════════════════════════════
 //  ThemeScreen — 主题选择器
@@ -31,6 +32,7 @@ export default function ThemeScreen(props: Props) {
     <View
       style={[styles.container, { backgroundColor: props.colors.background }]}
     >
+      <ArchiveBackground theme={props.theme} />
       {/* Header */}
       <View style={styles.header}>
         <Pressable

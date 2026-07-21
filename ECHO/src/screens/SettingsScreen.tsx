@@ -10,7 +10,8 @@ import {
 import * as Clipboard from "expo-clipboard";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/colors";
-import type { ThemeMode } from "../storage/preferences";
+import type { QuoteAnimation, ThemeMode } from "../storage/preferences";
+import ArchiveBackground from "../components/common/ArchiveBackground";
 
 type Props = {
   colors: typeof COLORS.light;
@@ -19,6 +20,8 @@ type Props = {
   onOpenPersonalization: () => void;
   onOpenTheme: () => void;
   onOpenQuoteSettings: () => void;
+  onOpenAnimationSettings: () => void;
+  quoteAnimation: QuoteAnimation;
   preferredCount: number;
 };
 
@@ -31,6 +34,12 @@ const THEME_LABELS: Record<ThemeMode, string> = {
   light: "Light",
   dark: "Dark",
   archive: "Archive",
+};
+
+const ANIMATION_LABELS: Record<QuoteAnimation, string> = {
+  fade: "Fade",
+  horizontal: "Horizontal",
+  none: "None",
 };
 
 async function safeOpenURL(url: string) {
@@ -102,6 +111,7 @@ export default function SettingsScreen(props: Props) {
         },
       ]}
     >
+      <ArchiveBackground theme={props.theme} />
       {/* Header */}
       <View style={styles.header}>
         <Pressable
@@ -296,6 +306,39 @@ export default function SettingsScreen(props: Props) {
               size={16}
               color={props.colors.btnIcon}
             />
+          </Pressable>
+
+          <View
+            style={[
+              styles.cardDivider,
+              { backgroundColor: props.colors.divider },
+            ]}
+          />
+
+          {/* Animation */}
+          <Pressable
+            style={styles.cardRow}
+            onPress={props.onOpenAnimationSettings}
+          >
+            <View style={styles.cardLeft}>
+              <Ionicons
+                name="sparkles-outline"
+                size={20}
+                color={props.colors.btnIcon}
+              />
+              <Text style={[styles.cardLabel, { color: props.colors.text }]}>Animation</Text>
+            </View>
+
+            <View style={styles.cardRight}>
+              <Text style={[styles.cardValue, { color: props.colors.author }]}>
+                {ANIMATION_LABELS[props.quoteAnimation]}
+              </Text>
+              <Ionicons
+                name="chevron-forward"
+                size={16}
+                color={props.colors.btnIcon}
+              />
+            </View>
           </Pressable>
         </View>
 

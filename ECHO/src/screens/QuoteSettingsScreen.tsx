@@ -2,9 +2,12 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/colors";
 import type { QuoteFont, QuoteFontSize } from "../storage/preferences";
+import type { ThemeMode } from "../storage/preferences";
+import ArchiveBackground from "../components/common/ArchiveBackground";
 
 type Props = {
   colors: typeof COLORS.light;
+  theme: ThemeMode;
   quoteFont: QuoteFont;
   quoteFontSize: QuoteFontSize;
   onChangeQuoteFont: (font: QuoteFont) => void;
@@ -28,6 +31,7 @@ export default function QuoteSettingsScreen(props: Props) {
     <View
       style={[styles.container, { backgroundColor: props.colors.background }]}
     >
+      <ArchiveBackground theme={props.theme} />
       <View style={styles.header}>
         <Pressable
           style={[styles.backBtn, { backgroundColor: props.colors.btnBg }]}

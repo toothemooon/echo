@@ -3,10 +3,12 @@ import { CATEGORIES, Category } from "../constants/categories";
 
 const QUOTE_FONT_KEY = "@echo/quote_font";
 const QUOTE_FONT_SIZE_KEY = "@echo/quote_font_size";
+const QUOTE_ANIMATION_KEY = "@echo/quote_animation";
 
 export type QuoteFont = "elegant" | "system";
 export type QuoteFontSize = "small" | "medium" | "large";
 export type ThemeMode = "light" | "dark" | "archive";
+export type QuoteAnimation = "fade" | "horizontal" | "none";
 
 const PREFS_KEY = "@echo/preferred_categories";
 const THEME_KEY = "@echo/theme";
@@ -157,4 +159,29 @@ export async function getQuoteFontSize(): Promise<QuoteFontSize> {
 
 export async function setQuoteFontSize(size: QuoteFontSize): Promise<void> {
   await AsyncStorage.setItem(QUOTE_FONT_SIZE_KEY, size);
+}
+
+export async function getQuoteAnimation(): Promise<QuoteAnimation> {
+  try {
+    const value = await AsyncStorage.getItem(QUOTE_ANIMATION_KEY);
+
+    if (
+      value === "fade" ||
+      value === "horizontal" ||
+      value === "none"
+    ) {
+      return value;
+    }
+
+    return "horizontal";
+  } catch (error) {
+    warnInDevelopment("Failed to read quote animation", error);
+    return "horizontal";
+  }
+}
+
+export async function setQuoteAnimation(
+  animation: QuoteAnimation,
+): Promise<void> {
+  await AsyncStorage.setItem(QUOTE_ANIMATION_KEY, animation);
 }
