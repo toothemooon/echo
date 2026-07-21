@@ -645,6 +645,7 @@
     "text": "The course of true love never did run smooth.",
     "author": "William Shakespeare",
     "role": "Playwright & poet",
+    "source": "A Midsummer Night’s Dream",
     "primary_category": "LOVE",
     "categories": [
       "LOVE"
@@ -1735,6 +1736,7 @@
     "text": "To be, or not to be: that is the question.",
     "author": "William Shakespeare",
     "role": "English playwright & poet",
+    "source": "Hamlet",
     "primary_category": "COURAGE",
     "categories": [
       "COURAGE",
@@ -1746,6 +1748,7 @@
     "text": "Brevity is the soul of wit.",
     "author": "William Shakespeare",
     "role": "English playwright & poet",
+    "source": "Hamlet",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -1757,6 +1760,7 @@
     "text": "To thine own self be true.",
     "author": "William Shakespeare",
     "role": "English playwright & poet",
+    "source": "Hamlet",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -1768,6 +1772,7 @@
     "text": "There is nothing either good or bad, but thinking makes it so.",
     "author": "William Shakespeare",
     "role": "English playwright & poet",
+    "source": "Hamlet",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -1779,6 +1784,7 @@
     "text": "The play’s the thing.",
     "author": "William Shakespeare",
     "role": "English playwright & poet",
+    "source": "Hamlet",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -1790,6 +1796,7 @@
     "text": "The rest is silence.",
     "author": "William Shakespeare",
     "role": "English playwright & poet",
+    "source": "Hamlet",
     "primary_category": "HEALING",
     "categories": [
       "HEALING",
@@ -1801,6 +1808,7 @@
     "text": "All the world’s a stage.",
     "author": "William Shakespeare",
     "role": "English playwright & poet",
+    "source": "As You Like It",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -1812,6 +1820,7 @@
     "text": "If music be the food of love, play on.",
     "author": "William Shakespeare",
     "role": "English playwright & poet",
+    "source": "Twelfth Night",
     "primary_category": "LOVE",
     "categories": [
       "LOVE"
@@ -1822,6 +1831,7 @@
     "text": "Some are born great, some achieve greatness, and some have greatness thrust upon them.",
     "author": "William Shakespeare",
     "role": "English playwright & poet",
+    "source": "Twelfth Night",
     "primary_category": "GROWTH",
     "categories": [
       "GROWTH",
@@ -1833,6 +1843,7 @@
     "text": "What’s past is prologue.",
     "author": "William Shakespeare",
     "role": "English playwright & poet",
+    "source": "The Tempest",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -1844,6 +1855,7 @@
     "text": "We are such stuff as dreams are made on.",
     "author": "William Shakespeare",
     "role": "English playwright & poet",
+    "source": "The Tempest",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -1855,6 +1867,7 @@
     "text": "Misery acquaints a man with strange bedfellows.",
     "author": "William Shakespeare",
     "role": "English playwright & poet",
+    "source": "The Tempest",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -1866,6 +1879,7 @@
     "text": "Love all, trust a few, do wrong to none.",
     "author": "William Shakespeare",
     "role": "English playwright & poet",
+    "source": "All’s Well That Ends Well",
     "primary_category": "LOVE",
     "categories": [
       "LOVE",
@@ -1877,6 +1891,7 @@
     "text": "The better part of valour is discretion.",
     "author": "William Shakespeare",
     "role": "English playwright & poet",
+    "source": "Henry IV, Part 1",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -1888,6 +1903,7 @@
     "text": "Uneasy lies the head that wears a crown.",
     "author": "William Shakespeare",
     "role": "English playwright & poet",
+    "source": "Henry IV, Part 2",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -1899,6 +1915,7 @@
     "text": "Cowards die many times before their deaths.",
     "author": "William Shakespeare",
     "role": "English playwright & poet",
+    "source": "Julius Caesar",
     "primary_category": "COURAGE",
     "categories": [
       "COURAGE",
@@ -1910,6 +1927,7 @@
     "text": "The fault, dear Brutus, is not in our stars, but in ourselves.",
     "author": "William Shakespeare",
     "role": "English playwright & poet",
+    "source": "Julius Caesar",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -1921,6 +1939,7 @@
     "text": "What’s done cannot be undone.",
     "author": "William Shakespeare",
     "role": "English playwright & poet",
+    "source": "Macbeth",
     "primary_category": "HEALING",
     "categories": [
       "HEALING",
@@ -1932,6 +1951,7 @@
     "text": "Fair is foul, and foul is fair.",
     "author": "William Shakespeare",
     "role": "English playwright & poet",
+    "source": "Macbeth",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -1943,6 +1963,7 @@
     "text": "I declare after all there is no enjoyment like reading!",
     "author": "Jane Austen",
     "role": "English novelist",
+    "source": "Pride and Prejudice",
     "primary_category": "GRATITUDE",
     "categories": [
       "GRATITUDE",
@@ -1954,6 +1975,7 @@
     "text": "My courage always rises at every attempt to intimidate me.",
     "author": "Jane Austen",
     "role": "English novelist",
+    "source": "Pride and Prejudice",
     "primary_category": "COURAGE",
     "categories": [
       "COURAGE",
@@ -1965,6 +1987,7 @@
     "text": "Till this moment I never knew myself.",
     "author": "Jane Austen",
     "role": "English novelist",
+    "source": "Pride and Prejudice",
     "primary_category": "GROWTH",
     "categories": [
       "GROWTH",
@@ -1976,6 +1999,7 @@
     "text": "We are all fools in love.",
     "author": "Jane Austen",
     "role": "English novelist",
+    "source": "Pride and Prejudice",
     "primary_category": "LOVE",
     "categories": [
       "LOVE",
@@ -1987,6 +2011,7 @@
     "text": "There is no charm equal to tenderness of heart.",
     "author": "Jane Austen",
     "role": "English novelist",
+    "source": "Emma",
     "primary_category": "LOVE",
     "categories": [
       "LOVE",
@@ -1998,6 +2023,7 @@
     "text": "One half of the world cannot understand the pleasures of the other.",
     "author": "Jane Austen",
     "role": "English novelist",
+    "source": "Emma",
     "primary_category": "LOVE",
     "categories": [
       "LOVE",
@@ -2009,6 +2035,7 @@
     "text": "If I loved you less, I might be able to talk about it more.",
     "author": "Jane Austen",
     "role": "English novelist",
+    "source": "Emma",
     "primary_category": "LOVE",
     "categories": [
       "LOVE"
@@ -2019,6 +2046,7 @@
     "text": "Know your own happiness.",
     "author": "Jane Austen",
     "role": "English novelist",
+    "source": "Sense and Sensibility",
     "primary_category": "GRATITUDE",
     "categories": [
       "GRATITUDE",
@@ -2030,6 +2058,7 @@
     "text": "I must learn to be content with being happier than I deserve.",
     "author": "Jane Austen",
     "role": "English novelist",
+    "source": "Pride and Prejudice",
     "primary_category": "GRATITUDE",
     "categories": [
       "GRATITUDE",
@@ -2041,6 +2070,7 @@
     "text": "Pictures of perfection make me sick and wicked.",
     "author": "Jane Austen",
     "role": "English novelist",
+    "source": "Letters to Fanny Knight",
     "primary_category": "LOVE",
     "categories": [
       "LOVE",
@@ -2052,6 +2082,7 @@
     "text": "It was the best of times, it was the worst of times.",
     "author": "Charles Dickens",
     "role": "English novelist",
+    "source": "A Tale of Two Cities",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -2063,6 +2094,7 @@
     "text": "I wish you to know that you have been the last dream of my soul.",
     "author": "Charles Dickens",
     "role": "English novelist",
+    "source": "A Tale of Two Cities",
     "primary_category": "LOVE",
     "categories": [
       "LOVE",
@@ -2074,6 +2106,7 @@
     "text": "No one is useless in this world who lightens the burden of another.",
     "author": "Charles Dickens",
     "role": "English novelist",
+    "source": "Our Mutual Friend",
     "primary_category": "LOVE",
     "categories": [
       "LOVE",
@@ -2085,6 +2118,7 @@
     "text": "There is nothing in the world so irresistibly contagious as laughter and good humour.",
     "author": "Charles Dickens",
     "role": "English novelist",
+    "source": "A Christmas Carol",
     "primary_category": "GRATITUDE",
     "categories": [
       "GRATITUDE",
@@ -2096,6 +2130,7 @@
     "text": "I will honour Christmas in my heart, and try to keep it all the year.",
     "author": "Charles Dickens",
     "role": "English novelist",
+    "source": "A Christmas Carol",
     "primary_category": "GRATITUDE",
     "categories": [
       "GRATITUDE",
@@ -2107,6 +2142,7 @@
     "text": "Reflect upon your present blessings, of which every man has many.",
     "author": "Charles Dickens",
     "role": "English novelist",
+    "source": "The Life and Adventures of Nicholas Nickleby",
     "primary_category": "GRATITUDE",
     "categories": [
       "GRATITUDE",
@@ -2118,6 +2154,7 @@
     "text": "Never close your lips to those whom you have already opened your heart.",
     "author": "Charles Dickens",
     "role": "English novelist",
+    "source": "The Mystery of Edwin Drood",
     "primary_category": "LOVE",
     "categories": [
       "LOVE",
@@ -2129,6 +2166,7 @@
     "text": "Take nothing on its looks; take everything on evidence.",
     "author": "Charles Dickens",
     "role": "English novelist",
+    "source": "Great Expectations",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -2140,6 +2178,7 @@
     "text": "Suffering has been stronger than all other teaching.",
     "author": "Charles Dickens",
     "role": "English novelist",
+    "source": "Great Expectations",
     "primary_category": "HEALING",
     "categories": [
       "HEALING",
@@ -2151,6 +2190,7 @@
     "text": "A loving heart was better and stronger than wisdom.",
     "author": "Charles Dickens",
     "role": "English novelist",
+    "source": "David Copperfield",
     "primary_category": "LOVE",
     "categories": [
       "LOVE",
@@ -2162,6 +2202,7 @@
     "text": "We are all in the gutter, but some of us are looking at the stars.",
     "author": "Oscar Wilde",
     "role": "Irish poet & playwright",
+    "source": "Lady Windermere’s Fan",
     "primary_category": "COURAGE",
     "categories": [
       "COURAGE",
@@ -2173,6 +2214,7 @@
     "text": "To love oneself is the beginning of a lifelong romance.",
     "author": "Oscar Wilde",
     "role": "Irish poet & playwright",
+    "source": "An Ideal Husband",
     "primary_category": "LOVE",
     "categories": [
       "LOVE",
@@ -2184,6 +2226,7 @@
     "text": "Experience is merely the name men gave to their mistakes.",
     "author": "Oscar Wilde",
     "role": "Irish poet & playwright",
+    "source": "The Picture of Dorian Gray",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -2195,6 +2238,7 @@
     "text": "The truth is rarely pure and never simple.",
     "author": "Oscar Wilde",
     "role": "Irish poet & playwright",
+    "source": "The Importance of Being Earnest",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -2206,6 +2250,7 @@
     "text": "Nowadays people know the price of everything and the value of nothing.",
     "author": "Oscar Wilde",
     "role": "Irish poet & playwright",
+    "source": "The Picture of Dorian Gray",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -2217,6 +2262,7 @@
     "text": "There is only one thing in the world worse than being talked about, and that is not being talked about.",
     "author": "Oscar Wilde",
     "role": "Irish poet & playwright",
+    "source": "The Picture of Dorian Gray",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -2228,6 +2274,7 @@
     "text": "Always forgive your enemies; nothing annoys them so much.",
     "author": "Oscar Wilde",
     "role": "Irish poet & playwright",
+    "source": "The Soul of Man Under Socialism",
     "primary_category": "HEALING",
     "categories": [
       "HEALING",
@@ -2239,6 +2286,7 @@
     "text": "Life is far too important a thing ever to talk seriously about.",
     "author": "Oscar Wilde",
     "role": "Irish poet & playwright",
+    "source": "Lady Windermere’s Fan",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -2250,6 +2298,7 @@
     "text": "Anybody can sympathise with the sufferings of a friend, but it requires a very fine nature to sympathise with a friend’s success.",
     "author": "Oscar Wilde",
     "role": "Irish poet & playwright",
+    "source": "The Soul of Man Under Socialism",
     "primary_category": "LOVE",
     "categories": [
       "LOVE",
@@ -2261,6 +2310,7 @@
     "text": "The only way to get rid of a temptation is to yield to it.",
     "author": "Oscar Wilde",
     "role": "Irish poet & playwright",
+    "source": "The Picture of Dorian Gray",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -2272,6 +2322,7 @@
     "text": "The mass of men lead lives of quiet desperation.",
     "author": "Henry David Thoreau",
     "role": "American naturalist & philosopher",
+    "source": "Walden",
     "primary_category": "HEALING",
     "categories": [
       "HEALING",
@@ -2283,6 +2334,7 @@
     "text": "Simplify, simplify.",
     "author": "Henry David Thoreau",
     "role": "American naturalist & philosopher",
+    "source": "Walden",
     "primary_category": "GROWTH",
     "categories": [
       "GROWTH",
@@ -2294,6 +2346,7 @@
     "text": "The sun is but a morning star.",
     "author": "Henry David Thoreau",
     "role": "American naturalist & philosopher",
+    "source": "Walden",
     "primary_category": "NATURE",
     "categories": [
       "NATURE",
@@ -2305,6 +2358,7 @@
     "text": "Things do not change; we change.",
     "author": "Henry David Thoreau",
     "role": "American naturalist & philosopher",
+    "source": "Walden",
     "primary_category": "GROWTH",
     "categories": [
       "GROWTH",
@@ -2316,6 +2370,7 @@
     "text": "A man is rich in proportion to the number of things which he can afford to let alone.",
     "author": "Henry David Thoreau",
     "role": "American naturalist & philosopher",
+    "source": "Walden",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -2327,6 +2382,7 @@
     "text": "Rather than love, than money, than fame, give me truth.",
     "author": "Henry David Thoreau",
     "role": "American naturalist & philosopher",
+    "source": "Walden",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -2338,6 +2394,7 @@
     "text": "Only that day dawns to which we are awake.",
     "author": "Henry David Thoreau",
     "role": "American naturalist & philosopher",
+    "source": "Walden",
     "primary_category": "MINDFULNESS",
     "categories": [
       "MINDFULNESS",
@@ -2349,6 +2406,7 @@
     "text": "Heaven is under our feet as well as over our heads.",
     "author": "Henry David Thoreau",
     "role": "American naturalist & philosopher",
+    "source": "Walden",
     "primary_category": "NATURE",
     "categories": [
       "NATURE",
@@ -2360,6 +2418,7 @@
     "text": "The question is not what you look at, but what you see.",
     "author": "Henry David Thoreau",
     "role": "American naturalist & philosopher",
+    "source": "Journal",
     "primary_category": "MINDFULNESS",
     "categories": [
       "MINDFULNESS",
@@ -2371,6 +2430,7 @@
     "text": "It is not enough to be busy. So are the ants.",
     "author": "Henry David Thoreau",
     "role": "American naturalist & philosopher",
+    "source": "Letter to Harrison Blake",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -2382,6 +2442,7 @@
     "text": "Nothing great was ever achieved without enthusiasm.",
     "author": "Ralph Waldo Emerson",
     "role": "American essayist & philosopher",
+    "source": "Circles",
     "primary_category": "GROWTH",
     "categories": [
       "GROWTH",
@@ -2393,6 +2454,7 @@
     "text": "A foolish consistency is the hobgoblin of little minds.",
     "author": "Ralph Waldo Emerson",
     "role": "American essayist & philosopher",
+    "source": "Self-Reliance",
     "primary_category": "GROWTH",
     "categories": [
       "GROWTH",
@@ -2404,6 +2466,7 @@
     "text": "Trust thyself: every heart vibrates to that iron string.",
     "author": "Ralph Waldo Emerson",
     "role": "American essayist & philosopher",
+    "source": "Self-Reliance",
     "primary_category": "COURAGE",
     "categories": [
       "COURAGE",
@@ -2415,6 +2478,7 @@
     "text": "Insist on yourself; never imitate.",
     "author": "Ralph Waldo Emerson",
     "role": "American essayist & philosopher",
+    "source": "Self-Reliance",
     "primary_category": "GROWTH",
     "categories": [
       "GROWTH",
@@ -2426,6 +2490,7 @@
     "text": "Life is a journey, not a destination.",
     "author": "Ralph Waldo Emerson",
     "role": "American essayist & philosopher",
+    "source": "Experience",
     "primary_category": "GROWTH",
     "categories": [
       "GROWTH",
@@ -2437,6 +2502,7 @@
     "text": "Beauty without grace is the hook without the bait.",
     "author": "Ralph Waldo Emerson",
     "role": "American essayist & philosopher",
+    "source": "The Conduct of Life",
     "primary_category": "LOVE",
     "categories": [
       "LOVE",
@@ -2448,6 +2514,7 @@
     "text": "The only way to have a friend is to be one.",
     "author": "Ralph Waldo Emerson",
     "role": "American essayist & philosopher",
+    "source": "Friendship",
     "primary_category": "LOVE",
     "categories": [
       "LOVE",
@@ -2459,6 +2526,7 @@
     "text": "Nature always wears the colors of the spirit.",
     "author": "Ralph Waldo Emerson",
     "role": "American essayist & philosopher",
+    "source": "Nature",
     "primary_category": "NATURE",
     "categories": [
       "NATURE",
@@ -2481,6 +2549,7 @@
     "text": "Write it on your heart that every day is the best day in the year.",
     "author": "Ralph Waldo Emerson",
     "role": "American essayist & philosopher",
+    "source": "Works and Days",
     "primary_category": "GRATITUDE",
     "categories": [
       "GRATITUDE",
@@ -2492,6 +2561,7 @@
     "text": "To err is human; to forgive, divine.",
     "author": "Alexander Pope",
     "role": "English poet & satirist",
+    "source": "An Essay on Criticism",
     "primary_category": "HEALING",
     "categories": [
       "HEALING",
@@ -2503,6 +2573,7 @@
     "text": "A little learning is a dangerous thing.",
     "author": "Alexander Pope",
     "role": "English poet & satirist",
+    "source": "An Essay on Criticism",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -2514,6 +2585,7 @@
     "text": "Fools rush in where angels fear to tread.",
     "author": "Alexander Pope",
     "role": "English poet & satirist",
+    "source": "An Essay on Criticism",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -2525,6 +2597,7 @@
     "text": "Hope springs eternal in the human breast.",
     "author": "Alexander Pope",
     "role": "English poet & satirist",
+    "source": "An Essay on Man",
     "primary_category": "GROWTH",
     "categories": [
       "GROWTH",
@@ -2536,6 +2609,7 @@
     "text": "Know then thyself, presume not God to scan.",
     "author": "Alexander Pope",
     "role": "English poet & satirist",
+    "source": "An Essay on Man",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -2547,6 +2621,7 @@
     "text": "The road of excess leads to the palace of wisdom.",
     "author": "William Blake",
     "role": "English poet & artist",
+    "source": "The Marriage of Heaven and Hell",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -2558,6 +2633,7 @@
     "text": "The busy bee has no time for sorrow.",
     "author": "William Blake",
     "role": "English poet & artist",
+    "source": "The Marriage of Heaven and Hell",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -2569,6 +2645,7 @@
     "text": "You never know what is enough unless you know what is more than enough.",
     "author": "William Blake",
     "role": "English poet & artist",
+    "source": "The Marriage of Heaven and Hell",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -2580,6 +2657,7 @@
     "text": "Exuberance is beauty.",
     "author": "William Blake",
     "role": "English poet & artist",
+    "source": "The Marriage of Heaven and Hell",
     "primary_category": "GROWTH",
     "categories": [
       "GROWTH",
@@ -2591,6 +2669,7 @@
     "text": "If the doors of perception were cleansed, everything would appear to man as it is: infinite.",
     "author": "William Blake",
     "role": "English poet & artist",
+    "source": "The Marriage of Heaven and Hell",
     "primary_category": "MINDFULNESS",
     "categories": [
       "MINDFULNESS",
@@ -2602,6 +2681,7 @@
     "text": "The best way out is always through.",
     "author": "Robert Frost",
     "role": "American poet",
+    "source": "A Servant to Servants",
     "primary_category": "COURAGE",
     "categories": [
       "COURAGE",
@@ -2613,6 +2693,7 @@
     "text": "Good fences make good neighbors.",
     "author": "Robert Frost",
     "role": "American poet",
+    "source": "Mending Wall",
     "primary_category": "NATURE",
     "categories": [
       "NATURE",
@@ -2624,6 +2705,7 @@
     "text": "Nothing gold can stay.",
     "author": "Robert Frost",
     "role": "American poet",
+    "source": "Nothing Gold Can Stay",
     "primary_category": "NATURE",
     "categories": [
       "NATURE",
@@ -2635,6 +2717,7 @@
     "text": "The woods are lovely, dark and deep.",
     "author": "Robert Frost",
     "role": "American poet",
+    "source": "Stopping by Woods on a Snowy Evening",
     "primary_category": "NATURE",
     "categories": [
       "NATURE",
@@ -2646,6 +2729,7 @@
     "text": "Two roads diverged in a wood, and I took the one less traveled by.",
     "author": "Robert Frost",
     "role": "American poet",
+    "source": "The Road Not Taken",
     "primary_category": "COURAGE",
     "categories": [
       "COURAGE",
@@ -2657,6 +2741,7 @@
     "text": "Good friends, good books, and a sleepy conscience: this is the ideal life.",
     "author": "Mark Twain",
     "role": "American writer & humorist",
+    "source": "More Maxims of Mark",
     "primary_category": "GRATITUDE",
     "categories": [
       "GRATITUDE",
@@ -2668,6 +2753,7 @@
     "text": "Never tell the truth to people who are not worthy of it.",
     "author": "Mark Twain",
     "role": "American writer & humorist",
+    "source": "Notebook",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -2679,6 +2765,7 @@
     "text": "The human race has only one really effective weapon, and that is laughter.",
     "author": "Mark Twain",
     "role": "American writer & humorist",
+    "source": "The Mysterious Stranger Manuscripts",
     "primary_category": "HEALING",
     "categories": [
       "HEALING",
@@ -2690,6 +2777,7 @@
     "text": "Courage is resistance to fear, mastery of fear—not absence of fear.",
     "author": "Mark Twain",
     "role": "American writer & humorist",
+    "source": "Pudd’nhead Wilson",
     "primary_category": "COURAGE",
     "categories": [
       "COURAGE",
@@ -2701,6 +2789,7 @@
     "text": "To everything there is a season.",
     "author": "Ecclesiastes 3:1",
     "role": "Biblical scripture",
+    "source": "The Bible",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -2712,6 +2801,7 @@
     "text": "The truth shall make you free.",
     "author": "John 8:32",
     "role": "Biblical scripture",
+    "source": "The Bible",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -2723,6 +2813,7 @@
     "text": "Perfect love casteth out fear.",
     "author": "1 John 4:18",
     "role": "Biblical scripture",
+    "source": "The Bible",
     "primary_category": "LOVE",
     "categories": [
       "LOVE",
@@ -2734,6 +2825,7 @@
     "text": "A soft answer turneth away wrath.",
     "author": "Proverbs 15:1",
     "role": "Biblical scripture",
+    "source": "The Bible",
     "primary_category": "WISDOM",
     "categories": [
       "WISDOM",
@@ -2745,6 +2837,7 @@
     "text": "Faith without works is dead.",
     "author": "James 2:26",
     "role": "Biblical scripture",
+    "source": "The Bible",
     "primary_category": "GROWTH",
     "categories": [
       "GROWTH",
@@ -2756,6 +2849,7 @@
     "text": "The happiness of your life depends upon the quality of your thoughts.",
     "author": "Marcus Aurelius",
     "role": "Roman emperor & Stoic philosopher",
+    "source": "Meditations",
     "primary_category": "MINDFULNESS",
     "categories": [
       "MINDFULNESS",
@@ -2767,6 +2861,7 @@
     "text": "The universe is change; our life is what our thoughts make it.",
     "author": "Marcus Aurelius",
     "role": "Roman emperor & Stoic philosopher",
+    "source": "Meditations",
     "primary_category": "MINDFULNESS",
     "categories": [
       "MINDFULNESS",
@@ -2778,6 +2873,7 @@
     "text": "Waste no more time arguing about what a good man should be. Be one.",
     "author": "Marcus Aurelius",
     "role": "Roman emperor & Stoic philosopher",
+    "source": "Meditations",
     "primary_category": "GROWTH",
     "categories": [
       "GROWTH",
@@ -2789,6 +2885,7 @@
     "text": "You have power over your mind—not outside events.",
     "author": "Marcus Aurelius",
     "role": "Roman emperor & Stoic philosopher",
+    "source": "Meditations",
     "primary_category": "COURAGE",
     "categories": [
       "COURAGE",
@@ -2927,7 +3024,7 @@
   },
   {
     "id": 270,
-    "text": "Believe in Your Vision because Purpose and Missionare led by Vision.” ~Sherrie Rose",
+    "text": "Believe in Your Vision because Purpose and Mission are led by Vision.” ~Sherrie Rose",
     "author": "Sherrie Rose",
     "role": "Author",
     "primary_category": "GROWTH",
@@ -2982,7 +3079,7 @@
   },
   {
     "id": 275,
-    "text": "Second chances are rare and comes with fortune.. thus use the first wisely.Think once!",
+    "text": "Second chances are rare and comes with fortune.. thus use the first wisely. Think once!",
     "author": "Bhawna Dehariya",
     "role": "Author",
     "primary_category": "GROWTH",
@@ -3191,7 +3288,7 @@
   },
   {
     "id": 294,
-    "text": "Fear gets feverish, attain such height.Haters go blind, burn so bright.Courage isn't absence of fear,courage is to overcome fear.Birds get jealous, fly to such heights.",
+    "text": "Fear gets feverish, attain such height. Haters go blind, burn so bright. Courage isn't absence of fear, courage is to overcome fear. Birds get jealous, fly to such heights.",
     "author": "Abhijit Naskar",
     "role": "Indian author & neuroscientist",
     "primary_category": "COURAGE",
@@ -3224,7 +3321,7 @@
   },
   {
     "id": 297,
-    "text": "If you can begin to see your life as a feedbackmechanism that is reflecting who you are, with the ultimate goal to help you live better and more fully. All of a sudden you realize it was never the world standing in your way but your own mind.",
+    "text": "If you can begin to see your life as a feedback mechanism that is reflecting who you are, with the ultimate goal to help you live better and more fully. All of a sudden you realize it was never the world standing in your way but your own mind.",
     "author": "Brianna Weist",
     "role": "Author",
     "primary_category": "MINDFULNESS",
@@ -3257,7 +3354,7 @@
   },
   {
     "id": 300,
-    "text": "We, as human beings, enjoy freedom of choice.Your attitude is your choice!",
+    "text": "We, as human beings, enjoy freedom of choice. Your attitude is your choice!",
     "author": "Lorii Myers",
     "role": "Author",
     "primary_category": "GRATITUDE",
@@ -3543,7 +3640,7 @@
   },
   {
     "id": 326,
-    "text": "#shreeshambavPlant the seeds of love, kindness, empathy, and compassion, and they will return to you in abundance, according to nature's law. -Shree Shambav",
+    "text": "Plant the seeds of love, kindness, empathy, and compassion, and they will return to you in abundance, according to nature's law.",
     "author": "Shree Shambav",
     "role": "Author",
     "primary_category": "LOVE",
@@ -3697,7 +3794,7 @@
   },
   {
     "id": 340,
-    "text": "Grief does not kill the light...it reveals it.....Agony does not kill the ecstasy....it unfolds it......Dark does not extinguish the Dawn...it unwinds it.....",
+    "text": "Grief does not kill the light... it reveals it..... Agony does not kill the ecstasy.... it unfolds it...... Dark does not extinguish the Dawn... it unwinds it.....",
     "author": "Jayita Bhattacharjee",
     "role": "Author",
     "primary_category": "HEALING",
@@ -4390,7 +4487,7 @@
   },
   {
     "id": 403,
-    "text": "No matter how crazy it may feel, I found thatfollowing my intuitive hunch is always my bestbet. When we are grounded, it will never steer us in the wrong direction. Acting as our guiding light and divine compass. So don't question it. Trust it.",
+    "text": "No matter how crazy it may feel, I found that following my intuitive hunch is always my best bet. When we are grounded, it will never steer us in the wrong direction. Acting as our guiding light and divine compass. So don't question it. Trust it.",
     "author": "Robin S. Baker",
     "role": "Author & coach",
     "primary_category": "WISDOM",
@@ -4400,7 +4497,7 @@
   },
   {
     "id": 404,
-    "text": "You might be dying, but you’re not dead yet, you miserable wretch, now get up and do something before you allow your brother’ssacrifice and everything we all have lost to be for nothing.",
+    "text": "You might be dying, but you’re not dead yet, you miserable wretch, now get up and do something before you allow your brother’s sacrifice and everything we all have lost to be for nothing.",
     "author": "Alex Aster",
     "role": "Author",
     "primary_category": "MINDFULNESS",
@@ -4652,7 +4749,7 @@
   },
   {
     "id": 427,
-    "text": "There is a difference between knowing the path andwalking the path.",
+    "text": "There is a difference between knowing the path and walking the path.",
     "author": "Genki Kawamura",
     "role": "Author",
     "primary_category": "MINDFULNESS",
@@ -4827,7 +4924,7 @@
   },
   {
     "id": 443,
-    "text": "Each time I try, I lose my aim.And the pain startsall over again.It's not an easy target.It's hopeless.But after a whileI start again.",
+    "text": "Each time I try, I lose my aim. And the pain starts all over again. It's not an easy target. It's hopeless. But after a while I start again.",
     "author": "Bhuwan Thapaliya",
     "role": "Author",
     "primary_category": "HEALING",
@@ -5046,7 +5143,7 @@
   },
   {
     "id": 463,
-    "text": "Changing a Habit is Never Difficult.Difficult is to Address Your Unwillingness to do it",
+    "text": "Changing a Habit is Never Difficult. Difficult is to Address Your Unwillingness to do it",
     "author": "Vineet Raj Kapoor",
     "role": "Author",
     "primary_category": "GROWTH",
@@ -5660,7 +5757,7 @@
   },
   {
     "id": 519,
-    "text": "I believeI can make itOn my ownThanks to my inherent tendencyTo do miraclesThe Waxing",
+    "text": "I believe I can make it On my own Thanks to my inherent tendency To do miracles The Waxing",
     "author": "Jazalyn",
     "role": "Author",
     "primary_category": "GROWTH",
@@ -5845,7 +5942,7 @@
   },
   {
     "id": 536,
-    "text": "RVM Thoughts for Today - \"Things will happen.You can't stop them from happening, but you can control your reaction from making things worse . React Positively. Live Happily ",
+    "text": "RVM Thoughts for Today - \"Things will happen. You can't stop them from happening, but you can control your reaction from making things worse . React Positively. Live Happily",
     "author": "RVM",
     "role": "Author",
     "primary_category": "WISDOM",
@@ -6130,7 +6227,7 @@
   },
   {
     "id": 562,
-    "text": "In meetings philosophy might work,on the field practicality works.",
+    "text": "In meetings philosophy might work, on the field practicality works.",
     "author": "Amit Kalantri",
     "role": "Indian author",
     "primary_category": "GROWTH",
@@ -6218,7 +6315,7 @@
   },
   {
     "id": 570,
-    "text": "How would your life be different if...You didn’t allow yourself to be defined by your past? Let today be the day...You stop letting your history interfere with your destiny and awaken to the opportunity to release your greatest self.",
+    "text": "How would your life be different if... You didn’t allow yourself to be defined by your past? Let today be the day... You stop letting your history interfere with your destiny and awaken to the opportunity to release your greatest self.",
     "author": "Steve Maraboli",
     "role": "American author & speaker",
     "primary_category": "GROWTH",
@@ -6306,7 +6403,7 @@
   },
   {
     "id": 578,
-    "text": "Seeing my book mentioned in various interviews and posts is an indescribable feeling. I’ll never take this love for granted.Whatever you’re creating right now, keep going. It’s never too late.",
+    "text": "Seeing my book mentioned in various interviews and posts is an indescribable feeling. I’ll never take this love for granted. Whatever you’re creating right now, keep going. It’s never too late.",
     "author": "Robin S. Baker",
     "role": "Author & coach",
     "primary_category": "MINDFULNESS",
@@ -6339,7 +6436,7 @@
   },
   {
     "id": 581,
-    "text": "Cream always rises to the top...so do good leaders\".",
+    "text": "Cream always rises to the top... so do good leaders\".",
     "author": "John Paul Warren",
     "role": "Author & speaker",
     "primary_category": "GROWTH",
@@ -6899,7 +6996,7 @@
   },
   {
     "id": 632,
-    "text": "Khud se jeetne ki zid h khudko hi hrana h ,M bheed nhi hu duniya ki mere andar zamana h.",
+    "text": "Khud se jeetne ki zid h khudko hi hrana h , M bheed nhi hu duniya ki mere andar zamana h.",
     "author": "Dr. Abhimanyu Kumawat",
     "role": "Author",
     "primary_category": "GROWTH",
@@ -6910,7 +7007,7 @@
   },
   {
     "id": 633,
-    "text": "If you believe ,you can.\"But work hard to believe\".",
+    "text": "If you believe , you can.\"But work hard to believe\".",
     "author": "Divyansh Mishra DM",
     "role": "Author",
     "primary_category": "GROWTH",
@@ -7074,7 +7171,7 @@
   },
   {
     "id": 648,
-    "text": "The critics...have it backward: The Qur’an is not the source of the Muslim world’s problems, but its untapped solution.",
+    "text": "The critics... have it backward: The Qur’an is not the source of the Muslim world’s problems, but its untapped solution.",
     "author": "Mohamad Jebara",
     "role": "Author",
     "primary_category": "GROWTH",
@@ -7855,7 +7952,7 @@
   },
   {
     "id": 719,
-    "text": "The IMPOSSIBLE is ONLY relevant to those who NEVER attempt it...otherwise it is ABSTACT and MEANINGLESS",
+    "text": "The IMPOSSIBLE is ONLY relevant to those who NEVER attempt it... otherwise it is ABSTACT and MEANINGLESS",
     "author": "John Paul Warren",
     "role": "Author & speaker",
     "primary_category": "GROWTH",
@@ -7888,7 +7985,7 @@
   },
   {
     "id": 722,
-    "text": "What makes the engine go?Desire, desire, desire.",
+    "text": "What makes the engine go? Desire, desire, desire.",
     "author": "Stanley Kunitz",
     "role": "Author",
     "primary_category": "GROWTH",
@@ -8008,7 +8105,7 @@
   },
   {
     "id": 733,
-    "text": "Under the spotlight, of the streetlightsThat wait for me to shine Over the moonlight, it feels so rightI'm poetry in motionIt's part of my devotionI play with all emotion Under the spotlight, of the streetlights",
+    "text": "Under the spotlight, of the streetlights That wait for me to shine Over the moonlight, it feels so right I'm poetry in motion It's part of my devotion I play with all emotion Under the spotlight, of the streetlights",
     "author": "Marie Helen Abramyan",
     "role": "Author",
     "primary_category": "NATURE",
@@ -8260,7 +8357,7 @@
   },
   {
     "id": 756,
-    "text": "First say to yourself what you would be;and then do what you have to do.",
+    "text": "First say to yourself what you would be; and then do what you have to do.",
     "author": "Epictetus",
     "role": "Greek Stoic philosopher",
     "primary_category": "GROWTH",
@@ -8326,7 +8423,7 @@
   },
   {
     "id": 762,
-    "text": "... Perspective is everything.That is, when you can break apart something, or look at it from a new angle, it loses its power over you.",
+    "text": "... Perspective is everything. That is, when you can break apart something, or look at it from a new angle, it loses its power over you.",
     "author": "Ryan Holiday",
     "role": "American author & Stoic philosopher",
     "primary_category": "WISDOM",
@@ -8336,7 +8433,7 @@
   },
   {
     "id": 763,
-    "text": "...one cannot but wonder how an environment can make people despair and sit idle and then, by changing the conditions, one can transform the same people into matchless performers.",
+    "text": "... one cannot but wonder how an environment can make people despair and sit idle and then, by changing the conditions, one can transform the same people into matchless performers.",
     "author": "Muhammad Yunus",
     "role": "Bangladeshi economist & Nobel laureate",
     "primary_category": "GROWTH",
@@ -8347,7 +8444,7 @@
   },
   {
     "id": 764,
-    "text": "...prizes are nothing. My prize is my work.",
+    "text": "... prizes are nothing. My prize is my work.",
     "author": "Katharine Hepburn",
     "role": "American actress",
     "primary_category": "GROWTH",
@@ -8358,7 +8455,7 @@
   },
   {
     "id": 765,
-    "text": "...she doesn't have to choose between being gentle or being fierce. Both exist in nature and both exist in her. That's ok. She'll know to nourish them both and when applicable, use each unapologetically.",
+    "text": "... she doesn't have to choose between being gentle or being fierce. Both exist in nature and both exist in her. That's ok. She'll know to nourish them both and when applicable, use each unapologetically.",
     "author": "Steve Maraboli",
     "role": "American author & speaker",
     "primary_category": "NATURE",
@@ -8369,7 +8466,7 @@
   },
   {
     "id": 766,
-    "text": "..your ambition is your beauty,",
+    "text": ".. your ambition is your beauty,",
     "author": "Ramita",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -8380,7 +8477,7 @@
   },
   {
     "id": 767,
-    "text": "12--Lose Battles, But Win The War: Grand StrategyGrand strategy is the art of looking beyond the present battle and calculating ahead. Focus on your ultimate goal and plot to reach it.",
+    "text": "12--Lose Battles, But Win The War: Grand Strategy Grand strategy is the art of looking beyond the present battle and calculating ahead. Focus on your ultimate goal and plot to reach it.",
     "author": "Robert Greene",
     "role": "American author",
     "primary_category": "MINDFULNESS",
@@ -8688,7 +8785,7 @@
   },
   {
     "id": 795,
-    "text": "A queen of a magnificent typeAn angel from a mysterious time The iron lady escaped all the hype She made every moment her prime",
+    "text": "A queen of a magnificent type An angel from a mysterious time The iron lady escaped all the hype She made every moment her prime",
     "author": "Aida Mandic",
     "role": "Poet & author",
     "primary_category": "MINDFULNESS",
@@ -9040,7 +9137,7 @@
   },
   {
     "id": 827,
-    "text": "Ain't there nothing sapiens can't do,Ain't no mountain sapiens can't climb.Ain't no darkness sapiens can't conquer,Ain't no division sapiens can't undivide.",
+    "text": "Ain't there nothing sapiens can't do, Ain't no mountain sapiens can't climb. Ain't no darkness sapiens can't conquer, Ain't no division sapiens can't undivide.",
     "author": "Abhijit Naskar",
     "role": "Indian author & neuroscientist",
     "primary_category": "NATURE",
@@ -9566,7 +9663,7 @@
   },
   {
     "id": 875,
-    "text": "Anytime you're afraid to try something new...just remember, amateurs built the ark, professionals built the Titanic.",
+    "text": "Anytime you're afraid to try something new... just remember, amateurs built the ark, professionals built the Titanic.",
     "author": "Drake",
     "role": "Canadian rapper & songwriter",
     "primary_category": "GROWTH",
@@ -9808,7 +9905,7 @@
   },
   {
     "id": 897,
-    "text": "BLACK SHEEP - A HAIKUMidst a starlit dance,The moon emerges alone,Thus she steals the show.",
+    "text": "BLACK SHEEP - A HAIKU Midst a starlit dance, The moon emerges alone, Thus she steals the show.",
     "author": "Amogh Swamy",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -10038,7 +10135,7 @@
   },
   {
     "id": 918,
-    "text": "Be silent and safe — silence never betrays you; Be true to your word and your work and your friend; Put least trust in him who is foremost to praise you,Nor judge of a road till it draw to the end.",
+    "text": "Be silent and safe — silence never betrays you; Be true to your word and your work and your friend; Put least trust in him who is foremost to praise you, Nor judge of a road till it draw to the end.",
     "author": "John Boyle O'Reilly",
     "role": "Irish-American poet & journalist",
     "primary_category": "MINDFULNESS",
@@ -10104,7 +10201,7 @@
   },
   {
     "id": 924,
-    "text": "Be your own armor,Be your motivator.Your are the tideof impossible light,You are your carburetor.",
+    "text": "Be your own armor, Be your motivator. Your are the tide of impossible light, You are your carburetor.",
     "author": "Abhijit Naskar",
     "role": "Indian author & neuroscientist",
     "primary_category": "GROWTH",
@@ -10159,7 +10256,7 @@
   },
   {
     "id": 929,
-    "text": "Beauty rises ...from a place of tenderness...for it is what pushes a human.... to be humane....",
+    "text": "Beauty rises ... from a place of tenderness... for it is what pushes a human.... to be humane....",
     "author": "Jayita Bhattacharjee",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -10433,7 +10530,7 @@
   },
   {
     "id": 954,
-    "text": "Berani tanpa disertai kesabaran akan membunuh anda.Ambisius tanpa kesabaran dapat memusnahkan karier yang paling menjanjikan.Berjuang meraih harta tanpa kesabaran akan mengamblaskan milik yang sudah ada.",
+    "text": "Berani tanpa disertai kesabaran akan membunuh anda. Ambisius tanpa kesabaran dapat memusnahkan karier yang paling menjanjikan. Berjuang meraih harta tanpa kesabaran akan mengamblaskan milik yang sudah ada.",
     "author": "Og Mandino",
     "role": "American author",
     "primary_category": "GROWTH",
@@ -10707,7 +10804,7 @@
   },
   {
     "id": 979,
-    "text": "By reaching your goal means Grow to some level and tell show you how brave and strong you're.not give you a permition for being bossy to others.",
+    "text": "By reaching your goal means Grow to some level and tell show you how brave and strong you're. not give you a permition for being bossy to others.",
     "author": "Nozipho N. Maphumulo",
     "role": "Writer",
     "primary_category": "COURAGE",
@@ -11057,7 +11154,7 @@
   },
   {
     "id": 1011,
-    "text": "Coming to the END of MYSELF and all SELF effort...seems to be the very point that God steps in and shows HIMSELF to be more than ENOUGH.",
+    "text": "Coming to the END of MYSELF and all SELF effort... seems to be the very point that God steps in and shows HIMSELF to be more than ENOUGH.",
     "author": "John Paul Warren",
     "role": "Author & speaker",
     "primary_category": "GROWTH",
@@ -11343,7 +11440,7 @@
   },
   {
     "id": 1037,
-    "text": "Coz Red is so Dangerously Lovely... U choose...Danger or Love?",
+    "text": "Coz Red is so Dangerously Lovely... U choose... Danger or Love?",
     "author": "RJ Yolande Mendes",
     "role": "Writer",
     "primary_category": "LOVE",
@@ -11486,7 +11583,7 @@
   },
   {
     "id": 1050,
-    "text": "Deep and clear ideasHave a way of coming true They sense every single clueI always seek to discoverOptions and their subtle bordersI know their kind never accepts orders",
+    "text": "Deep and clear ideas Have a way of coming true They sense every single clue I always seek to discover Options and their subtle borders I know their kind never accepts orders",
     "author": "Aida Mandic",
     "role": "Poet & author",
     "primary_category": "GROWTH",
@@ -11817,7 +11914,7 @@
   },
   {
     "id": 1080,
-    "text": "Do not limit yourself to things that may lead you to successful path.The self-limiting beliefs will hinder you reaching to your goals. Think once!",
+    "text": "Do not limit yourself to things that may lead you to successful path. The self-limiting beliefs will hinder you reaching to your goals. Think once!",
     "author": "Bhawna Dehariya",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -12048,7 +12145,7 @@
   },
   {
     "id": 1101,
-    "text": "Don't care about ,who laugh on you.. Care about those who caring about you..",
+    "text": "Don't care about , who laugh on you.. Care about those who caring about you..",
     "author": "P k",
     "role": "Writer",
     "primary_category": "LOVE",
@@ -12179,7 +12276,7 @@
   },
   {
     "id": 1113,
-    "text": "Don't just speak for yourself,Be who stands up for somebody else.",
+    "text": "Don't just speak for yourself, Be who stands up for somebody else.",
     "author": "Janna Cachola",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -12310,7 +12407,7 @@
   },
   {
     "id": 1125,
-    "text": "Don't try to change, be the changeDon't try to be good, be goodDon't try to be a Buddha, be a BuddhaDon't try to be successful, behave successfully",
+    "text": "Don't try to change, be the change Don't try to be good, be good Don't try to be a Buddha, be a Buddha Don't try to be successful, behave successfully",
     "author": "Dido Stargaze",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -12464,7 +12561,7 @@
   },
   {
     "id": 1139,
-    "text": "Don’t hide what you have just because people tell you it’s not normal. I have known normal people...and guess what? They are as boring as hell...",
+    "text": "Don’t hide what you have just because people tell you it’s not normal. I have known normal people... and guess what? They are as boring as hell...",
     "author": "Sidney Knight",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -12651,7 +12748,7 @@
   },
   {
     "id": 1156,
-    "text": "Dušo,me mogu bove,ograničiti more.",
+    "text": "Dušo, me mogu bove, ograničiti more.",
     "author": "Djura Kelj",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -12685,7 +12782,7 @@
   },
 {
     "id": 1159,
-    "text": "Each corpuscle contains the cosmos,Each valve is gateway to valor.Cada corpúsculo contiene el cosmos,Cada válvula es la puerta al valor.",
+    "text": "Each corpuscle contains the cosmos, Each valve is gateway to valor. Cada corpúsculo contiene el cosmos, Cada válvula es la puerta al valor.",
     "author": "Abhijit Naskar",
     "role": "Indian author & neuroscientist",
     "primary_category": "GROWTH",
@@ -13574,7 +13671,7 @@
   },
   {
     "id": 1240,
-    "text": "Everything is within your power,and your power is within you.",
+    "text": "Everything is within your power, and your power is within you.",
     "author": "Janice Trachtman",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -13684,7 +13781,7 @@
   },
   {
     "id": 1250,
-    "text": "Excellence requires growth.Growth requires learning.Learning requires change...Change is inextricably imbued with risk.Risk implies that failure is possible, if not likely.But, Great & Good frontload the risk.",
+    "text": "Excellence requires growth. Growth requires learning. Learning requires change... Change is inextricably imbued with risk. Risk implies that failure is possible, if not likely. But, Great & Good frontload the risk.",
     "author": "Courtney Greene McDonald",
     "role": "Writer",
     "primary_category": "COURAGE",
@@ -14256,7 +14353,7 @@
   },
   {
     "id": 1302,
-    "text": "Firm was my resolveand fragile was my heart.I saw many ends and many a start.",
+    "text": "Firm was my resolve and fragile was my heart. I saw many ends and many a start.",
     "author": "Alok Mishra",
     "role": "Writer",
     "primary_category": "LOVE",
@@ -14366,7 +14463,7 @@
   },
   {
     "id": 1312,
-    "text": "Follow Your Heart & The world Shall Follow YOU!Reject it and It stops beating!",
+    "text": "Follow Your Heart & The world Shall Follow YOU! Reject it and It stops beating!",
     "author": "Sujit Lalwani",
     "role": "Author & speaker",
     "primary_category": "LOVE",
@@ -14431,7 +14528,7 @@
   },
   {
     "id": 1318,
-    "text": "For young adults,the growth from silly to serious can be very fast, indeed.",
+    "text": "For young adults, the growth from silly to serious can be very fast, indeed.",
     "author": "Dean Cumings",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -14486,7 +14583,7 @@
   },
   {
     "id": 1323,
-    "text": "Forgiveness provide you strengthWord Sorry make you calm",
+    "text": "Forgiveness provide you strength Word Sorry make you calm",
     "author": "P k",
     "role": "Writer",
     "primary_category": "MINDFULNESS",
@@ -14607,7 +14704,7 @@
   },
   {
     "id": 1334,
-    "text": "Genius doesn't wait for moments,they create it.",
+    "text": "Genius doesn't wait for moments, they create it.",
     "author": "Uttam Singh",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -14794,7 +14891,7 @@
   },
   {
     "id": 1351,
-    "text": "Goal Of LIFE Is patience,Goal Of Patience Is LIFE!",
+    "text": "Goal Of LIFE Is patience, Goal Of Patience Is LIFE!",
     "author": "Sujit Lalwani",
     "role": "Author & speaker",
     "primary_category": "GROWTH",
@@ -15156,7 +15253,7 @@
   },
   {
     "id": 1384,
-    "text": "Happiness starts with a cute snout and lots of Fur...I promise you it doesn't end here!",
+    "text": "Happiness starts with a cute snout and lots of Fur... I promise you it doesn't end here!",
     "author": "RJ Yolande Mendes",
     "role": "Writer",
     "primary_category": "GRATITUDE",
@@ -15376,7 +15473,7 @@
   },
   {
     "id": 1404,
-    "text": "Holding a grudge & harboring anger/resentment is poison to the soul. Get even with people...but not those who have hurt us, forget them, instead get even with those who have helped us.",
+    "text": "Holding a grudge & harboring anger/resentment is poison to the soul. Get even with people... but not those who have hurt us, forget them, instead get even with those who have helped us.",
     "author": "Steve Maraboli",
     "role": "American author & speaker",
     "primary_category": "LOVE",
@@ -15517,7 +15614,7 @@
   },
   {
     "id": 1417,
-    "text": "How we treat others is a reflection of how we treat ourselves.It is rare almost impossible, for a mean, conniving, hurtful, racist, bigoted person to truly love themselves.",
+    "text": "How we treat others is a reflection of how we treat ourselves. It is rare almost impossible, for a mean, conniving, hurtful, racist, bigoted person to truly love themselves.",
     "author": "Ankur Warikoo",
     "role": "Writer",
     "primary_category": "LOVE",
@@ -15528,7 +15625,7 @@
   },
   {
     "id": 1418,
-    "text": "How would your life be different if...You didn’t wait for someone else to fix a problem or social issue? Let today be the day...You take up a cause that you feel in your heart and give your time and efforts towards that cause.",
+    "text": "How would your life be different if... You didn’t wait for someone else to fix a problem or social issue? Let today be the day... You take up a cause that you feel in your heart and give your time and efforts towards that cause.",
     "author": "Steve Maraboli",
     "role": "American author & speaker",
     "primary_category": "LOVE",
@@ -15539,7 +15636,7 @@
   },
   {
     "id": 1419,
-    "text": "How would your life be different if...You walked away from gossip and verbal defamation? Let today be the day...You speak only the good you know of other people and encourage others to do the same.",
+    "text": "How would your life be different if... You walked away from gossip and verbal defamation? Let today be the day... You speak only the good you know of other people and encourage others to do the same.",
     "author": "Steve Maraboli",
     "role": "American author & speaker",
     "primary_category": "COURAGE",
@@ -15550,7 +15647,7 @@
   },
   {
     "id": 1420,
-    "text": "How would your life be different if...you had a plan of action towards your goals? Let today be the day...You stop allowing your days to be stolen by busy nothingness and take calculated steps towards your goals.",
+    "text": "How would your life be different if... you had a plan of action towards your goals? Let today be the day... You stop allowing your days to be stolen by busy nothingness and take calculated steps towards your goals.",
     "author": "Steve Maraboli",
     "role": "American author & speaker",
     "primary_category": "GROWTH",
@@ -15603,7 +15700,7 @@
   },
   {
     "id": 1425,
-    "text": "I am extreme in everything I do...Can immensely love and can immensely hate...U choose",
+    "text": "I am extreme in everything I do... Can immensely love and can immensely hate... U choose",
     "author": "RJ Yolande Mendes",
     "role": "Writer",
     "primary_category": "LOVE",
@@ -15691,7 +15788,7 @@
   },
   {
     "id": 1433,
-    "text": "I ask myself: Are Defeats necessary ?Well,necessary or not, they happen.When we first begin fighting for our dream, we've no experience and make many mistakes.The Secret of life, though,is to fall seven times and to get up eight times !",
+    "text": "I ask myself: Are Defeats necessary ? Well, necessary or not, they happen. When we first begin fighting for our dream, we've no experience and make many mistakes. The Secret of life, though, is to fall seven times and to get up eight times !",
     "author": "Paulo Coelho",
     "role": "Brazilian novelist",
     "primary_category": "COURAGE",
@@ -15790,7 +15887,7 @@
   },
   {
     "id": 1442,
-    "text": "I dont just have to be perfect...I have to be me",
+    "text": "I dont just have to be perfect... I have to be me",
     "author": "RJ Yolande Mendes",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -15890,7 +15987,7 @@
     "id": 1451,
     "text": "I have realized that whatever good comes to me, comes from God, whatever bad comes to me, God has allowed it, and I choose to be thankful for both.",
     "author": "Jeff Goins",
-    "role": "Writer",
+    "role": "Bestselling author, speaker & entrepreneur",
     "primary_category": "GRATITUDE",
     "categories": [
       "GRATITUDE",
@@ -15921,7 +16018,7 @@
   },
   {
     "id": 1454,
-    "text": "I know me God and I know you see my heartI ain't afraid, nothing will tear us apart",
+    "text": "I know me God and I know you see my heart I ain't afraid, nothing will tear us apart",
     "author": "Dwight Thompson",
     "role": "Writer",
     "primary_category": "LOVE",
@@ -15932,7 +16029,7 @@
   },
   {
     "id": 1455,
-    "text": "I know that you feel like I pressing your corners never it just a good standard for fashion,no short cut in doing it, it you need to explain it.",
+    "text": "I know that you feel like I pressing your corners never it just a good standard for fashion, no short cut in doing it, it you need to explain it.",
     "author": "Nozipho N.Maphumulo",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -16141,7 +16238,7 @@
   },
   {
     "id": 1474,
-    "text": "I think that negativeEmotions have their place ConfusionAngerSadnessFearThey have their placeThey set a paceEach unraveling a unique faceAnd it’s up to our choicesWhether we learn from their voices",
+    "text": "I think that negative Emotions have their place Confusion Anger Sadness Fear They have their place They set a pace Each unraveling a unique face And it’s up to our choices Whether we learn from their voices",
     "author": "Aida Mandic",
     "role": "Poet & author",
     "primary_category": "WISDOM",
@@ -16207,7 +16304,7 @@
   },
   {
     "id": 1480,
-    "text": "I will not try to convince you to love me, to respect me, to commit to me. I deserve better than that; I AM BETTER THAN THAT...Goodbye.",
+    "text": "I will not try to convince you to love me, to respect me, to commit to me. I deserve better than that; I AM BETTER THAN THAT... Goodbye.",
     "author": "Steve Maraboli",
     "role": "American author & speaker",
     "primary_category": "LOVE",
@@ -16295,7 +16392,7 @@
   },
   {
     "id": 1488,
-    "text": "I'd you say bright make ups color boost you tell me in what? unrespect or being pushy to others ,it not designed for that gal.",
+    "text": "I'd you say bright make ups color boost you tell me in what? unrespect or being pushy to others , it not designed for that gal.",
     "author": "Nozipho N.Maphumulo",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -16350,7 +16447,7 @@
   },
   {
     "id": 1493,
-    "text": "I've never considered the possibility of defeat. I've never planned for it. That's the job for those people who plan for such things. My job is to only plan for success...victory; it has my complete focus.",
+    "text": "I've never considered the possibility of defeat. I've never planned for it. That's the job for those people who plan for such things. My job is to only plan for success... victory; it has my complete focus.",
     "author": "Spuds Crawford",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -16788,7 +16885,7 @@
   },
   {
     "id": 1533,
-    "text": "If you believe that the show you’remaking will improve the world, there’s nothing saying that your goals andself-interests and someone else’s goals and interests have to be mutuallyexclusive. They can align.",
+    "text": "If you believe that the show you’re making will improve the world, there’s nothing saying that your goals and self-interests and someone else’s goals and interests have to be mutually exclusive. They can align.",
     "author": "Eric Bates",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -17008,7 +17105,7 @@
   },
   {
     "id": 1553,
-    "text": "If you know where you want to go in life, people tend to help or get out of the way.Both of those are useful.",
+    "text": "If you know where you want to go in life, people tend to help or get out of the way. Both of those are useful.",
     "author": "James Clear",
     "role": "American author",
     "primary_category": "GROWTH",
@@ -17317,7 +17414,7 @@
   },
   {
     "id": 1581,
-    "text": "Illuminate the beauty that lies within us...rediscovering the grace in being different.",
+    "text": "Illuminate the beauty that lies within us... rediscovering the grace in being different.",
     "author": "Sara Yahia",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -17765,9 +17862,10 @@
   },
   {
     "id": 1622,
-    "text": "In what worldTo live?What loveTo give?Is it worthy?Or will it breakMy heart?EveryoneSeems to beSecretly evilAnd to tryTo disguiseThe truthWith lies;It’s disappointingBut stillI seeSomething differentIn you;I find hopeAnd I fallIn love",
+    "text": "In what world To live? What love To give? Is it worthy? Or will it break My heart? Everyone Seems to be Secretly evil And to try To disguise The truth With lies; It’s disappointing But still I see Something different In you; I find hope And I fall In love",
     "author": "Jazalyn",
     "role": "Writer",
+    "source": "vViIrRuUsS: I Never Forget",
     "primary_category": "LOVE",
     "categories": [
       "LOVE",
@@ -18048,7 +18146,7 @@
   },
   {
     "id": 1648,
-    "text": "It doesn't matter what you did or where you were...it matters where you are and what you're doing. Get out there! Sing the song in your heart and NEVER let anyone shut you up!!",
+    "text": "It doesn't matter what you did or where you were... it matters where you are and what you're doing. Get out there! Sing the song in your heart and NEVER let anyone shut you up!!",
     "author": "Steve Maraboli",
     "role": "American author & speaker",
     "primary_category": "LOVE",
@@ -18114,7 +18212,7 @@
   },
   {
     "id": 1654,
-    "text": "It is OK not to be OK..It is ok to be tired, angry & sad..Then we reflect & decide to rise like a Phoenix!",
+    "text": "It is OK not to be OK.. It is ok to be tired, angry & sad.. Then we reflect & decide to rise like a Phoenix!",
     "author": "Sally El-Akkad",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -18225,7 +18323,7 @@
   },
   {
     "id": 1664,
-    "text": "It is not about hate,It is about Time....",
+    "text": "It is not about hate, It is about Time....",
     "author": "shu-jais",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -18528,7 +18626,7 @@
   },
   {
     "id": 1692,
-    "text": "It's funny, haha.Time consuming oil.",
+    "text": "It's funny, haha. Time consuming oil.",
     "author": "I forgot the name",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -18659,7 +18757,7 @@
   },
   {
     "id": 1704,
-    "text": "It's one thing to get called into creation without being asked first,But it's an insult to injury to then be expected on top of that to work out what the hell you're doing here in the first (second) place",
+    "text": "It's one thing to get called into creation without being asked first, But it's an insult to injury to then be expected on top of that to work out what the hell you're doing here in the first (second) place",
     "author": "Exurb1a",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -18846,7 +18944,7 @@
   },
   {
     "id": 1721,
-    "text": "I’m a rebel in the game of chanceI have learned to enjoy the spiritual danceI have yearned to speak the language of truth I have the power to inspire our youth",
+    "text": "I’m a rebel in the game of chance I have learned to enjoy the spiritual dance I have yearned to speak the language of truth I have the power to inspire our youth",
     "author": "Aida Mandic",
     "role": "Poet & author",
     "primary_category": "WISDOM",
@@ -19039,7 +19137,7 @@
   },
   {
     "id": 1739,
-    "text": "Just because it didn’t work doesn’t mean it was the wrong choice.The world is full of probabilities, not certainties.Find a game where the probabilities favor you and keep taking shots.",
+    "text": "Just because it didn’t work doesn’t mean it was the wrong choice. The world is full of probabilities, not certainties. Find a game where the probabilities favor you and keep taking shots.",
     "author": "James Clear",
     "role": "American author",
     "primary_category": "WISDOM",
@@ -19434,7 +19532,7 @@
   },
   {
     "id": 1775,
-    "text": "Leadership is all about caring, daring and sharing!Caring for people, Daring to Act fearlessly,& Sharing the success with all!",
+    "text": "Leadership is all about caring, daring and sharing! Caring for people, Daring to Act fearlessly,& Sharing the success with all!",
     "author": "Sujit Lalwani",
     "role": "Author & speaker",
     "primary_category": "LOVE",
@@ -20154,7 +20252,7 @@
   },
   {
     "id": 1841,
-    "text": "Life is govern by principles not by how you feel.Just image a farmer who does not sow his seeds & decides that he is going throw them on the roof because he feels so, well he is sure not going to have a harvest.",
+    "text": "Life is govern by principles not by how you feel. Just image a farmer who does not sow his seeds & decides that he is going throw them on the roof because he feels so, well he is sure not going to have a harvest.",
     "author": "Thabang Kanti",
     "role": "Writer",
     "primary_category": "NATURE",
@@ -20209,7 +20307,7 @@
   },
   {
     "id": 1846,
-    "text": "Life is meant to be an adventure. Seek experiences that ignite your soul.failure, inspiration, life, motivation, pep-talk-radio, struggle, success, passion, adventure",
+    "text": "Life is meant to be an adventure. Seek experiences that ignite your soul. failure, inspiration, life, motivation, pep-talk-radio, struggle, success, passion, adventure",
     "author": "Pep Talk Radio",
     "role": "Motivational media platform",
     "primary_category": "LOVE",
@@ -20341,7 +20439,7 @@
   },
   {
     "id": 1858,
-    "text": "Life is so precious, we all are having a very limited time. To access the knowledge of Truth & the Creation.The sooner you get it, the lesser you'll struggle in between the conflicts of Consciousness and Heart",
+    "text": "Life is so precious, we all are having a very limited time. To access the knowledge of Truth & the Creation. The sooner you get it, the lesser you'll struggle in between the conflicts of Consciousness and Heart",
     "author": "Tanveer Hossain Mullick",
     "author": "Tanveer Hossain Mullick",
     "role": "Writer",
@@ -20777,7 +20875,7 @@
   },
   {
     "id": 1898,
-    "text": "Like sun shine over the hills! rise and shine before sunset, do what expected on you,yes that you love to do the most world waiting it.",
+    "text": "Like sun shine over the hills! rise and shine before sunset, do what expected on you, yes that you love to do the most world waiting it.",
     "author": "Nozipho N.Maphumulo",
     "role": "Writer",
     "primary_category": "LOVE",
@@ -20909,7 +21007,7 @@
   },
   {
     "id": 1910,
-    "text": "Live the Life of Your DreamsWhen you start living the life of your dreams, there will always be obstacles, doubters, mistakes and setbacks along the way. But with hard work, perseverance and self-belief there is no limit to what you can achieve.",
+    "text": "Live the Life of Your Dreams When you start living the life of your dreams, there will always be obstacles, doubters, mistakes and setbacks along the way. But with hard work, perseverance and self-belief there is no limit to what you can achieve.",
     "author": "Roy T. Bennett",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -20986,7 +21084,7 @@
   },
   {
     "id": 1917,
-    "text": "Look around you. Everything changes. Everything on this earth is in a continuous state of evolving, refining, improving, adapting, enhancing...changing. You were not put on this earth to remain stagnant.",
+    "text": "Look around you. Everything changes. Everything on this earth is in a continuous state of evolving, refining, improving, adapting, enhancing... changing. You were not put on this earth to remain stagnant.",
     "author": "Steve Maraboli",
     "role": "American author & speaker",
     "primary_category": "GROWTH",
@@ -21019,7 +21117,7 @@
   },
   {
     "id": 1920,
-    "text": "Love is eternal; the aspect may change,but not the essence.",
+    "text": "Love is eternal; the aspect may change, but not the essence.",
     "author": "Shree Shambav",
     "role": "Writer",
     "primary_category": "LOVE",
@@ -21041,7 +21139,7 @@
   },
   {
     "id": 1922,
-    "text": "Love to be unliked because it where you'll gain strength,indipendent.",
+    "text": "Love to be unliked because it where you'll gain strength, indipendent.",
     "author": "Nozipho N.Maphumulo",
     "role": "Writer",
     "primary_category": "LOVE",
@@ -21118,7 +21216,7 @@
   },
   {
     "id": 1929,
-    "text": "Make a pact with yourself today to not be defined by your past. Sometimes the greatest thing to come out of all your hard work isn't what you get for it, but what you become for it. Shake things up today! Be You...Be Free...Share.",
+    "text": "Make a pact with yourself today to not be defined by your past. Sometimes the greatest thing to come out of all your hard work isn't what you get for it, but what you become for it. Shake things up today! Be You... Be Free... Share.",
     "author": "Steve Maraboli",
     "role": "American author & speaker",
     "primary_category": "GROWTH",
@@ -21205,7 +21303,7 @@
   },
   {
     "id": 1937,
-    "text": "Make what's missing.If you are watching a movie and griping, 'why didn't they do this?'. Well, it sounds like you have some writing to do.",
+    "text": "Make what's missing. If you are watching a movie and griping, 'why didn't they do this?'. Well, it sounds like you have some writing to do.",
     "author": "Lin Manuel Miranda",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -21216,7 +21314,7 @@
   },
   {
     "id": 1938,
-    "text": "Make your Mark without Erasing who You are...!...Words of Wisdom...take or leave!",
+    "text": "Make your Mark without Erasing who You are...!... Words of Wisdom... take or leave!",
     "author": "RJ Yolande Mendes",
     "role": "Writer",
     "primary_category": "WISDOM",
@@ -21402,7 +21500,7 @@
   },
   {
     "id": 1955,
-    "text": "Me Right Now...lol...Takes 1 Snapchat Selfie and deletes 100 normal selfies...",
+    "text": "Me Right Now... lol... Takes 1 Snapchat Selfie and deletes 100 normal selfies...",
     "author": "RJ Yolande Mendes",
     "role": "Writer",
     "primary_category": "MINDFULNESS",
@@ -21994,7 +22092,7 @@
   },
   {
     "id": 2009,
-    "text": "Never respond to an angry person with a fiery comeback, even if he deserves it...Don't allow his anger to become your anger.",
+    "text": "Never respond to an angry person with a fiery comeback, even if he deserves it... Don't allow his anger to become your anger.",
     "author": "Bohdi Sanders",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -22092,7 +22190,7 @@
   },
   {
     "id": 2018,
-    "text": "No Matter How Worst Your Life Is Passing,Always Remember,The Living You Have Today Is Already Some People's Dream.",
+    "text": "No Matter How Worst Your Life Is Passing, Always Remember, The Living You Have Today Is Already Some People's Dream.",
     "author": "Ravevx",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -22344,7 +22442,7 @@
   },
   {
     "id": 2041,
-    "text": "Nobody is going to save you but yourself and the ‘best’ and only way to do so isthrough action.",
+    "text": "Nobody is going to save you but yourself and the ‘best’ and only way to do so is through action.",
     "author": "Oli Anderson",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -22543,9 +22641,10 @@
   },
 {
     "id": 2059,
-    "text": "Now that I found my destinyCan't be the endBefore the startSo I ignore what they sayAnd I listen to my heartAnd then I knowThat I'm enough",
+    "text": "Now that I found my destiny Can't be the end Before the start So I ignore what they say And I listen to my heart And then I know That I'm enough",
     "author": "Jazalyn",
     "role": "Writer",
+    "source": "Rose: Future Heart",
     "primary_category": "MINDFULNESS",
     "categories": [
       "MINDFULNESS",
@@ -22554,7 +22653,7 @@
   },
   {
     "id": 2060,
-    "text": "Now you've done it all,certified people with your life tell me your results what is your benefits?",
+    "text": "Now you've done it all, certified people with your life tell me your results what is your benefits?",
     "author": "Nozipho N.Maphumulo",
     "role": "Writer",
     "primary_category": "MINDFULNESS",
@@ -22609,7 +22708,7 @@
   },
   {
     "id": 2065,
-    "text": "Oh I see you shine like a summer rose but it not make everyone turn with you,why?it not balance nced.",
+    "text": "Oh I see you shine like a summer rose but it not make everyone turn with you, why? it not balance nced.",
     "author": "Nozipho N.Maphumulo",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -22675,7 +22774,7 @@
   },
   {
     "id": 2071,
-    "text": "Once You keep Aside the Emotional side Of yours,Is when You stop using the phrase “This was a BAD PHASE” of life..",
+    "text": "Once You keep Aside the Emotional side Of yours, Is when You stop using the phrase “This was a BAD PHASE” of life..",
     "author": "Sujit Lalwani",
     "role": "Author & speaker",
     "primary_category": "GROWTH",
@@ -22729,7 +22828,7 @@
   },
   {
     "id": 2076,
-    "text": "Once, I was flying as usual.Some people called me ill.I, too, for a while, Believed them...Then I saw,Their sophisticated cage!",
+    "text": "Once, I was flying as usual. Some people called me ill. I, too, for a while, Believed them... Then I saw, Their sophisticated cage!",
     "author": "Amogh Swamy",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -22938,7 +23037,7 @@
   },
   {
     "id": 2095,
-    "text": "Orang yang selalu menunda-nunda niatnya tidak akan mencapai apa-apa.Bertindak memang ada bahayanya, tetapi bila kita duduk saja menunggu rezeki nomplok, yang akan datang adalah kegagalan.Kesampingkan saja keragu-raguan anda dan maju terus.!",
+    "text": "Orang yang selalu menunda-nunda niatnya tidak akan mencapai apa-apa. Bertindak memang ada bahayanya, tetapi bila kita duduk saja menunggu rezeki nomplok, yang akan datang adalah kegagalan. Kesampingkan saja keragu-raguan anda dan maju terus.!",
     "author": "Og Mandino",
     "role": "American author",
     "primary_category": "GROWTH",
@@ -23081,7 +23180,7 @@
   },
   {
     "id": 2108,
-    "text": "POEMINHA DO CONTRATodos estes que aí estãoAtravancando o meu caminho,Eles passarão.Eu passarinho!",
+    "text": "POEMINHA DO CONTRA Todos estes que aí estão Atravancando o meu caminho, Eles passarão. Eu passarinho!",
     "author": "Mario Quintana",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -23288,7 +23387,7 @@
   },
   {
     "id": 2127,
-    "text": "People try to prevail their own truth. And they use evil means. Theytorture, they threaten. What they impose as truth keeps them in power, but it is fascistic. When the truth is a strategy or a pattern is not genuine truth.",
+    "text": "People try to prevail their own truth. And they use evil means. They torture, they threaten. What they impose as truth keeps them in power, but it is fascistic. When the truth is a strategy or a pattern is not genuine truth.",
     "author": "Maria Karvouni",
     "role": "Writer",
     "primary_category": "WISDOM",
@@ -23331,7 +23430,7 @@
   },
   {
     "id": 2131,
-    "text": "Perfection is not a destination; it's a never-ending process...Enjoy!",
+    "text": "Perfection is not a destination; it's a never-ending process... Enjoy!",
     "author": "Jim Bouchard",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -23736,7 +23835,7 @@
   },
   {
     "id": 2168,
-    "text": "Recognize that throughout this beautiful day,you have an incredible amount of opportunities to move your life into the direction you want it to go.",
+    "text": "Recognize that throughout this beautiful day, you have an incredible amount of opportunities to move your life into the direction you want it to go.",
     "author": "Steve Maraboli",
     "role": "American author & speaker",
     "primary_category": "GROWTH",
@@ -23747,7 +23846,7 @@
   },
   {
     "id": 2169,
-    "text": "Recovery is full of ups and downs.There is no such thing as a linear life.But you can always turn your setbacks into setups to come back stronger.",
+    "text": "Recovery is full of ups and downs. There is no such thing as a linear life. But you can always turn your setbacks into setups to come back stronger.",
     "author": "Brittany Burgunder",
     "role": "Writer",
     "primary_category": "HEALING",
@@ -23944,7 +24043,7 @@
   },
   {
     "id": 2187,
-    "text": "Reputation Is Temporary..As Much as The Man Owning Your Reputation Is",
+    "text": "Reputation Is Temporary.. As Much as The Man Owning Your Reputation Is",
     "author": "Sujit Lalwani",
     "role": "Author & speaker",
     "primary_category": "GROWTH",
@@ -23988,7 +24087,7 @@
   },
   {
     "id": 2191,
-    "text": "Riveting discoveries unfurl when one thinks the unimaginable, instead of imagining the unthinkable...for thought precedes imagination and sculptures acceptance for new ideas.",
+    "text": "Riveting discoveries unfurl when one thinks the unimaginable, instead of imagining the unthinkable... for thought precedes imagination and sculptures acceptance for new ideas.",
     "author": "Dr. Anhad Kaur Suri",
     "role": "Writer",
     "primary_category": "WISDOM",
@@ -24053,7 +24152,7 @@
   },
   {
     "id": 2197,
-    "text": "Seeing my book mentioned in different interviews and posts is an indescribable feeling. I’ll never take this love for granted.Whatever you’re creating right now, keep going. It is never too late.",
+    "text": "Seeing my book mentioned in different interviews and posts is an indescribable feeling. I’ll never take this love for granted. Whatever you’re creating right now, keep going. It is never too late.",
     "author": "Robin S. Baker",
     "role": "Author & coach",
     "primary_category": "MINDFULNESS",
@@ -24229,7 +24328,7 @@
   },
   {
     "id": 2213,
-    "text": "She appears quiet and subdued.The paradox: Raging storms twirl inside her.",
+    "text": "She appears quiet and subdued. The paradox: Raging storms twirl inside her.",
     "author": "Melody  Lee",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -24240,7 +24339,7 @@
   },
   {
     "id": 2214,
-    "text": "She brought light into the darkest hourShe reminded humanity of love’s beautiful power No matter what obstacles she facedNo matter how confidently evil paced",
+    "text": "She brought light into the darkest hour She reminded humanity of love’s beautiful power No matter what obstacles she faced No matter how confidently evil paced",
     "author": "Aida Mandic",
     "role": "Poet & author",
     "primary_category": "LOVE",
@@ -24273,7 +24372,7 @@
   },
   {
     "id": 2217,
-    "text": "She's living That life,with the view, she designed.",
+    "text": "She's living That life, with the view, she designed.",
     "author": "Bri Miller",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -24317,7 +24416,7 @@
   },
   {
     "id": 2221,
-    "text": "Should our motivation to achieve be just for the sake of the achievement itself with no thought of who/what we become in the process?If we want to sincerely enjoy our lives, who we become along the way is far more important than what we achieve.",
+    "text": "Should our motivation to achieve be just for the sake of the achievement itself with no thought of who/what we become in the process? If we want to sincerely enjoy our lives, who we become along the way is far more important than what we achieve.",
     "author": "Richie Norton",
     "role": "Writer",
     "primary_category": "WISDOM",
@@ -24965,7 +25064,7 @@
   },
   {
     "id": 2280,
-    "text": "Start Now! but believe in Yourself, Take Baby Steps...One Day, you’ll leave behind the Rest!",
+    "text": "Start Now! but believe in Yourself, Take Baby Steps... One Day, you’ll leave behind the Rest!",
     "author": "RJ Yolande Mendes",
     "role": "Writer",
     "primary_category": "MINDFULNESS",
@@ -25305,7 +25404,7 @@
   },
   {
     "id": 2311,
-    "text": "Success doesn’t just happen; it doesn’t pot out on its own.Success is all about the choices you make.It’s a balancing act betweenwhat to choose and what not to.",
+    "text": "Success doesn’t just happen; it doesn’t pot out on its own. Success is all about the choices you make. It’s a balancing act between what to choose and what not to.",
     "author": "Bhuwan Thapaliya",
     "role": "Writer",
     "primary_category": "WISDOM",
@@ -25569,7 +25668,7 @@
   },
   {
     "id": 2335,
-    "text": "Surrender,Submit,Sing.",
+    "text": "Surrender, Submit, Sing.",
     "author": "Lailah Gifty Akita",
     "role": "Ghanaian author",
     "primary_category": "GROWTH",
@@ -25845,7 +25944,7 @@
   },
   {
     "id": 2360,
-    "text": "The Best Way to Predict Your Future is to .....Create It",
+    "text": "The Best Way to Predict Your Future is to ..... Create It",
     "author": "Iman Gadzhi",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -26249,7 +26348,7 @@
   },
   {
     "id": 2397,
-    "text": "The elements of the written word can be purely magical. I read and I write...I inspire and I’m living.",
+    "text": "The elements of the written word can be purely magical. I read and I write... I inspire and I’m living.",
     "author": "C. Toni Graham",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -27648,7 +27747,7 @@
   },
   {
     "id": 2525,
-    "text": "The whole world's a canvas for our sketchesHorizons as far as the mind stretchesA work of art with soft edgesWaiting to come aliveNow's the time",
+    "text": "The whole world's a canvas for our sketches Horizons as far as the mind stretches A work of art with soft edges Waiting to come alive Now's the time",
     "author": "Marie Helen Abramyan",
     "role": "Writer",
     "primary_category": "MINDFULNESS",
@@ -27769,7 +27868,7 @@
   },
   {
     "id": 2536,
-    "text": "There are people who merely see what is.And there are people who look beyond what is.There are those who swim in the stream of history. And there are those who shape it.",
+    "text": "There are people who merely see what is. And there are people who look beyond what is. There are those who swim in the stream of history. And there are those who shape it.",
     "author": "Bhuwan Thapaliya",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -28087,7 +28186,7 @@
   },
   {
     "id": 2565,
-    "text": "Things do not happen TO you. They happen THROUGH you.You are the co-creator of everything in your reality.",
+    "text": "Things do not happen TO you. They happen THROUGH you. You are the co-creator of everything in your reality.",
     "author": "Gordana Biernat",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -28241,7 +28340,7 @@
   },
   {
     "id": 2579,
-    "text": "Those who wish to readalways find a book,there’ll new chapters, new pagesand new journey to embark on.",
+    "text": "Those who wish to read always find a book, there’ll new chapters, new pages and new journey to embark on.",
     "author": "Shaa Zainol",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -28373,7 +28472,7 @@
   },
   {
     "id": 2591,
-    "text": "Time is a serious phenomena, unending nights and days.Why use finite numbers (calendar) to measure endless time?Man needs a break and some excitement.",
+    "text": "Time is a serious phenomena, unending nights and days. Why use finite numbers (calendar) to measure endless time? Man needs a break and some excitement.",
     "author": "Enoble Asuquo",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -28384,7 +28483,7 @@
   },
   {
     "id": 2592,
-    "text": "Time is a slimy wimy thing,Life is a blessy messy thing.Love is a happy crappy thing,Mind is a mighty fighty thing.",
+    "text": "Time is a slimy wimy thing, Life is a blessy messy thing. Love is a happy crappy thing, Mind is a mighty fighty thing.",
     "author": "Abhijit Naskar",
     "role": "Indian author & neuroscientist",
     "primary_category": "MINDFULNESS",
@@ -28395,7 +28494,7 @@
   },
   {
     "id": 2593,
-    "text": "Time is always new, for dreams to come trueDestiny is yours, to do what you do Change is different, but only for awhileFree will it always, brings in a whole new styleCompetition makes, the fight all worth your while",
+    "text": "Time is always new, for dreams to come true Destiny is yours, to do what you do Change is different, but only for awhile Free will it always, brings in a whole new style Competition makes, the fight all worth your while",
     "author": "Marie Helen Abramyan",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -28723,7 +28822,7 @@
   },
   {
     "id": 2623,
-    "text": "To lovers there.Most ladies the reason they are dumped and their relationship doesn't last is they made themselves to become a want than a need in a relationship.",
+    "text": "To lovers there. Most ladies the reason they are dumped and their relationship doesn't last is they made themselves to become a want than a need in a relationship.",
     "author": "De philosopher DJ Kyos",
     "role": "Writer",
     "primary_category": "LOVE",
@@ -29281,7 +29380,7 @@
   },
   {
     "id": 2674,
-    "text": "Viral Code...I want my dreamsAnd I want them now;Give me my dreams;Only dreams can cure me;Everyone deserves dreamsBecause no one deserves them",
+    "text": "Viral Code... I want my dreams And I want them now; Give me my dreams; Only dreams can cure me; Everyone deserves dreams Because no one deserves them",
     "author": "Jazalyn",
     "role": "Writer",
     "primary_category": "MINDFULNESS",
@@ -29303,7 +29402,7 @@
   },
   {
     "id": 2676,
-    "text": "WINNER:is A Runner who “Wins Inspite Of Ninety Nine ExcellentRunners!",
+    "text": "WINNER: is A Runner who “Wins In spite Of Ninety Nine Excellent Runners!",
     "author": "Sujit Lalwani",
     "role": "Author & speaker",
     "primary_category": "GROWTH",
@@ -29632,7 +29731,7 @@
   },
   {
     "id": 2706,
-    "text": "We do not just go through life blindly,we create our own journey.Your faith has sculpted you into the human being you have become.",
+    "text": "We do not just go through life blindly, we create our own journey. Your faith has sculpted you into the human being you have become.",
     "author": "Judie McCarty",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -29664,7 +29763,7 @@
   },
   {
     "id": 2709,
-    "text": "We don't meet people face to face,But waste our time on social media's embrace.",
+    "text": "We don't meet people face to face, But waste our time on social media's embrace.",
     "author": "NITISH THAKUR",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -29675,7 +29774,7 @@
   },
   {
     "id": 2710,
-    "text": "We don't need to make longerregret lists. We don't need people thatare very very smart and yet do nothing.We need people that do the things theyalready know how to do. Stop learning and start doing. Motivation, not education.",
+    "text": "We don't need to make longer regret lists. We don't need people that are very very smart and yet do nothing. We need people that do the things they already know how to do. Stop learning and start doing. Motivation, not education.",
     "author": "Richard Heart",
     "role": "Writer",
     "primary_category": "WISDOM",
@@ -29686,7 +29785,7 @@
   },
   {
     "id": 2711,
-    "text": "We find out what is obviousWe discover what is curiousAt last the puzzle has been solved Into dreams that evolved",
+    "text": "We find out what is obvious We discover what is curious At last the puzzle has been solved Into dreams that evolved",
     "author": "Aida Mandic",
     "role": "Poet & author",
     "primary_category": "GROWTH",
@@ -29785,7 +29884,7 @@
   },
   {
     "id": 2720,
-    "text": "We need each other more than ever.We cannot get through it alone,find the hope to move forward and doall we need to doalone,find the joy and beautyaloneto have the incentiveto find the hope.",
+    "text": "We need each other more than ever. We cannot get through it alone, find the hope to move forward and do all we need to do alone, find the joy and beauty alone to have the incentive to find the hope.",
     "author": "Shellen Lubin",
     "role": "Writer",
     "primary_category": "GRATITUDE",
@@ -29829,7 +29928,7 @@
   },
   {
     "id": 2724,
-    "text": "We only get a few momentsIn this lifeWe must live and lovethem well",
+    "text": "We only get a few moments In this life We must live and love them well",
     "author": "Alice Tyszka",
     "role": "Writer",
     "primary_category": "LOVE",
@@ -30629,7 +30728,7 @@
   },
   {
     "id": 2797,
-    "text": "When the murky cloudsBegan drizzling gloomWhen there was nothing But darkness aroundWhen everythingLooked hazy and mistySuddenly there twinkledA starFar away.",
+    "text": "When the murky clouds Began drizzling gloom When there was nothing But darkness around When everything Looked hazy and misty Suddenly there twinkled A star Far away.",
     "author": "Neelam Saxena Chandra",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -30926,7 +31025,7 @@
   },
   {
     "id": 2824,
-    "text": "When you practice leadership,The evidence of quality of your leadership, Is known from the type of leaders that emerge out of your leadership",
+    "text": "When you practice leadership, The evidence of quality of your leadership, Is known from the type of leaders that emerge out of your leadership",
     "author": "Sujit Lalwani",
     "role": "Author & speaker",
     "primary_category": "GROWTH",
@@ -31345,7 +31444,7 @@
   },
   {
     "id": 2862,
-    "text": "Wisdom comes from knowing the order of things...and you are the first order of your business.",
+    "text": "Wisdom comes from knowing the order of things... and you are the first order of your business.",
     "author": "Elaine Marolakos Edelson",
     "role": "Writer",
     "primary_category": "WISDOM",
@@ -31355,7 +31454,7 @@
   },
   {
     "id": 2863,
-    "text": "Wise words doesn't make you wise...It makes you a smart person!Wisdom makes you a gentleman.",
+    "text": "Wise words doesn't make you wise... It makes you a smart person! Wisdom makes you a gentleman.",
     "author": "Deepa Gera",
     "role": "Writer",
     "primary_category": "WISDOM",
@@ -31616,7 +31715,7 @@
   },
   {
     "id": 2887,
-    "text": "Yawns are not the only infectious things out there besides germs.Giggles can spread from person to person.So can blushing.But maybe the most powerful infectious thing is the act of speaking the truth.",
+    "text": "Yawns are not the only infectious things out there besides germs. Giggles can spread from person to person. So can blushing. But maybe the most powerful infectious thing is the act of speaking the truth.",
     "author": "Vera Nazarian",
     "role": "Writer",
     "primary_category": "WISDOM",
@@ -31637,7 +31736,7 @@
   },
   {
     "id": 2889,
-    "text": "Yeu only live once.No matter what yeu choose to do with it, it should be worth it.",
+    "text": "Yeu only live once. No matter what yeu choose to do with it, it should be worth it.",
     "author": "Sandesh Hukpachongbang",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -31648,7 +31747,7 @@
   },
   {
     "id": 2890,
-    "text": "You Are the Master of Your AttitudeYou cannot control what happens to you, but you can control the way you think about all the events. You always have a choice. You can choose to face them with a positive mental attitude.",
+    "text": "You Are the Master of Your Attitude You cannot control what happens to you, but you can control the way you think about all the events. You always have a choice. You can choose to face them with a positive mental attitude.",
     "author": "Roy T. Bennett",
     "role": "Writer",
     "primary_category": "WISDOM",
@@ -31691,7 +31790,7 @@
   },
   {
     "id": 2894,
-    "text": "You are exactly where you need to be.Do something if you want something. Otherwise It will be your whole life.",
+    "text": "You are exactly where you need to be. Do something if you want something. Otherwise It will be your whole life.",
     "author": "NITISH THAKUR",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -31812,7 +31911,7 @@
   },
   {
     "id": 2905,
-    "text": "You are thunder and lightning Love and rageIntensity and sensitivity Made of mountains, oceansFire and fierce thingsDreams and curiosityYou are paradoxes and contradictions Some days soft, some daysStrong as fuck Always beautiful.",
+    "text": "You are thunder and lightning Love and rage Intensity and sensitivity Made of mountains, oceans Fire and fierce things Dreams and curiosity You are paradoxes and contradictions Some days soft, some days Strong as fuck Always beautiful.",
     "author": "Melody  Lee",
     "role": "Writer",
     "primary_category": "LOVE",
@@ -31922,7 +32021,7 @@
   },
   {
     "id": 2915,
-    "text": "You can lose your MONEY. You can lose your FRIENDS. You can lose your JOB and you can lose your MARRIAGE...and still recover...as long as there is HOPE. Never lose HOPE.",
+    "text": "You can lose your MONEY. You can lose your FRIENDS. You can lose your JOB and you can lose your MARRIAGE... and still recover... as long as there is HOPE. Never lose HOPE.",
     "author": "John Paul Warren",
     "role": "Author & speaker",
     "primary_category": "LOVE",
@@ -32153,7 +32252,7 @@
   },
   {
     "id": 2936,
-    "text": "You have the power to heal your life, and you need to know that. We think so often that we are helpless, but we're not. We always have the power of our minds...Claim and consciously use your power.",
+    "text": "You have the power to heal your life, and you need to know that. We think so often that we are helpless, but we're not. We always have the power of our minds... Claim and consciously use your power.",
     "author": "Louise L. Hay",
     "role": "Writer",
     "primary_category": "HEALING",
@@ -32362,7 +32461,7 @@
   },
   {
     "id": 2955,
-    "text": "You will be continuous growing ,while you start blaming yourselves..",
+    "text": "You will be continuous growing , while you start blaming yourselves..",
     "author": "P k",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -32813,7 +32912,7 @@
   },
   {
     "id": 2996,
-    "text": "[Team player vs team builder]Players focus on the wins and the loses.Builders focus on the team and future of the vision.Let's move our members from team player to team builder.",
+    "text": "[Team player vs team builder]Players focus on the wins and the loses. Builders focus on the team and future of the vision. Let's move our members from team player to team builder.",
     "author": "Janna Cachola",
     "role": "Writer",
     "primary_category": "GROWTH",
@@ -32824,7 +32923,7 @@
   },
   {
     "id": 2997,
-    "text": "a subtle kind of murder happenswhen parents don’t allow their childrento be the people they’re meant to belove means letting your child just live free",
+    "text": "a subtle kind of murder happens when parents don’t allow their children to be the people they’re meant to be. Love means letting your child just live free",
     "author": "Aida Mandic",
     "role": "Poet & author",
     "primary_category": "GROWTH",
@@ -32835,7 +32934,7 @@
   },
   {
     "id": 2998,
-    "text": "check the time and dateit's never too late, pray and have faithlet your spirit elevatedon't wait for someone to open the gatetake control of your life, navigatethe world is yours, break the cursecreate your own universe",
+    "text": "check the time and date, it's never too late, pray and have faith. Let your spirit elevate. Don't wait for someone to open the gate. Take control of your life, navigate the world is yours, break the curse. Create your own universe",
     "author": "Patrick Cruz",
     "role": "Writer",
     "primary_category": "NATURE",
@@ -32890,7 +32989,7 @@
   },
   {
     "id": 3003,
-    "text": "no struggle is harderthan survival for our existence..",
+    "text": "no struggle is harder than survival for our existence..",
     "author": "S S Rai",
     "role": "Writer",
     "primary_category": "HEALING",

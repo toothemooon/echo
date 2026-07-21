@@ -10,10 +10,11 @@ import {
 import * as Clipboard from "expo-clipboard";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/colors";
+import type { ThemeMode } from "../storage/preferences";
 
 type Props = {
   colors: typeof COLORS.light;
-  isDark: boolean;
+  theme: ThemeMode;
   onBack: () => void;
   onOpenPersonalization: () => void;
   onOpenTheme: () => void;
@@ -25,6 +26,12 @@ const FEEDBACK_EMAIL = "abc510433622@gmail.com";
 const APP_STORE_URL = "https://apps.apple.com/app/echo/id0000000000";
 const PRIVACY_URL = "https://echo.app/privacy";
 const TERMS_URL = "https://echo.app/terms";
+
+const THEME_LABELS: Record<ThemeMode, string> = {
+  light: "Light",
+  dark: "Dark",
+  archive: "Archive",
+};
 
 async function safeOpenURL(url: string) {
   try {
@@ -42,7 +49,12 @@ async function safeOpenURL(url: string) {
 
 export default function SettingsScreen(props: Props) {
   const handleShareApp = () => {
-    Alert.alert("Share ECHO", APP_STORE_URL, [
+    const message =
+      "Every meaningful quote deserves another echo.\n\n" +
+      "Share ECHO with someone who may need a thoughtful moment today.\n\n" +
+      APP_STORE_URL;
+
+    Alert.alert("Share ECHO", message, [
       { text: "Cancel", style: "cancel" },
       {
         text: "Copy Link",
@@ -54,12 +66,28 @@ export default function SettingsScreen(props: Props) {
   };
 
   const handleSendFeedback = () => {
-    Alert.alert("Send Feedback", FEEDBACK_EMAIL, [
+    const message =
+      "Your thoughts help make ECHO better.\n\n" +
+      "Feel free to send me your feedback, ideas, or suggestions. " +
+      "Every message is read and greatly appreciated.\n\n" +
+      FEEDBACK_EMAIL;
+
+    Alert.alert("Send Feedback", message, [
       { text: "Cancel", style: "cancel" },
       {
         text: "Copy Email",
         onPress: () => {
           void Clipboard.setStringAsync(FEEDBACK_EMAIL);
+        },
+      },
+      {
+        text: "Open Mail",
+        onPress: () => {
+          void safeOpenURL(
+            `mailto:${FEEDBACK_EMAIL}?subject=${encodeURIComponent(
+              "ECHO App Feedback",
+            )}`,
+          );
         },
       },
     ]);
@@ -169,7 +197,7 @@ export default function SettingsScreen(props: Props) {
                   },
                 ]}
               >
-                {props.isDark ? "Dark" : "Light"}
+                {THEME_LABELS[props.theme]}
               </Text>
 
               <Ionicons

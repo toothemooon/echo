@@ -23,6 +23,13 @@ type Props = {
  * Not rendered in the main UI — used offscreen for screenshot generation.
  */
 export default function ShareCard(props: Props) {
+  const normalizedRole = props.quote.role.trim();
+  const displayRole =
+    normalizedRole === "Writer" || normalizedRole === "Author"
+      ? null
+      : normalizedRole;
+  const attributionDetail = props.quote.source ?? displayRole;
+
   return (
     <View
       style={[
@@ -56,6 +63,12 @@ export default function ShareCard(props: Props) {
       <Text style={[styles.author, { color: props.colors.author }]}>
         — {props.quote.author}
       </Text>
+
+      {attributionDetail ? (
+        <Text style={[styles.role, { color: props.colors.roleText }]}>
+          {attributionDetail}
+        </Text>
+      ) : null}
 
       {/* App branding */}
       <Text style={[styles.branding, { color: props.colors.inactiveDot }]}>
@@ -104,6 +117,13 @@ const styles = StyleSheet.create({
   author: {
     fontSize: 14,
     fontWeight: "400",
+    textAlign: "right",
+    marginBottom: 4,
+  },
+  role: {
+    fontSize: 11,
+    fontWeight: "300",
+    fontStyle: "italic",
     textAlign: "right",
     marginBottom: 4,
   },

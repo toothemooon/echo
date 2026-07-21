@@ -1,28 +1,32 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/colors";
+import type { ThemeMode } from "../storage/preferences";
 
 // ══════════════════════════════════════════════
 //  ThemeScreen — 主题选择器
-//  提供 Light / Dark 两个选项，切换后立即生效
+//  提供 Light / Dark / Archive 三个选项，切换后立即生效
 // ══════════════════════════════════════════════
 
 // ── Props ──
 type Props = {
   colors: typeof COLORS.light;
-  isDark: boolean;
-  onToggleTheme: () => void;
+  theme: ThemeMode;
+  onChangeTheme: (theme: ThemeMode) => void;
   onBack: () => void;
 };
 
 const THEMES = [
   { key: "light" as const, label: "Light", icon: "sunny-outline" as const },
   { key: "dark" as const, label: "Dark", icon: "moon-outline" as const },
+  {
+    key: "archive" as const,
+    label: "Archive",
+    icon: "library-outline" as const,
+  },
 ];
 
 export default function ThemeScreen(props: Props) {
-  const currentTheme = props.isDark ? "dark" : "light";
-
   return (
     <View
       style={[styles.container, { backgroundColor: props.colors.background }]}
@@ -52,7 +56,7 @@ export default function ThemeScreen(props: Props) {
       {/* Theme Options */}
       <View style={[styles.card, { backgroundColor: props.colors.btnBg }]}>
         {THEMES.map((theme, index) => {
-          const isActive = currentTheme === theme.key;
+          const isActive = props.theme === theme.key;
           const isLast = index === THEMES.length - 1;
           return (
             <Pressable
@@ -64,12 +68,7 @@ export default function ThemeScreen(props: Props) {
                   borderBottomColor: props.colors.divider,
                 },
               ]}
-              onPress={() => {
-                if (theme.key === "dark" && !props.isDark)
-                  props.onToggleTheme();
-                if (theme.key === "light" && props.isDark)
-                  props.onToggleTheme();
-              }}
+              onPress={() => props.onChangeTheme(theme.key)}
             >
               <View style={styles.cardLeft}>
                 <Ionicons

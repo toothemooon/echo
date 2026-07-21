@@ -23,6 +23,7 @@ import {
   setQuoteFontSize,
   type QuoteFont,
   type QuoteFontSize,
+  type ThemeMode,
 } from "../storage/preferences";
 
 import {
@@ -61,7 +62,8 @@ export default function Index() {
 
   // ── 跨页面 State ──
   const [currentPage, setCurrentPage] = useState<Page>("home");
-  const [isDark, setIsDark] = useState(false);
+  const [theme, setThemeState] = useState<ThemeMode>("light");
+  const isDark = theme === "dark";
 
   const [preferredCategories, setPreferredCategories] = useState<Category[]>([
     ...CATEGORIES,
@@ -111,11 +113,11 @@ export default function Index() {
           getQuoteFontSize(),
         ]);
 
-        const shouldUseDarkTheme = savedTheme
-          ? savedTheme === "dark"
-          : Appearance.getColorScheme() === "dark";
+        const resolvedTheme: ThemeMode =
+          savedTheme ??
+          (Appearance.getColorScheme() === "dark" ? "dark" : "light");
 
-        setIsDark(shouldUseDarkTheme);
+        setThemeState(resolvedTheme);
         setPreferredCategories(prefs);
         setSavedQuotes(savedRecords.map((record) => record.quote));
         setQuoteFontState(savedQuoteFont);
@@ -151,36 +153,36 @@ export default function Index() {
       <View
         style={{
           flex: 1,
-          backgroundColor: isDark
-            ? COLORS.dark.background
-            : COLORS.light.background,
+          backgroundColor: COLORS[theme].background,
         }}
       >
         <SplashScreen
-          isDark={isDark}
+          theme={theme}
           onAnimationComplete={() => setShowSplash(false)}
         />
       </View>
     );
   }
 
-  const colors = isDark ? COLORS.dark : COLORS.light;
+  const colors = COLORS[theme];
 
   const isSaved = savedQuotes.some((quote) => quote.id === currentQuote.id);
 
   const canGoPrev = historyIndex > 0;
 
   // ── 主题 ──
-  const toggleTheme = () => {
-    const nextIsDark = !isDark;
+  const changeTheme = (nextTheme: ThemeMode) => {
+    setThemeState(nextTheme);
 
-    setIsDark(nextIsDark);
-
-    void setTheme(nextIsDark ? "dark" : "light").catch(() => {
+    void setTheme(nextTheme).catch(() => {
       if (__DEV__) {
         console.warn("Failed to save theme.");
       }
     });
+  };
+
+  const toggleTheme = () => {
+    changeTheme(theme === "dark" ? "light" : "dark");
   };
 
   // ── 字体 ──
@@ -423,8 +425,8 @@ export default function Index() {
     return (
       <ThemeScreen
         colors={colors}
-        isDark={isDark}
-        onToggleTheme={toggleTheme}
+        theme={theme}
+        onChangeTheme={changeTheme}
         onBack={() => setCurrentPage("settings")}
       />
     );
@@ -461,7 +463,7 @@ export default function Index() {
     return (
       <SettingsScreen
         colors={colors}
-        isDark={isDark}
+        theme={theme}
         onBack={() => setCurrentPage("home")}
         onOpenPersonalization={() => setCurrentPage("personalization")}
         onOpenTheme={() => setCurrentPage("theme")}

@@ -42,6 +42,12 @@ export default function QuoteCard(props: Props) {
   const quoteFontStyle = props.quoteFont === "system" ? "italic" : "normal";
 
   const quoteSizeStyle = QUOTE_SIZE_STYLES[props.quoteFontSize];
+  const normalizedRole = props.quote.role.trim();
+  const displayRole =
+    normalizedRole === "Writer" || normalizedRole === "Author"
+      ? null
+      : normalizedRole;
+  const attributionDetail = props.quote.source ?? displayRole;
 
   return (
     <Animated.View
@@ -121,7 +127,7 @@ export default function QuoteCard(props: Props) {
       </Text>
 
       {/* Role */}
-      {props.quote.role ? (
+      {attributionDetail ? (
         <Text
           style={[
             styles.role,
@@ -130,7 +136,7 @@ export default function QuoteCard(props: Props) {
             },
           ]}
         >
-          {props.quote.role}
+          {attributionDetail}
         </Text>
       ) : null}
     </Animated.View>

@@ -1,25 +1,40 @@
 import React, { useEffect, useRef } from "react";
-import { Animated, Dimensions, Image, StyleSheet, View } from "react-native";
+import {
+  Animated,
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { COLORS } from "../../constants/colors";
+import type { ThemeMode } from "../../storage/preferences";
 
 interface SplashScreenProps {
-  isDark: boolean;
+  theme: ThemeMode;
   onAnimationComplete: () => void;
 }
 
 const { width, height } = Dimensions.get("window");
 
+const SPLASH_IMAGES = {
+  light: require("../../../assets/echo-icon-light.png"),
+  dark: require("../../../assets/echo-icon-dark.png"),
+  archive: require("../../../assets/echo-icon-archive.png"),
+} as const;
+
 export default function SplashScreen({
-  isDark,
+  theme,
   onAnimationComplete,
 }: SplashScreenProps) {
   const logoOpacity = useRef(new Animated.Value(0)).current;
   const logoScale = useRef(new Animated.Value(0.8)).current;
+  const echoProgress = useRef(new Animated.Value(0)).current;
   const textOpacity = useRef(new Animated.Value(0)).current;
   const containerOpacity = useRef(new Animated.Value(1)).current;
 
-  const bgColor = isDark ? COLORS.dark.background : COLORS.light.background;
-  const brandColor = "#8FAE8B";
+  const colors = COLORS[theme];
+  const splashImage = SPLASH_IMAGES[theme];
 
   useEffect(() => {
     // Logo fade in and scale up
@@ -34,6 +49,11 @@ export default function SplashScreen({
           toValue: 1,
           friction: 8,
           tension: 40,
+          useNativeDriver: true,
+        }),
+        Animated.timing(echoProgress, {
+          toValue: 1,
+          duration: 1100,
           useNativeDriver: true,
         }),
       ]),
@@ -60,7 +80,10 @@ export default function SplashScreen({
     <Animated.View
       style={[
         styles.container,
-        { opacity: containerOpacity, backgroundColor: bgColor },
+        {
+          opacity: containerOpacity,
+          backgroundColor: colors.background,
+        },
       ]}
     >
       <View style={styles.content}>
@@ -74,8 +97,54 @@ export default function SplashScreen({
             },
           ]}
         >
+          <Animated.Image
+            source={splashImage}
+            style={[
+              styles.logo,
+              styles.echoLayer,
+              {
+                opacity: echoProgress.interpolate({
+                  inputRange: [0, 0.5, 1],
+                  outputRange: [0, 0.16, 0],
+                }),
+                transform: [
+                  {
+                    translateX: echoProgress.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [30, 0],
+                    }),
+                  },
+                ],
+              },
+            ]}
+            resizeMode="contain"
+          />
+
+          <Animated.Image
+            source={splashImage}
+            style={[
+              styles.logo,
+              styles.echoLayer,
+              {
+                opacity: echoProgress.interpolate({
+                  inputRange: [0, 0.55, 1],
+                  outputRange: [0, 0.28, 0],
+                }),
+                transform: [
+                  {
+                    translateX: echoProgress.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [15, 0],
+                    }),
+                  },
+                ],
+              },
+            ]}
+            resizeMode="contain"
+          />
+
           <Image
-            source={require("../../../assets/splash-icon.png")}
+            source={splashImage}
             style={styles.logo}
             resizeMode="contain"
           />
@@ -84,19 +153,24 @@ export default function SplashScreen({
         {/* App Name */}
         <Animated.View style={{ opacity: textOpacity }}>
           <View style={styles.textContainer}>
-            <View style={[styles.dot, { backgroundColor: brandColor }]} />
-            <View
-              style={[
-                styles.dot,
-                { backgroundColor: brandColor, opacity: 0.6 },
-              ]}
-            />
-            <View
-              style={[
-                styles.dot,
-                { backgroundColor: brandColor, opacity: 0.3 },
-              ]}
-            />
+            <Text style={[styles.tagline, { color: colors.author }]}>
+              WORDS OUTLIVE THEIR MOMENT
+            </Text>
+            <View style={styles.echoDots}>
+              <View style={[styles.dot, { backgroundColor: colors.dot }]} />
+              <View
+                style={[
+                  styles.dot,
+                  { backgroundColor: colors.dot, opacity: 0.6 },
+                ]}
+              />
+              <View
+                style={[
+                  styles.dot,
+                  { backgroundColor: colors.dot, opacity: 0.3 },
+                ]}
+              />
+            </View>
           </View>
         </Animated.View>
       </View>
@@ -106,7 +180,7 @@ export default function SplashScreen({
         <View
           style={[
             styles.accentLine,
-            { backgroundColor: brandColor, opacity: 0.3 },
+            { backgroundColor: colors.dot, opacity: 0.3 },
           ]}
         />
       </View>
@@ -136,15 +210,27 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   logo: {
-    width: width * 0.4,
-    height: width * 0.4,
-    maxHeight: 200,
-    maxWidth: 200,
+    width: width * 0.68,
+    height: width * 0.68,
+    maxHeight: 340,
+    maxWidth: 340,
+    borderRadius: 36,
+  },
+  echoLayer: {
+    position: "absolute",
   },
   textContainer: {
-    flexDirection: "row",
     marginTop: 24,
     alignItems: "center",
+  },
+  tagline: {
+    fontSize: 10,
+    fontWeight: "500",
+    letterSpacing: 2.8,
+  },
+  echoDots: {
+    flexDirection: "row",
+    marginTop: 14,
     gap: 8,
   },
   dot: {

@@ -6,6 +6,7 @@ const QUOTE_FONT_SIZE_KEY = "@echo/quote_font_size";
 
 export type QuoteFont = "elegant" | "system";
 export type QuoteFontSize = "small" | "medium" | "large";
+export type ThemeMode = "light" | "dark" | "archive";
 
 const PREFS_KEY = "@echo/preferred_categories";
 const THEME_KEY = "@echo/theme";
@@ -89,11 +90,13 @@ export async function setPreferredCategories(
 }
 
 /** Returns the stored theme, or null when the system theme should be used. */
-export async function getTheme(): Promise<"light" | "dark" | null> {
+export async function getTheme(): Promise<ThemeMode | null> {
   try {
     const value = await AsyncStorage.getItem(THEME_KEY);
     if (value === null) return null;
-    if (value === "light" || value === "dark") return value;
+    if (value === "light" || value === "dark" || value === "archive") {
+      return value;
+    }
 
     warnInDevelopment("Ignored invalid theme");
     return null;
@@ -103,11 +106,11 @@ export async function getTheme(): Promise<"light" | "dark" | null> {
   }
 }
 
-/** Saves an explicit light or dark theme preference. */
-export async function setTheme(theme: "light" | "dark"): Promise<void> {
+/** Saves an explicit theme preference. */
+export async function setTheme(theme: ThemeMode): Promise<void> {
   try {
-    if (theme !== "light" && theme !== "dark") {
-      throw new TypeError("Theme must be light or dark.");
+    if (theme !== "light" && theme !== "dark" && theme !== "archive") {
+      throw new TypeError("Theme must be light, dark, or archive.");
     }
 
     await AsyncStorage.setItem(THEME_KEY, theme);

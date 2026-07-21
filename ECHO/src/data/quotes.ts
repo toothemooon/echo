@@ -8,6 +8,7 @@ export type Quote = {
   text: string;
   author: string;
   role: string;
+  source?: string;
   primary_category: Category;
   categories: Category[];
 };
@@ -44,6 +45,7 @@ export function isQuote(value: unknown): value is Quote {
   const candidate = value as Record<string, unknown>;
   const primaryCategory = candidate.primary_category;
   const categories = candidate.categories;
+  const source = candidate.source;
 
   if (!isCategory(primaryCategory) || !Array.isArray(categories)) {
     return false;
@@ -54,6 +56,7 @@ export function isQuote(value: unknown): value is Quote {
     isNonEmptyString(candidate.text) &&
     isNonEmptyString(candidate.author) &&
     typeof candidate.role === "string" &&
+    (source === undefined || isNonEmptyString(source)) &&
     categories.length > 0 &&
     categories.every(isCategory) &&
     categories.includes(primaryCategory)
@@ -94,6 +97,7 @@ function validateQuoteCollection(value: unknown): Quote[] {
         text: candidate.text,
         author: candidate.author,
         role: candidate.role,
+        ...(candidate.source ? { source: candidate.source } : {}),
         primary_category: candidate.primary_category,
         categories: [...candidate.categories],
       }),
