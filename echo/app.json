@@ -6,7 +6,12 @@
     "scheme": "echo",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#E5E0D8"
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.anonymous.ECHO",

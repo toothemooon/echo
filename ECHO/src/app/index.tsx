@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { View, Animated, Dimensions, Alert, Appearance } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import SplashScreen from "../components/common/SplashScreen";
 import { captureRef } from "react-native-view-shot";
 import {
   useFonts,
@@ -65,6 +66,9 @@ export default function Index() {
   const [historyVisible, setHistoryVisible] = useState(false);
   const [shareVisible, setShareVisible] = useState(false);
 
+  // ── Splash Screen State ──
+  const [showSplash, setShowSplash] = useState(true);
+
   // ── useRef 动画和组件引用 ──
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const slideAnim = useRef(new Animated.Value(0)).current;
@@ -111,7 +115,25 @@ export default function Index() {
 
   // ── 派生值（统一计算一次） ──
   const currentQuote = quoteHistory[historyIndex] ?? null;
-  if (!fontsLoaded || !initializationReady || !currentQuote) return null;
+
+  // Splash screen: show while loading
+  if (!fontsLoaded || !initializationReady || !currentQuote) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: isDark
+            ? COLORS.dark.background
+            : COLORS.light.background,
+        }}
+      >
+        <SplashScreen
+          isDark={isDark}
+          onAnimationComplete={() => setShowSplash(false)}
+        />
+      </View>
+    );
+  }
 
   const colors = isDark ? COLORS.dark : COLORS.light;
   const isSaved = savedQuotes.some((q) => q.id === currentQuote.id);
@@ -141,9 +163,7 @@ export default function Index() {
     try {
       if (isSaved) {
         await removeSavedQuote(currentQuote.id);
-        setSavedQuotes((prev) =>
-          prev.filter((q) => q.id !== currentQuote.id),
-        );
+        setSavedQuotes((prev) => prev.filter((q) => q.id !== currentQuote.id));
       } else {
         await saveQuote(currentQuote);
         setSavedQuotes((prev) => [
