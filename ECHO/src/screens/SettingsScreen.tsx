@@ -26,7 +26,6 @@ type Props = {
 };
 
 const FEEDBACK_EMAIL = "abc510433622@gmail.com";
-const APP_STORE_URL = "https://apps.apple.com/app/echo/id0000000000";
 const PRIVACY_URL = "https://sarada.yachts/projects/echo/privacy";
 const TERMS_URL = "https://sarada.yachts/projects/echo/terms";
 
@@ -57,23 +56,6 @@ async function safeOpenURL(url: string) {
 }
 
 export default function SettingsScreen(props: Props) {
-  const handleShareApp = () => {
-    const message =
-      "Every meaningful quote deserves another echo.\n\n" +
-      "Share ECHO with someone who may need a thoughtful moment today.\n\n" +
-      APP_STORE_URL;
-
-    Alert.alert("Share ECHO", message, [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Copy Link",
-        onPress: () => {
-          void Clipboard.setStringAsync(APP_STORE_URL);
-        },
-      },
-    ]);
-  };
-
   const handleSendFeedback = () => {
     const message =
       "Your thoughts help make ECHO better.\n\n" +
@@ -389,41 +371,6 @@ export default function SettingsScreen(props: Props) {
             />
           </Pressable>
 
-          <View
-            style={[
-              styles.cardDivider,
-              {
-                backgroundColor: props.colors.divider,
-              },
-            ]}
-          />
-
-          <Pressable style={styles.cardRow} onPress={handleShareApp}>
-            <View style={styles.cardLeft}>
-              <Ionicons
-                name="share-outline"
-                size={20}
-                color={props.colors.btnIcon}
-              />
-
-              <Text
-                style={[
-                  styles.cardLabel,
-                  {
-                    color: props.colors.text,
-                  },
-                ]}
-              >
-                Share App
-              </Text>
-            </View>
-
-            <Ionicons
-              name="chevron-forward"
-              size={16}
-              color={props.colors.btnIcon}
-            />
-          </Pressable>
         </View>
 
         {/* About */}

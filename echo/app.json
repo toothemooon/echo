@@ -8,8 +8,12 @@
     "icon": "./assets/echo-icon-light.png",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.ECHO",
+      "supportsTablet": false,
+      "bundleIdentifier": "yachts.sarada.echo",
+      "buildNumber": "1",
+      "config": {
+        "usesNonExemptEncryption": false
+      },
       "infoPlist": {
         "LSApplicationQueriesSchemes": [
           "itms-apps",
@@ -24,7 +28,8 @@
         "foregroundImage": "./assets/echo-icon-light.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.anonymous.ECHO"
+      "package": "yachts.sarada.echo",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/echo-icon-light.png"

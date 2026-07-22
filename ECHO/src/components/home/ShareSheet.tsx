@@ -41,12 +41,27 @@ export default function ShareSheet(props: Props) {
 
   const handleTwitter = () => {
     const encoded = encodeURIComponent(shareText);
-    Linking.openURL(`https://twitter.com/intent/tweet?text=${encoded}`);
+    void openExternalShare(`https://twitter.com/intent/tweet?text=${encoded}`);
   };
 
   const handleWhatsApp = () => {
     const encoded = encodeURIComponent(shareText);
-    Linking.openURL(`whatsapp://send?text=${encoded}`);
+    void openExternalShare(`whatsapp://send?text=${encoded}`);
+  };
+
+  const openExternalShare = async (url: string) => {
+    try {
+      const supported = await Linking.canOpenURL(url);
+
+      if (supported) {
+        await Linking.openURL(url);
+        return;
+      }
+    } catch (_error) {
+      // Fall back to the system share sheet below.
+    }
+
+    await Share.share({ message: shareText });
   };
 
   const handleSystemShare = () => {
