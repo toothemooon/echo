@@ -52,6 +52,13 @@
         }
       ],
       "expo-status-bar"
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "31027af5-fe6e-41bf-9cee-23204247f355"
+      }
+    },
+    "owner": "hsc110110"
   }
 }
