@@ -27,8 +27,8 @@ type Props = {
 
 const FEEDBACK_EMAIL = "abc510433622@gmail.com";
 const APP_STORE_URL = "https://apps.apple.com/app/echo/id0000000000";
-const PRIVACY_URL = "https://echo.app/privacy";
-const TERMS_URL = "https://echo.app/terms";
+const PRIVACY_URL = "https://sarada.yachts/projects/echo/privacy";
+const TERMS_URL = "https://sarada.yachts/projects/echo/terms";
 
 const THEME_LABELS: Record<ThemeMode, string> = {
   light: "Light",
