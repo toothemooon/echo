@@ -8,6 +8,7 @@
     "icon": "./assets/echo-icon-light.png",
     "userInterfaceStyle": "automatic",
     "ios": {
+      "icon": "./assets/echo-icon-light.png",
       "supportsTablet": false,
       "bundleIdentifier": "yachts.sarada.echo",
       "buildNumber": "1",
@@ -23,8 +24,9 @@
       }
     },
     "android": {
+      "icon": "./assets/echo-icon-light.png",
       "adaptiveIcon": {
-        "backgroundColor": "#E5E0D8",
+        "backgroundColor": "#F4EAD7",
         "foregroundImage": "./assets/echo-icon-light.png"
       },
       "predictiveBackGestureEnabled": false,
@@ -38,6 +40,27 @@
       "expo-font",
       "expo-router",
       "expo-asset",
+      [
+        "expo-alternate-app-icons",
+        [
+          {
+            "name": "Dark",
+            "ios": "./assets/echo-icon-dark.png",
+            "android": {
+              "foregroundImage": "./assets/echo-icon-dark.png",
+              "backgroundColor": "#0A0D0E"
+            }
+          },
+          {
+            "name": "Archive",
+            "ios": "./assets/echo-icon-archive.png",
+            "android": {
+              "foregroundImage": "./assets/echo-icon-archive.png",
+              "backgroundColor": "#C6A66B"
+            }
+          }
+        ]
+      ],
       [
         "expo-splash-screen",
         {

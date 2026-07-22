@@ -50,6 +50,7 @@ import ThemeScreen from "../screens/ThemeScreen";
 import QuoteSettingsScreen from "../screens/QuoteSettingsScreen";
 import ArchiveBackground from "../components/common/ArchiveBackground";
 import AnimationSettingsScreen from "../screens/AnimationSettingsScreen";
+import { syncAppIconWithTheme } from "../services/appIcon";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -129,6 +130,14 @@ export default function Index() {
           (Appearance.getColorScheme() === "dark" ? "dark" : "light");
 
         setThemeState(resolvedTheme);
+        void syncAppIconWithTheme(resolvedTheme).catch((error) => {
+          if (__DEV__) {
+            console.warn(
+              "Failed to synchronize the app icon.",
+              error instanceof Error ? error.message : "Unknown error",
+            );
+          }
+        });
         setPreferredCategories(prefs);
         setSavedQuotes(savedRecords.map((record) => record.quote));
         setQuoteFontState(savedQuoteFont);
@@ -189,6 +198,15 @@ export default function Index() {
     void setTheme(nextTheme).catch(() => {
       if (__DEV__) {
         console.warn("Failed to save theme.");
+      }
+    });
+
+    void syncAppIconWithTheme(nextTheme).catch((error) => {
+      if (__DEV__) {
+        console.warn(
+          "Failed to synchronize the app icon.",
+          error instanceof Error ? error.message : "Unknown error",
+        );
       }
     });
   };
