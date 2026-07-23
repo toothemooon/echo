@@ -12,6 +12,11 @@ import { setStringAsync } from "expo-clipboard";
 import * as Linking from "expo-linking";
 import { COLORS } from "../../constants/colors";
 import type { Quote } from "../../data/quotes";
+import {
+  buildTwitterShareUrl,
+  buildWhatsAppShareUrl,
+  formatQuoteShareText,
+} from "../../services/shareQuote";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -33,20 +38,18 @@ export default function ShareSheet(props: Props) {
   // ── 未显示时直接返回 ──
   if (!props.visible) return null;
 
-  const shareText = `"${props.quote.text}"\n— ${props.quote.author}\n\nShared from Echo`;
+  const shareText = formatQuoteShareText(props.quote);
 
   const handleCopyText = async () => {
     await setStringAsync(shareText);
   };
 
   const handleTwitter = () => {
-    const encoded = encodeURIComponent(shareText);
-    void openExternalShare(`https://twitter.com/intent/tweet?text=${encoded}`);
+    void openExternalShare(buildTwitterShareUrl(props.quote));
   };
 
   const handleWhatsApp = () => {
-    const encoded = encodeURIComponent(shareText);
-    void openExternalShare(`whatsapp://send?text=${encoded}`);
+    void openExternalShare(buildWhatsAppShareUrl(props.quote));
   };
 
   const openExternalShare = async (url: string) => {

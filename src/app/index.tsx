@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { View, Animated, Dimensions, Alert, Appearance } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { captureRef } from "react-native-view-shot";
+import { formatQuoteShareText } from "../services/shareQuote";
 import {
   useFonts,
   CormorantGaramond_400Regular_Italic,
@@ -408,10 +409,7 @@ export default function Index() {
 
       await RNShare.share({
         url: uri,
-        message:
-          `"${currentQuote.text}"\n` +
-          `— ${currentQuote.author}\n\n` +
-          "Shared from Echo",
+        message: formatQuoteShareText(currentQuote),
       });
     } catch (_error) {
       Alert.alert("Error", "Failed to generate image.");
