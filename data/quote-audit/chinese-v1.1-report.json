@@ -1,0 +1,29 @@
+{
+  "catalog": "assets/quotes.zh-Hans.json",
+  "provider": "inBox Card",
+  "provider_url": "https://card.gudong.site/",
+  "provider_api": "https://card.gudong.site/api/random-note",
+  "catalog_size": 600,
+  "unique_author_ids": 24,
+  "duplicate_ids": 0,
+  "duplicate_texts": 0,
+  "missing_sources": 0,
+  "maximum_quotes_per_author": 26,
+  "maximum_text_length": 76,
+  "category_counts": {
+    "MINDFULNESS": 69,
+    "WISDOM": 248,
+    "COURAGE": 60,
+    "LOVE": 14,
+    "NATURE": 41,
+    "GROWTH": 145,
+    "HEALING": 12,
+    "GRATITUDE": 11
+  },
+  "notes": [
+    "Chinese and English bundled catalogs contain 600 records each.",
+    "Provider and collection URLs are stored separately in chinese-provenance.json.",
+    "Category counts follow the source material and were not artificially equalized.",
+    "Hitokoto content was not bundled because its sentence package is AGPL and its documentation discourages crawling the random API."
+  ]
+}

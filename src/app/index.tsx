@@ -9,8 +9,14 @@ import {
 
 import SplashScreen from "../components/common/SplashScreen";
 import { COLORS } from "../constants/colors";
-import { CATEGORIES, type Category } from "../constants/categories";
-import { getRandomQuote, type Quote } from "../data/quotes";
+import {
+  CATEGORIES,
+  categoriesForMood,
+  moodSummary,
+  type Category,
+  type MoodPreference,
+} from "../constants/categories";
+import { type Quote } from "../data/quotes";
 
 import {
   getPreferredCategories,
@@ -23,9 +29,16 @@ import {
   setQuoteFontSize,
   getQuoteAnimation,
   setQuoteAnimation,
+  getQuoteLanguage,
+  setQuoteLanguage,
+  getMoodPreference,
+  setMoodPreference,
+  getOnboardingComplete,
+  setOnboardingComplete,
   type QuoteFont,
   type QuoteFontSize,
   type QuoteAnimation,
+  type QuoteLanguagePreference,
   type ThemeMode,
 } from "../storage/preferences";
 
@@ -50,7 +63,10 @@ import ThemeScreen from "../screens/ThemeScreen";
 import QuoteSettingsScreen from "../screens/QuoteSettingsScreen";
 import ArchiveBackground from "../components/common/ArchiveBackground";
 import AnimationSettingsScreen from "../screens/AnimationSettingsScreen";
+import LanguageSettingsScreen from "../screens/LanguageSettingsScreen";
+import OnboardingScreen from "../screens/OnboardingScreen";
 import { syncAppIconWithTheme } from "../services/appIcon";
+import { getNextRecommendedQuote } from "../storage/quoteRotation";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -60,6 +76,7 @@ type Page =
   | "theme"
   | "personalization"
   | "quote-settings"
+  | "language-settings"
   | "animation-settings";
 
 export default function Index() {
@@ -75,6 +92,8 @@ export default function Index() {
   const [preferredCategories, setPreferredCategories] = useState<Category[]>([
     ...CATEGORIES,
   ]);
+  const [mood, setMood] = useState<MoodPreference>("surprise");
+  const [onboardingComplete, setOnboardingCompleteState] = useState(false);
 
   const [savedQuotes, setSavedQuotes] = useState<Quote[]>([]);
 
@@ -85,6 +104,9 @@ export default function Index() {
 
   const [quoteAnimation, setQuoteAnimationState] =
     useState<QuoteAnimation>("horizontal");
+
+  const [quoteLanguage, setQuoteLanguageState] =
+    useState<QuoteLanguagePreference>("en");
 
   const [initializationReady, setInitializationReady] = useState(false);
 
@@ -103,6 +125,7 @@ export default function Index() {
   const sheetAnim = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
   const backdropAnim = useRef(new Animated.Value(0)).current;
   const isAnimating = useRef(false);
+  const isSelectingQuote = useRef(false);
   const shareCardRef = useRef<View>(null);
 
   // ── 初始化 ──
@@ -116,6 +139,9 @@ export default function Index() {
           savedQuoteFont,
           savedQuoteFontSize,
           savedQuoteAnimation,
+          savedQuoteLanguage,
+          savedMood,
+          savedOnboardingComplete,
         ] = await Promise.all([
           getTheme(),
           getPreferredCategories(),
@@ -123,6 +149,9 @@ export default function Index() {
           getQuoteFont(),
           getQuoteFontSize(),
           getQuoteAnimation(),
+          getQuoteLanguage(),
+          getMoodPreference(),
+          getOnboardingComplete(),
         ]);
 
         const resolvedTheme: ThemeMode =
@@ -139,12 +168,17 @@ export default function Index() {
           }
         });
         setPreferredCategories(prefs);
+        setMood(savedMood);
+        setOnboardingCompleteState(savedOnboardingComplete);
         setSavedQuotes(savedRecords.map((record) => record.quote));
         setQuoteFontState(savedQuoteFont);
         setQuoteFontSizeState(savedQuoteFontSize);
         setQuoteAnimationState(savedQuoteAnimation);
+        setQuoteLanguageState(savedQuoteLanguage);
 
-        const firstQuote = getRandomQuote(prefs);
+        const firstQuote = savedOnboardingComplete
+          ? await getNextRecommendedQuote(prefs, [], savedQuoteLanguage)
+          : null;
 
         if (firstQuote) {
           setQuoteHistory([firstQuote]);
@@ -169,7 +203,7 @@ export default function Index() {
   const currentQuote = quoteHistory[historyIndex] ?? null;
 
   // ── 启动页 ──
-  if (!fontsLoaded || !initializationReady || !currentQuote || showSplash) {
+  if (!fontsLoaded || !initializationReady || showSplash) {
     return (
       <View
         style={{
@@ -186,6 +220,22 @@ export default function Index() {
   }
 
   const colors = COLORS[theme];
+
+  if (!onboardingComplete) {
+    return (
+      <OnboardingScreen
+        colors={colors}
+        theme={theme}
+        onSelect={(nextMood) => {
+          void changeMood(nextMood, true);
+        }}
+      />
+    );
+  }
+
+  if (!currentQuote) {
+    return <View style={{ flex: 1, backgroundColor: colors.background }} />;
+  }
 
   const isSaved = savedQuotes.some((quote) => quote.id === currentQuote.id);
 
@@ -246,30 +296,63 @@ export default function Index() {
     });
   };
 
-  // ── 分类 ──
-  const toggleCategory = (category: Category) => {
-    const next = preferredCategories.includes(category)
-      ? preferredCategories.filter((item) => item !== category)
-      : [...preferredCategories, category];
+  async function changeQuoteLanguage(
+    nextLanguage: QuoteLanguagePreference,
+  ) {
+    setQuoteLanguageState(nextLanguage);
 
-    if (next.length === 0) {
-      return;
-    }
+    try {
+      await setQuoteLanguage(nextLanguage);
+      const firstMatchingQuote = await getNextRecommendedQuote(
+        preferredCategories,
+        [],
+        nextLanguage,
+      );
 
-    setPreferredCategories(next);
-
-    const firstMatchingQuote = getRandomQuote(next);
-    if (firstMatchingQuote) {
-      setQuoteHistory([firstMatchingQuote]);
-      setHistoryIndex(0);
-    }
-
-    void savePreferredCategories(next).catch(() => {
-      if (__DEV__) {
-        console.warn("Failed to save preferred categories.");
+      if (firstMatchingQuote) {
+        setQuoteHistory([firstMatchingQuote]);
+        setHistoryIndex(0);
       }
-    });
-  };
+    } catch {
+      if (__DEV__) {
+        console.warn("Failed to change quote language.");
+      }
+    }
+  }
+
+  // ── 阅读偏好 ──
+  async function changeMood(
+    nextMood: MoodPreference,
+    completeOnboarding = false,
+  ) {
+    const nextCategories = categoriesForMood(nextMood);
+    setMood(nextMood);
+    setPreferredCategories(nextCategories);
+
+    try {
+      await Promise.all([
+        setMoodPreference(nextMood),
+        savePreferredCategories(nextCategories),
+        ...(completeOnboarding ? [setOnboardingComplete(true)] : []),
+      ]);
+      const firstMatchingQuote = await getNextRecommendedQuote(
+        nextCategories,
+        [],
+        quoteLanguage,
+      );
+      if (firstMatchingQuote) {
+        setQuoteHistory([firstMatchingQuote]);
+        setHistoryIndex(0);
+      }
+      if (completeOnboarding) {
+        setOnboardingCompleteState(true);
+      }
+    } catch {
+      if (__DEV__) {
+        console.warn("Failed to save reading preference.");
+      }
+    }
+  }
 
   // ── 收藏 ──
   const toggleBookmark = async () => {
@@ -393,8 +476,8 @@ export default function Index() {
   };
 
   // ── 下一条名言 ──
-  const goNext = () => {
-    if (isAnimating.current) {
+  const goNext = async () => {
+    if (isAnimating.current || isSelectingQuote.current) {
       return;
     }
 
@@ -408,10 +491,14 @@ export default function Index() {
       return;
     }
 
-    const newQuote = getRandomQuote(
+    isSelectingQuote.current = true;
+    const newQuote = await getNextRecommendedQuote(
       preferredCategories,
-      quoteHistory.map((quote) => quote.id),
-    );
+      quoteHistory,
+      quoteLanguage,
+    ).finally(() => {
+      isSelectingQuote.current = false;
+    });
 
     if (!newQuote) {
       return;
@@ -491,8 +578,10 @@ export default function Index() {
       <PersonalizationScreen
         colors={colors}
         theme={theme}
-        preferredCategories={preferredCategories}
-        onToggleCategory={toggleCategory}
+        mood={mood}
+        onChangeMood={(nextMood) => {
+          void changeMood(nextMood);
+        }}
         onBack={() => setCurrentPage("settings")}
       />
     );
@@ -508,6 +597,21 @@ export default function Index() {
         quoteFontSize={quoteFontSize}
         onChangeQuoteFont={changeQuoteFont}
         onChangeQuoteFontSize={changeQuoteFontSize}
+        onBack={() => setCurrentPage("settings")}
+      />
+    );
+  }
+
+  // ── Language Settings 页面 ──
+  if (currentPage === "language-settings") {
+    return (
+      <LanguageSettingsScreen
+        colors={colors}
+        theme={theme}
+        language={quoteLanguage}
+        onChangeLanguage={(nextLanguage) => {
+          void changeQuoteLanguage(nextLanguage);
+        }}
         onBack={() => setCurrentPage("settings")}
       />
     );
@@ -536,9 +640,11 @@ export default function Index() {
         onOpenPersonalization={() => setCurrentPage("personalization")}
         onOpenTheme={() => setCurrentPage("theme")}
         onOpenQuoteSettings={() => setCurrentPage("quote-settings")}
+        onOpenLanguageSettings={() => setCurrentPage("language-settings")}
         onOpenAnimationSettings={() => setCurrentPage("animation-settings")}
+        quoteLanguage={quoteLanguage}
         quoteAnimation={quoteAnimation}
-        preferredCount={preferredCategories.length}
+        preferenceSummary={moodSummary(mood)}
       />
     );
   }

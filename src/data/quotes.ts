@@ -1,15 +1,26 @@
 import quotesJson from "../../assets/quotes.json";
-import { CATEGORIES, type Category } from "../constants/categories";
+import chineseQuotesJson from "../../assets/quotes.zh-Hans.json";
+import japaneseQuotesJson from "../../assets/quotes.ja.json";
+import {
+  CATEGORIES,
+  SUBCATEGORIES,
+  type Category,
+  type Subcategory,
+} from "../constants/categories";
 
 export type QuoteId = number | string;
+export type QuoteLanguage = "en" | "zh-Hans" | "ja";
 
 export type Quote = {
   id: QuoteId;
   text: string;
+  language: QuoteLanguage;
+  author_id: string;
   author: string;
   role: string;
   source?: string;
   primary_category: Category;
+  subcategory: Subcategory;
   categories: Category[];
 };
 
@@ -33,6 +44,20 @@ function isQuoteId(value: unknown): value is QuoteId {
   return typeof value === "number" && Number.isFinite(value);
 }
 
+function isQuoteLanguage(value: unknown): value is QuoteLanguage {
+  return value === "en" || value === "zh-Hans" || value === "ja";
+}
+
+function isSubcategory(
+  value: unknown,
+  category: Category,
+): value is Subcategory {
+  return (
+    typeof value === "string" &&
+    (SUBCATEGORIES[category] as readonly string[]).includes(value)
+  );
+}
+
 function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
 }
@@ -54,12 +79,14 @@ export function isQuote(value: unknown): value is Quote {
   return (
     isQuoteId(candidate.id) &&
     isNonEmptyString(candidate.text) &&
+    isQuoteLanguage(candidate.language) &&
+    isNonEmptyString(candidate.author_id) &&
     isNonEmptyString(candidate.author) &&
-    typeof candidate.role === "string" &&
+    isNonEmptyString(candidate.role) &&
     (source === undefined || isNonEmptyString(source)) &&
-    categories.length > 0 &&
-    categories.every(isCategory) &&
-    categories.includes(primaryCategory)
+    isSubcategory(candidate.subcategory, primaryCategory) &&
+    categories.length === 1 &&
+    categories[0] === primaryCategory
   );
 }
 
@@ -95,10 +122,13 @@ function validateQuoteCollection(value: unknown): Quote[] {
       freezeQuote({
         id: candidate.id,
         text: candidate.text,
+        language: candidate.language,
+        author_id: candidate.author_id,
         author: candidate.author,
         role: candidate.role,
         ...(candidate.source ? { source: candidate.source } : {}),
         primary_category: candidate.primary_category,
+        subcategory: candidate.subcategory,
         categories: [...candidate.categories],
       }),
     );
@@ -121,7 +151,11 @@ function validateQuoteCollection(value: unknown): Quote[] {
 
 /** Validated, runtime-frozen quotes bundled with the app. */
 export const BUILT_IN_QUOTES: readonly Quote[] = Object.freeze(
-  validateQuoteCollection(quotesJson),
+  validateQuoteCollection([
+    ...quotesJson,
+    ...chineseQuotesJson,
+    ...japaneseQuotesJson,
+  ]),
 );
 
 const QUOTES_BY_ID = new Map<QuoteId, Quote>(

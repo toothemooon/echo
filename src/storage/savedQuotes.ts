@@ -1,5 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { isQuote, Quote, QuoteId } from "../data/quotes";
+import { getQuoteById, isQuote, Quote, QuoteId } from "../data/quotes";
+import {
+  CATEGORIES,
+  SUBCATEGORIES,
+  type Category,
+} from "../constants/categories";
 
 const SAVED_QUOTES_KEY = "@echo/saved_quotes";
 
@@ -42,6 +47,67 @@ function isSavedQuoteRecord(value: unknown): value is SavedQuoteRecord {
 
   const candidate = value as Record<string, unknown>;
   return isQuote(candidate.quote) && isIsoTimestamp(candidate.savedAt);
+}
+
+function legacyAuthorId(author: string): string {
+  return author
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "");
+}
+
+function normalizeSavedQuoteRecord(value: unknown): SavedQuoteRecord | null {
+  if (isSavedQuoteRecord(value)) return value;
+  if (typeof value !== "object" || value === null) return null;
+
+  const candidate = value as Record<string, unknown>;
+  if (!isIsoTimestamp(candidate.savedAt)) return null;
+  if (
+    typeof candidate.quote !== "object" ||
+    candidate.quote === null ||
+    Array.isArray(candidate.quote)
+  ) {
+    return null;
+  }
+
+  const legacy = candidate.quote as Record<string, unknown>;
+  if (!isQuoteId(legacy.id)) return null;
+  const bundled = getQuoteById(legacy.id);
+  if (bundled) return { quote: bundled, savedAt: candidate.savedAt };
+
+  if (
+    typeof legacy.text !== "string" ||
+    !legacy.text.trim() ||
+    typeof legacy.author !== "string" ||
+    !legacy.author.trim() ||
+    typeof legacy.role !== "string" ||
+    !legacy.role.trim() ||
+    typeof legacy.primary_category !== "string" ||
+    !CATEGORIES.includes(legacy.primary_category as Category)
+  ) {
+    return null;
+  }
+
+  const category = legacy.primary_category as Category;
+  return {
+    savedAt: candidate.savedAt,
+    quote: {
+      id: legacy.id,
+      text: legacy.text.trim(),
+      language: "en",
+      author_id: legacyAuthorId(legacy.author),
+      author: legacy.author.trim(),
+      role: legacy.role.trim(),
+      ...(typeof legacy.source === "string" && legacy.source.trim()
+        ? { source: legacy.source.trim() }
+        : {}),
+      primary_category: category,
+      subcategory: SUBCATEGORIES[category][0],
+      categories: [category],
+    },
+  };
 }
 
 function quoteIdKey(id: QuoteId): string {
@@ -89,7 +155,9 @@ async function readStoredRecords(): Promise<SavedQuoteRecord[]> {
     return [];
   }
 
-  const validRecords = parsed.filter(isSavedQuoteRecord);
+  const validRecords = parsed
+    .map(normalizeSavedQuoteRecord)
+    .filter((record): record is SavedQuoteRecord => record !== null);
   if (validRecords.length !== parsed.length) {
     warnInDevelopment("Discarded invalid saved-quote records");
   }

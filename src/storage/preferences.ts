@@ -1,19 +1,30 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { CATEGORIES, Category } from "../constants/categories";
+import {
+  CATEGORIES,
+  MOOD_OPTIONS,
+  type Category,
+  type MoodPreference,
+} from "../constants/categories";
+import type { QuoteLanguage } from "../data/quotes";
 
 const QUOTE_FONT_KEY = "@echo/quote_font";
 const QUOTE_FONT_SIZE_KEY = "@echo/quote_font_size";
 const QUOTE_ANIMATION_KEY = "@echo/quote_animation";
+const QUOTE_LANGUAGE_KEY = "@echo/quote_language";
+const MOOD_KEY = "@echo/mood_preference";
+const ONBOARDING_KEY = "@echo/onboarding_complete";
 
 export type QuoteFont = "elegant" | "system";
 export type QuoteFontSize = "small" | "medium" | "large";
 export type ThemeMode = "light" | "dark" | "archive";
 export type QuoteAnimation = "fade" | "horizontal" | "none";
+export type QuoteLanguagePreference = QuoteLanguage;
 
 const PREFS_KEY = "@echo/preferred_categories";
 const THEME_KEY = "@echo/theme";
 
 const VALID_CATEGORIES = new Set<string>(CATEGORIES);
+const VALID_MOODS = new Set<string>(MOOD_OPTIONS.map((option) => option.value));
 
 function warnInDevelopment(operation: string, error?: unknown): void {
   if (typeof __DEV__ === "undefined" || !__DEV__) return;
@@ -184,4 +195,67 @@ export async function setQuoteAnimation(
   animation: QuoteAnimation,
 ): Promise<void> {
   await AsyncStorage.setItem(QUOTE_ANIMATION_KEY, animation);
+}
+
+export async function getMoodPreference(): Promise<MoodPreference> {
+  try {
+    const value = await AsyncStorage.getItem(MOOD_KEY);
+    return value && VALID_MOODS.has(value)
+      ? (value as MoodPreference)
+      : "surprise";
+  } catch (error) {
+    warnInDevelopment("Failed to read mood preference", error);
+    return "surprise";
+  }
+}
+
+export async function setMoodPreference(
+  mood: MoodPreference,
+): Promise<void> {
+  if (!VALID_MOODS.has(mood)) {
+    throw new TypeError("Invalid mood preference.");
+  }
+  await AsyncStorage.setItem(MOOD_KEY, mood);
+}
+
+export async function getOnboardingComplete(): Promise<boolean> {
+  try {
+    return (await AsyncStorage.getItem(ONBOARDING_KEY)) === "true";
+  } catch (error) {
+    warnInDevelopment("Failed to read onboarding state", error);
+    return false;
+  }
+}
+
+export async function setOnboardingComplete(value: boolean): Promise<void> {
+  await AsyncStorage.setItem(ONBOARDING_KEY, String(value));
+}
+
+export async function getQuoteLanguage(): Promise<QuoteLanguagePreference> {
+  try {
+    const value = await AsyncStorage.getItem(QUOTE_LANGUAGE_KEY);
+
+    if (value === "en" || value === "zh-Hans" || value === "ja") {
+      return value;
+    }
+
+    return "en";
+  } catch (error) {
+    warnInDevelopment("Failed to read quote language", error);
+    return "en";
+  }
+}
+
+export async function setQuoteLanguage(
+  language: QuoteLanguagePreference,
+): Promise<void> {
+  if (
+    language !== "en" &&
+    language !== "zh-Hans" &&
+    language !== "ja"
+  ) {
+    throw new TypeError("Invalid quote language.");
+  }
+
+  await AsyncStorage.setItem(QUOTE_LANGUAGE_KEY, language);
 }

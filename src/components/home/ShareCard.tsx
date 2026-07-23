@@ -55,7 +55,20 @@ export default function ShareCard(props: Props) {
       </Text>
 
       {/* Quote */}
-      <Text style={[styles.quoteText, { color: props.colors.text }]}>
+      <Text
+        style={[
+          styles.quoteText,
+          {
+            color: props.colors.text,
+            fontFamily:
+              props.quote.language !== "en"
+                ? undefined
+                : "CormorantGaramond_400Regular_Italic",
+            fontStyle:
+              props.quote.language !== "en" ? "normal" : "italic",
+          },
+        ]}
+      >
         {props.quote.text}
       </Text>
 
@@ -108,7 +121,6 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   quoteText: {
-    fontFamily: "CormorantGaramond_400Regular_Italic",
     fontSize: 22,
     lineHeight: 32,
     letterSpacing: 0.3,

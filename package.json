@@ -1,6 +1,6 @@
 {
   "name": "echo",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "expo-router/entry",
   "dependencies": {
     "@expo-google-fonts/cormorant-garamond": "^0.4.1",
@@ -23,14 +23,18 @@
     "react-native-view-shot": "5.1.0"
   },
   "devDependencies": {
+    "@types/node": "^26.1.1",
     "@types/react": "~19.2.2",
+    "tsx": "^4.23.1",
     "typescript": "~6.0.3"
   },
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "test": "node --import tsx --test tests/**/*.test.ts",
+    "check": "npm run test && tsc --noEmit && npx expo-doctor"
   },
   "private": true
 }

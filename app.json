@@ -2,7 +2,7 @@
   "expo": {
     "name": "ECHO",
     "slug": "ECHO",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "scheme": "echo",
     "orientation": "portrait",
     "icon": "./assets/echo-icon-light.png",
@@ -31,7 +31,7 @@
       },
       "predictiveBackGestureEnabled": false,
       "package": "yachts.sarada.echo",
-      "versionCode": 1
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/echo-icon-light.png"

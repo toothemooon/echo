@@ -10,7 +10,11 @@ import {
 import * as Clipboard from "expo-clipboard";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/colors";
-import type { QuoteAnimation, ThemeMode } from "../storage/preferences";
+import type {
+  QuoteAnimation,
+  QuoteLanguagePreference,
+  ThemeMode,
+} from "../storage/preferences";
 import ArchiveBackground from "../components/common/ArchiveBackground";
 
 type Props = {
@@ -20,14 +24,18 @@ type Props = {
   onOpenPersonalization: () => void;
   onOpenTheme: () => void;
   onOpenQuoteSettings: () => void;
+  onOpenLanguageSettings: () => void;
   onOpenAnimationSettings: () => void;
+  quoteLanguage: QuoteLanguagePreference;
   quoteAnimation: QuoteAnimation;
-  preferredCount: number;
+  preferenceSummary: string;
 };
 
 const FEEDBACK_EMAIL = "abc510433622@gmail.com";
 const PRIVACY_URL = "https://sarada.yachts/projects/echo/privacy";
 const TERMS_URL = "https://sarada.yachts/projects/echo/terms";
+const INBOX_CARD_URL = "https://card.gudong.site/";
+const WIKIQUOTE_URL = "https://www.wikiquote.org/";
 
 const THEME_LABELS: Record<ThemeMode, string> = {
   light: "Light",
@@ -39,6 +47,12 @@ const ANIMATION_LABELS: Record<QuoteAnimation, string> = {
   fade: "Fade",
   horizontal: "Horizontal",
   none: "None",
+};
+
+const LANGUAGE_LABELS: Record<QuoteLanguagePreference, string> = {
+  en: "English",
+  "zh-Hans": "简体中文",
+  ja: "日本語",
 };
 
 async function safeOpenURL(url: string) {
@@ -56,6 +70,31 @@ async function safeOpenURL(url: string) {
 }
 
 export default function SettingsScreen(props: Props) {
+  const handleContentSources = () => {
+    const message =
+      "English: ECHO curated catalog and English Wikiquote\n" +
+      "Chinese: inBox Card and Chinese Wikiquote\n" +
+      "Japanese: Japanese Wikiquote\n\n" +
+      "Wikiquote-derived content is used under CC BY-SA. " +
+      "Choose a source to view its website and attribution details.";
+
+    Alert.alert("Content Sources", message, [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "inBox Card",
+        onPress: () => {
+          void safeOpenURL(INBOX_CARD_URL);
+        },
+      },
+      {
+        text: "Wikiquote",
+        onPress: () => {
+          void safeOpenURL(WIKIQUOTE_URL);
+        },
+      },
+    ]);
+  };
+
   const handleSendFeedback = () => {
     const message =
       "Your thoughts help make ECHO better.\n\n" +
@@ -209,7 +248,7 @@ export default function SettingsScreen(props: Props) {
             ]}
           />
 
-          {/* Categories */}
+          {/* Reading preference */}
           <Pressable
             style={styles.cardRow}
             onPress={props.onOpenPersonalization}
@@ -229,7 +268,7 @@ export default function SettingsScreen(props: Props) {
                   },
                 ]}
               >
-                Categories
+                Preferences
               </Text>
             </View>
 
@@ -242,7 +281,60 @@ export default function SettingsScreen(props: Props) {
                   },
                 ]}
               >
-                {props.preferredCount} Selected
+                {props.preferenceSummary}
+              </Text>
+
+              <Ionicons
+                name="chevron-forward"
+                size={16}
+                color={props.colors.btnIcon}
+              />
+            </View>
+          </Pressable>
+
+          <View
+            style={[
+              styles.cardDivider,
+              {
+                backgroundColor: props.colors.divider,
+              },
+            ]}
+          />
+
+          {/* Quote language */}
+          <Pressable
+            style={styles.cardRow}
+            onPress={props.onOpenLanguageSettings}
+          >
+            <View style={styles.cardLeft}>
+              <Ionicons
+                name="language-outline"
+                size={20}
+                color={props.colors.btnIcon}
+              />
+
+              <Text
+                style={[
+                  styles.cardLabel,
+                  {
+                    color: props.colors.text,
+                  },
+                ]}
+              >
+                Quote Language
+              </Text>
+            </View>
+
+            <View style={styles.cardRight}>
+              <Text
+                style={[
+                  styles.cardValue,
+                  {
+                    color: props.colors.author,
+                  },
+                ]}
+              >
+                {LANGUAGE_LABELS[props.quoteLanguage]}
               </Text>
 
               <Ionicons
@@ -456,6 +548,42 @@ export default function SettingsScreen(props: Props) {
                 ]}
               >
                 Terms of Service
+              </Text>
+            </View>
+
+            <Ionicons
+              name="chevron-forward"
+              size={16}
+              color={props.colors.btnIcon}
+            />
+          </Pressable>
+
+          <View
+            style={[
+              styles.cardDivider,
+              {
+                backgroundColor: props.colors.divider,
+              },
+            ]}
+          />
+
+          <Pressable style={styles.cardRow} onPress={handleContentSources}>
+            <View style={styles.cardLeft}>
+              <Ionicons
+                name="library-outline"
+                size={20}
+                color={props.colors.btnIcon}
+              />
+
+              <Text
+                style={[
+                  styles.cardLabel,
+                  {
+                    color: props.colors.text,
+                  },
+                ]}
+              >
+                Content Sources
               </Text>
             </View>
 

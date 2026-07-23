@@ -1,0 +1,113 @@
+{
+  "generated_at": "2026-07-23T11:59:12.344Z",
+  "total_records": 6000,
+  "unique_ids": 6000,
+  "unique_texts": 6000,
+  "catalogs": {
+    "en": {
+      "count": 2000,
+      "unique_ids": 2000,
+      "unique_texts": 2000,
+      "unique_authors": 409,
+      "records_with_work_source": 1315,
+      "maximum_text_length": 280,
+      "maximum_quotes_per_author": 16,
+      "category_counts": {
+        "MINDFULNESS": 159,
+        "NATURE": 108,
+        "HEALING": 99,
+        "WISDOM": 1090,
+        "COURAGE": 108,
+        "GRATITUDE": 74,
+        "LOVE": 152,
+        "GROWTH": 210
+      },
+      "problems": {
+        "duplicate_ids": 0,
+        "duplicate_texts": 0,
+        "invalid_language": 0,
+        "missing_author": 0,
+        "missing_role": 0,
+        "generic_role": 0,
+        "residual_markup": 0
+      }
+    },
+    "zh-Hans": {
+      "count": 2000,
+      "unique_ids": 2000,
+      "unique_texts": 2000,
+      "unique_authors": 510,
+      "records_with_work_source": 1421,
+      "maximum_text_length": 178,
+      "maximum_quotes_per_author": 100,
+      "category_counts": {
+        "WISDOM": 1083,
+        "MINDFULNESS": 128,
+        "GROWTH": 336,
+        "COURAGE": 137,
+        "LOVE": 62,
+        "GRATITUDE": 38,
+        "HEALING": 29,
+        "NATURE": 187
+      },
+      "problems": {
+        "duplicate_ids": 0,
+        "duplicate_texts": 0,
+        "invalid_language": 0,
+        "missing_author": 0,
+        "missing_role": 0,
+        "generic_role": 0,
+        "residual_markup": 0
+      }
+    },
+    "ja": {
+      "count": 2000,
+      "unique_ids": 2000,
+      "unique_texts": 2000,
+      "unique_authors": 334,
+      "records_with_work_source": 1352,
+      "maximum_text_length": 120,
+      "maximum_quotes_per_author": 21,
+      "category_counts": {
+        "WISDOM": 994,
+        "NATURE": 562,
+        "LOVE": 63,
+        "MINDFULNESS": 233,
+        "COURAGE": 71,
+        "HEALING": 19,
+        "GROWTH": 44,
+        "GRATITUDE": 14
+      },
+      "problems": {
+        "duplicate_ids": 0,
+        "duplicate_texts": 0,
+        "invalid_language": 0,
+        "missing_author": 0,
+        "missing_role": 0,
+        "generic_role": 0,
+        "residual_markup": 0
+      }
+    }
+  },
+  "provenance": {
+    "english": [
+      "Controlled ECHO English catalog",
+      "English Wikiquote"
+    ],
+    "simplified_chinese": [
+      "inBox Card",
+      "Chinese Wikiquote"
+    ],
+    "japanese": [
+      "Japanese Wikiquote"
+    ]
+  },
+  "quality_rules": [
+    "Exactly 2,000 records per language.",
+    "No duplicate ID or normalized text.",
+    "No empty author or role.",
+    "No generic Writer, Author, unknown, or generic historical-person role.",
+    "No residual wiki markup, category marker, URL, or ref tag in quote text.",
+    "Wikiquote additions retain revision-level provenance."
+  ]
+}
