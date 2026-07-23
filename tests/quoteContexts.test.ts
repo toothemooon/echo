@@ -19,7 +19,8 @@ const allowedContentStatuses = new Set([
 ]);
 
 test("all 6,000 quotes have one structurally valid context", () => {
-  const quoteIds = getAllQuotes().map((quote) => String(quote.id));
+  const allQuotes = getAllQuotes();
+  const quoteIds = allQuotes.map((quote) => String(quote.id));
   const contextIds = contextJson.quote_contexts.map((context) =>
     String(context.quote_id),
   );
@@ -37,10 +38,18 @@ test("all 6,000 quotes have one structurally valid context", () => {
     assert.equal(author.biography_content_status, "editorial_profile");
     assert.doesNotMatch(
       author.biography,
-      /identified in the current ECHO catalog|完整生平尚待|本調査ファイル/,
+      /identified in the current ECHO catalog|presented in ECHO|在\s*ECHO|ECHOでは|紹介されて|完整生平尚待|本調査ファイル/i,
     );
     assert.ok(author.editorial_note.trim().length > 0);
     assert.equal(author.editorial_note_kind, "interpretive_commentary");
+    assert.doesNotMatch(
+      author.editorial_note,
+      /presented in ECHO|在\s*ECHO|ECHOでは|紹介されて/i,
+    );
+    assert.doesNotMatch(
+      `${author.known_role} ${author.biography}`,
+      /CBDB\s*[=(]?\s*\d+/i,
+    );
   }
 
   for (const context of contextJson.quote_contexts) {
@@ -50,7 +59,7 @@ test("all 6,000 quotes have one structurally valid context", () => {
     assert.equal(context.editorial_note_kind, "interpretive_commentary");
     assert.doesNotMatch(
       context.editorial_note,
-      /unverified|not verified|verification|未确认|尚待核实|未確認|確認状況/i,
+      /unverified|not verified|verification|未确认|尚待核实|未確認|確認状況|現在記録されている|公共角色与个人表达|public role with a more personal voice|Its force comes from narrowing|複雑な説明を重ねず/i,
     );
     assert.ok(allowedVerificationStatuses.has(context.verification_status));
     assert.ok(allowedContentStatuses.has(context.context_content_status));
@@ -69,5 +78,16 @@ test("all 6,000 quotes have one structurally valid context", () => {
     if (context.context_content_status === "attribution_only") {
       assert.notEqual(context.verification_status, "verified_composite");
     }
+  }
+
+  assert.equal(
+    new Set(contextJson.quote_contexts.map((context) => context.editorial_note))
+      .size,
+    contextJson.quote_contexts.length,
+    "every quote should receive a distinct editorial reading",
+  );
+
+  for (const quote of allQuotes) {
+    assert.doesNotMatch(quote.role, /CBDB\s*[=(]?\s*\d+/i);
   }
 });

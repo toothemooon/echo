@@ -37,7 +37,7 @@ const COPY = {
   },
   ja: {
     title: "人物",
-    life: "人物",
+    life: "人物像",
     editorial: "編集者の解釈",
     source: "出典",
     missing: "この言葉に関する人物情報はまだありません",
