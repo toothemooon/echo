@@ -40,6 +40,9 @@ export default function Header(props: Props) {
           <Pressable
             style={[styles.iconBtn, { backgroundColor: props.colors.btnBg }]}
             onPress={props.onToggleTheme}
+            accessibilityRole="button"
+            accessibilityLabel={props.isDark ? "Use light theme" : "Use dark theme"}
+            accessibilityHint="Changes the app color theme"
           >
             <Ionicons
               name={props.isDark ? "sunny-outline" : "moon-outline"}
@@ -50,6 +53,9 @@ export default function Header(props: Props) {
           <Pressable
             style={[styles.iconBtn, { backgroundColor: props.colors.btnBg }]}
             onPress={props.onMenu}
+            accessibilityRole="button"
+            accessibilityLabel="Open Settings"
+            accessibilityHint="Opens preferences and accessibility options"
           >
             <Ionicons
               name="ellipsis-horizontal"

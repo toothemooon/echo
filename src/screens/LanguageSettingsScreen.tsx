@@ -58,6 +58,9 @@ export default function LanguageSettingsScreen(props: Props) {
             },
           ]}
           onPress={props.onBack}
+          accessibilityRole="button"
+          accessibilityLabel="Back to Settings"
+          hitSlop={10}
         >
           <Ionicons
             name="chevron-back"

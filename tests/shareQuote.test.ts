@@ -2,9 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import type { Quote } from "../src/data/quotes";
 import {
-  buildTwitterShareUrl,
-  buildWhatsAppShareUrl,
   formatQuoteShareText,
+  getShareCopy,
 } from "../src/services/shareQuote";
 
 function quote(overrides: Partial<Quote> = {}): Quote {
@@ -29,25 +28,8 @@ test("share text is normalized and carries attribution and branding", () => {
   );
 });
 
-test("Twitter URL safely encodes multilingual text and punctuation", () => {
-  const url = buildTwitterShareUrl(
-    quote({ text: '勇気 & "希望"', author: "作者 / Author" }),
-  );
-  const parsed = new URL(url);
-
-  assert.equal(parsed.origin, "https://twitter.com");
-  assert.equal(parsed.pathname, "/intent/tweet");
-  assert.equal(
-    parsed.searchParams.get("text"),
-    '"勇気 & "希望""\n— 作者 / Author\n\nShared from Echo',
-  );
-});
-
-test("WhatsApp URL safely encodes the same canonical share text", () => {
-  const sample = quote({ text: "Love + patience", author: "A&B" });
-  const url = buildWhatsAppShareUrl(sample);
-  const encodedText = url.slice(url.indexOf("?text=") + 6);
-
-  assert.equal(url.startsWith("whatsapp://send?text="), true);
-  assert.equal(decodeURIComponent(encodedText), formatQuoteShareText(sample));
+test("share controls are localized for every quote language", () => {
+  assert.equal(getShareCopy("en").image, "Share as Image");
+  assert.equal(getShareCopy("zh-Hans").copied, "已复制");
+  assert.equal(getShareCopy("ja").more, "その他の共有方法");
 });

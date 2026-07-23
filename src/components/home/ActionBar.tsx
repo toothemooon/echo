@@ -32,6 +32,10 @@ export default function ActionBar(props: Props) {
             },
           ]}
           onPress={props.onPrev ?? (() => {})}
+          disabled={!props.onPrev}
+          accessibilityRole="button"
+          accessibilityLabel="Previous Quote"
+          accessibilityState={{ disabled: !props.onPrev }}
         >
           <Ionicons
             name="chevron-back"
@@ -43,6 +47,9 @@ export default function ActionBar(props: Props) {
         <Pressable
           style={[styles.actionBtn, { backgroundColor: props.colors.btnBg }]}
           onPress={props.onBookmark}
+          accessibilityRole="button"
+          accessibilityLabel={props.isSaved ? "Remove Bookmark" : "Bookmark Quote"}
+          accessibilityState={{ selected: props.isSaved }}
         >
           <Ionicons
             name={props.isSaved ? "bookmark" : "bookmark-outline"}
@@ -54,6 +61,8 @@ export default function ActionBar(props: Props) {
         <Pressable
           style={[styles.actionBtn, { backgroundColor: props.colors.btnBg }]}
           onPress={props.onShare}
+          accessibilityRole="button"
+          accessibilityLabel="Share Quote"
         >
           <Ionicons
             name="share-outline"
@@ -65,6 +74,8 @@ export default function ActionBar(props: Props) {
         <Pressable
           style={[styles.actionBtn, { backgroundColor: props.colors.btnBg }]}
           onPress={props.onNext}
+          accessibilityRole="button"
+          accessibilityLabel="Next Quote"
         >
           <Ionicons
             name="chevron-forward"
@@ -75,7 +86,12 @@ export default function ActionBar(props: Props) {
       </View>
 
       {/* History */}
-      <Pressable style={styles.historyRow} onPress={props.onHistory}>
+      <Pressable
+        style={styles.historyRow}
+        onPress={props.onHistory}
+        accessibilityRole="button"
+        accessibilityLabel="Open Quote History"
+      >
         <Text style={[styles.historyLabel, { color: props.colors.menuIcon }]}>
           HISTORY
         </Text>

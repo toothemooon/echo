@@ -37,6 +37,13 @@
       "favicon": "./assets/echo-icon-light.png"
     },
     "plugins": [
+      [
+        "expo-notifications",
+        {
+          "color": "#496946",
+          "defaultChannel": "daily-reminders"
+        }
+      ],
       "expo-font",
       "expo-router",
       "expo-asset",

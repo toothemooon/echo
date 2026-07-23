@@ -1,286 +1,251 @@
+import { useEffect, useState } from "react";
 import {
   View,
   Text,
   Pressable,
   StyleSheet,
-  Dimensions,
   ScrollView,
   Share,
+  AccessibilityInfo,
+  ActivityIndicator,
+  useWindowDimensions,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { setStringAsync } from "expo-clipboard";
-import * as Linking from "expo-linking";
 import { COLORS } from "../../constants/colors";
 import type { Quote } from "../../data/quotes";
 import {
-  buildTwitterShareUrl,
-  buildWhatsAppShareUrl,
   formatQuoteShareText,
+  getShareCopy,
 } from "../../services/shareQuote";
 
-const { height: SCREEN_HEIGHT } = Dimensions.get("window");
-
-// ══════════════════════════════════════════════
-//  ShareSheet — 分享选项底部弹窗
-//  提供复制文字、分享图片、系统分享、Twitter、WhatsApp
-// ══════════════════════════════════════════════
-
-// ── Props ──
 type Props = {
   visible: boolean;
   quote: Quote;
   colors: typeof COLORS.light;
   onClose: () => void;
-  onShareAsImage: () => void;
+  onShareAsImage: () => Promise<boolean>;
 };
 
 export default function ShareSheet(props: Props) {
-  // ── 未显示时直接返回 ──
-  if (!props.visible) return null;
-
+  const { height } = useWindowDimensions();
+  const [copied, setCopied] = useState(false);
+  const [isSharingImage, setIsSharingImage] = useState(false);
+  const copy = getShareCopy(props.quote.language);
   const shareText = formatQuoteShareText(props.quote);
+
+  useEffect(() => {
+    if (!props.visible) {
+      setCopied(false);
+      setIsSharingImage(false);
+    }
+  }, [props.visible]);
+
+  if (!props.visible) return null;
 
   const handleCopyText = async () => {
     await setStringAsync(shareText);
+    setCopied(true);
+    AccessibilityInfo.announceForAccessibility(copy.copied);
   };
 
-  const handleTwitter = () => {
-    void openExternalShare(buildTwitterShareUrl(props.quote));
+  const handleImageShare = async () => {
+    if (isSharingImage) return;
+    setIsSharingImage(true);
+    const shared = await props.onShareAsImage();
+    setIsSharingImage(false);
+    if (shared) props.onClose();
   };
 
-  const handleWhatsApp = () => {
-    void openExternalShare(buildWhatsAppShareUrl(props.quote));
-  };
-
-  const openExternalShare = async (url: string) => {
-    try {
-      const supported = await Linking.canOpenURL(url);
-
-      if (supported) {
-        await Linking.openURL(url);
-        return;
-      }
-    } catch (_error) {
-      // Fall back to the system share sheet below.
-    }
-
+  const handleSystemShare = async () => {
     await Share.share({ message: shareText });
-  };
-
-  const handleSystemShare = () => {
-    Share.share({ message: shareText });
+    props.onClose();
   };
 
   const options = [
     {
-      icon: "copy-outline" as const,
-      label: "Copy Text",
+      icon: copied ? ("checkmark-circle-outline" as const) : ("copy-outline" as const),
+      label: copied ? copy.copied : copy.copy,
       onPress: handleCopyText,
+      busy: false,
     },
     {
       icon: "image-outline" as const,
-      label: "Share as Image",
-      onPress: props.onShareAsImage,
+      label: copy.image,
+      onPress: handleImageShare,
+      busy: isSharingImage,
     },
     {
       icon: "share-outline" as const,
-      label: "Share via...",
+      label: copy.more,
       onPress: handleSystemShare,
-    },
-    {
-      icon: "logo-twitter" as const,
-      label: "Twitter",
-      onPress: handleTwitter,
-    },
-    {
-      icon: "logo-whatsapp" as const,
-      label: "WhatsApp",
-      onPress: handleWhatsApp,
+      busy: false,
     },
   ];
 
   return (
-    <View style={StyleSheet.absoluteFill}>
-      {/* Backdrop */}
-      <Pressable style={styles.backdrop} onPress={props.onClose} />
+    <View
+      style={StyleSheet.absoluteFill}
+      accessibilityViewIsModal
+      importantForAccessibility="yes"
+    >
+      <Pressable
+        style={styles.backdrop}
+        onPress={props.onClose}
+        accessibilityRole="button"
+        accessibilityLabel={copy.close}
+      />
 
-      {/* Sheet */}
-      <View style={[styles.sheet, { backgroundColor: props.colors.sheetBg }]}>
-        {/* Handle */}
+      <View
+        style={[
+          styles.sheet,
+          {
+            backgroundColor: props.colors.sheetBg,
+            maxHeight: height * 0.86,
+          },
+        ]}
+      >
         <View style={styles.handleContainer}>
-          <View
-            style={[
-              styles.handle,
-              { backgroundColor: props.colors.sheetHandle },
-            ]}
-          />
+          <View style={[styles.handle, { backgroundColor: props.colors.sheetHandle }]} />
         </View>
 
-        {/* Header */}
         <View style={styles.sheetHeader}>
           <Text
             style={[
               styles.sheetTitle,
               {
                 color: props.colors.sheetTitle,
-                fontFamily: "CormorantGaramond_400Regular_Italic",
+                fontFamily:
+                  props.quote.language === "en"
+                    ? "CormorantGaramond_400Regular_Italic"
+                    : undefined,
               },
             ]}
           >
-            Share Quote
+            {copy.title}
           </Text>
-          <Pressable onPress={props.onClose}>
+          <Pressable
+            style={styles.closeButton}
+            onPress={props.onClose}
+            accessibilityRole="button"
+            accessibilityLabel={copy.close}
+            hitSlop={8}
+          >
             <Ionicons name="close" size={24} color={props.colors.btnIcon} />
           </Pressable>
         </View>
 
-        <View
-          style={[
-            styles.sheetDivider,
-            { backgroundColor: props.colors.divider },
-          ]}
-        />
+        <View style={[styles.sheetDivider, { backgroundColor: props.colors.divider }]} />
 
-        {/* Quote Preview */}
-        <View
-          style={[styles.preview, { backgroundColor: props.colors.background }]}
-        >
-          <Text
-            style={[
-              styles.previewText,
-              {
-                color: props.colors.text,
-                fontFamily: "CormorantGaramond_400Regular_Italic",
-              },
-            ]}
+        <View style={[styles.preview, { backgroundColor: props.colors.background }]}>
+          <ScrollView
+            style={{ maxHeight: Math.min(210, height * 0.28) }}
+            showsVerticalScrollIndicator={props.quote.text.length > 140}
+            nestedScrollEnabled
           >
-            "{props.quote.text}"
-          </Text>
+            <Text
+              style={[
+                styles.previewText,
+                {
+                  color: props.colors.text,
+                  fontFamily:
+                    props.quote.language === "en"
+                      ? "CormorantGaramond_400Regular_Italic"
+                      : undefined,
+                  fontStyle: props.quote.language === "en" ? "italic" : "normal",
+                },
+              ]}
+            >
+              “{props.quote.text}”
+            </Text>
+          </ScrollView>
           <Text style={[styles.previewAuthor, { color: props.colors.author }]}>
             — {props.quote.author}
           </Text>
         </View>
 
-        {/* Share Options */}
-        <ScrollView
-          style={styles.optionsList}
-          showsVerticalScrollIndicator={false}
-        >
-          {options.map((opt, index) => (
+        <View style={styles.optionsList}>
+          {options.map((option) => (
             <Pressable
-              key={opt.label}
-              style={[
-                styles.optionRow,
-                { backgroundColor: props.colors.btnBg },
-                index < options.length - 1 && {
-                  borderBottomWidth: StyleSheet.hairlineWidth,
-                  borderBottomColor: props.colors.divider,
-                },
-              ]}
-              onPress={opt.onPress}
+              key={option.label}
+              style={[styles.optionRow, { backgroundColor: props.colors.btnBg }]}
+              onPress={() => {
+                void option.onPress();
+              }}
+              disabled={option.busy}
+              accessibilityRole="button"
+              accessibilityLabel={option.label}
+              accessibilityState={{ busy: option.busy, disabled: option.busy }}
             >
               <View style={styles.optionLeft}>
-                <Ionicons
-                  name={opt.icon}
-                  size={22}
-                  color={props.colors.btnIcon}
-                />
-                <Text
-                  style={[styles.optionLabel, { color: props.colors.text }]}
-                >
-                  {opt.label}
+                {option.busy ? (
+                  <ActivityIndicator size="small" color={props.colors.btnIcon} />
+                ) : (
+                  <Ionicons name={option.icon} size={22} color={props.colors.btnIcon} />
+                )}
+                <Text style={[styles.optionLabel, { color: props.colors.text }]}>
+                  {option.label}
                 </Text>
               </View>
-              <Ionicons
-                name="chevron-forward"
-                size={16}
-                color={props.colors.btnIcon}
-              />
+              {!option.busy ? (
+                <Ionicons name="chevron-forward" size={16} color={props.colors.btnIcon} />
+              ) : null}
             </Pressable>
           ))}
-        </ScrollView>
+        </View>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  backdrop: {
-    ...StyleSheet.absoluteFill,
-    backgroundColor: "#000",
-    opacity: 0.4,
-  },
+  backdrop: { ...StyleSheet.absoluteFill, backgroundColor: "#000", opacity: 0.45 },
   sheet: {
     position: "absolute",
     left: 0,
     right: 0,
     bottom: 0,
-    height: SCREEN_HEIGHT * 0.65,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    paddingBottom: 40,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingBottom: 34,
   },
-  handleContainer: {
-    alignItems: "center",
-    paddingTop: 10,
-    paddingBottom: 6,
-  },
-  handle: {
-    width: 36,
-    height: 4,
-    borderRadius: 2,
-  },
+  handleContainer: { alignItems: "center", paddingTop: 10, paddingBottom: 6 },
+  handle: { width: 36, height: 4, borderRadius: 2 },
   sheetHeader: {
+    minHeight: 60,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 24,
-    paddingVertical: 12,
+    paddingVertical: 8,
   },
-  sheetTitle: {
-    fontSize: 26,
-    fontWeight: "700",
+  sheetTitle: { flex: 1, flexShrink: 1, fontSize: 26, fontWeight: "600" },
+  closeButton: {
+    width: 44,
+    height: 44,
+    alignItems: "center",
+    justifyContent: "center",
   },
-  sheetDivider: {
-    height: StyleSheet.hairlineWidth,
-    marginHorizontal: 24,
-  },
-  preview: {
-    marginHorizontal: 24,
-    marginTop: 16,
-    borderRadius: 16,
-    padding: 20,
-  },
-  previewText: {
-    fontSize: 18,
-    lineHeight: 26,
-    fontStyle: "italic",
-    marginBottom: 8,
-  },
-  previewAuthor: {
-    fontSize: 14,
-    textAlign: "right",
-  },
-  optionsList: {
-    marginTop: 16,
-    paddingHorizontal: 24,
-  },
+  sheetDivider: { height: StyleSheet.hairlineWidth, marginHorizontal: 24 },
+  preview: { marginHorizontal: 24, marginTop: 16, borderRadius: 16, padding: 20 },
+  previewText: { fontSize: 18, lineHeight: 27, marginBottom: 8 },
+  previewAuthor: { marginTop: 8, fontSize: 14, lineHeight: 21, textAlign: "right" },
+  optionsList: { marginTop: 16, paddingHorizontal: 24, gap: 8 },
   optionRow: {
+    minHeight: 58,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 16,
+    paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 12,
-    marginBottom: 8,
   },
   optionLeft: {
+    flex: 1,
+    minWidth: 0,
     flexDirection: "row",
     alignItems: "center",
     gap: 14,
   },
-  optionLabel: {
-    fontSize: 16,
-    fontWeight: "400",
-  },
+  optionLabel: { flexShrink: 1, fontSize: 16, lineHeight: 22 },
 });

@@ -13,6 +13,7 @@ const QUOTE_ANIMATION_KEY = "@echo/quote_animation";
 const QUOTE_LANGUAGE_KEY = "@echo/quote_language";
 const MOOD_KEY = "@echo/mood_preference";
 const ONBOARDING_KEY = "@echo/onboarding_complete";
+const HIGH_CONTRAST_KEY = "@echo/high_contrast";
 
 export type QuoteFont = "elegant" | "system";
 export type QuoteFontSize = "small" | "medium" | "large";
@@ -258,4 +259,17 @@ export async function setQuoteLanguage(
   }
 
   await AsyncStorage.setItem(QUOTE_LANGUAGE_KEY, language);
+}
+
+export async function getHighContrast(): Promise<boolean> {
+  try {
+    return (await AsyncStorage.getItem(HIGH_CONTRAST_KEY)) === "true";
+  } catch (error) {
+    warnInDevelopment("Failed to read high contrast preference", error);
+    return false;
+  }
+}
+
+export async function setHighContrast(value: boolean): Promise<void> {
+  await AsyncStorage.setItem(HIGH_CONTRAST_KEY, String(value));
 }

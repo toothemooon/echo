@@ -264,10 +264,13 @@ scripts/
 └── audit-quote-catalogs.mjs         # 三语目录统一质量门
 
 tests/
+├── accessibility.test.ts            # 三套主题 WCAG AA 对比度
 ├── contextLookup.test.ts            # 数字/字符串 ID 与典型语境查询
+├── quoteData.test.ts                 # Quote schema 与只读目录行为
 ├── quoteContexts.test.ts            # 6,000 条语境资料完整性测试
 ├── quotes.test.ts                   # 数据目录测试
-└── selector.test.ts                 # 推荐算法测试
+├── selector.test.ts                 # 推荐算法测试
+└── shareQuote.test.ts               # 分享文字与三语界面文案
 ```
 
 ## 7. 本地开发
@@ -332,6 +335,7 @@ npm run check
 3. Expo Doctor 依赖与配置检查。
 
 目前测试覆盖三语目录、推荐算法、6,000 条语境对应关系、作者引用、核实状态、
+分享文案、Quote 边界数据和主题颜色对比度，
 来源约束，以及数字和字符串 ID 的查询行为。React Native 的作者点击交互现阶段
 仍在模拟器中人工检查；若要自动模拟点击，需要引入 React Native Testing Library。
 
@@ -397,7 +401,7 @@ v1.1 暂不包含：
 - 通知和 Widget；
 - 用户账号和云同步；
 - 跨设备收藏同步；
-- 完整无障碍适配；
+- 更深入的 VoiceOver 手势与真实设备 Dynamic Type UI 自动化；
 - 后台内容管理系统；
 - Saved / History 命名重构。
 

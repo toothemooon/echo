@@ -23,6 +23,9 @@ type Props = {
  * Not rendered in the main UI — used offscreen for screenshot generation.
  */
 export default function ShareCard(props: Props) {
+  const textLength = props.quote.text.length;
+  const quoteFontSize =
+    textLength > 260 ? 15 : textLength > 190 ? 17 : textLength > 120 ? 19 : 22;
   const normalizedRole = props.quote.role.trim();
   const displayRole =
     normalizedRole === "Writer" || normalizedRole === "Author"
@@ -66,6 +69,8 @@ export default function ShareCard(props: Props) {
                 : "CormorantGaramond_400Regular_Italic",
             fontStyle:
               props.quote.language !== "en" ? "normal" : "italic",
+            fontSize: quoteFontSize,
+            lineHeight: Math.round(quoteFontSize * 1.45),
           },
         ]}
       >
@@ -78,7 +83,11 @@ export default function ShareCard(props: Props) {
       </Text>
 
       {attributionDetail ? (
-        <Text style={[styles.role, { color: props.colors.roleText }]}>
+        <Text
+          style={[styles.role, { color: props.colors.roleText }]}
+          numberOfLines={2}
+          adjustsFontSizeToFit
+        >
           {attributionDetail}
         </Text>
       ) : null}
@@ -121,8 +130,6 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   quoteText: {
-    fontSize: 22,
-    lineHeight: 32,
     letterSpacing: 0.3,
     marginBottom: 20,
   },

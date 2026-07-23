@@ -132,6 +132,7 @@ export default function QuoteCard(props: Props) {
         style={{ maxHeight: Math.max(190, height * 0.42) }}
         contentContainerStyle={styles.quoteScrollContent}
         showsVerticalScrollIndicator={props.quote.text.length > 220}
+        nestedScrollEnabled
       >
         <Text
           style={[
@@ -144,6 +145,7 @@ export default function QuoteCard(props: Props) {
               lineHeight: adaptiveLineHeight,
             },
           ]}
+          accessibilityRole="text"
         >
           {props.quote.text}
         </Text>

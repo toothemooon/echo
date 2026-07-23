@@ -24,6 +24,9 @@ export default function PersonalizationScreen(props: Props) {
         <Pressable
           style={[styles.backBtn, { backgroundColor: props.colors.btnBg }]}
           onPress={props.onBack}
+          accessibilityRole="button"
+          accessibilityLabel="Back to Settings"
+          hitSlop={10}
         >
           <Ionicons name="chevron-back" size={20} color={props.colors.btnIcon} />
         </Pressable>

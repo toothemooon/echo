@@ -59,7 +59,7 @@ test("all 6,000 quotes have one structurally valid context", () => {
     assert.equal(context.editorial_note_kind, "interpretive_commentary");
     assert.doesNotMatch(
       context.editorial_note,
-      /unverified|not verified|verification|未确认|尚待核实|未確認|確認状況|現在記録されている|公共角色与个人表达|public role with a more personal voice|Its force comes from narrowing|複雑な説明を重ねず/i,
+      /unverified|not verified|verification|未确认|尚待核实|未確認|確認状況|現在記録されている|公共角色与个人表达|public role with a more personal voice|Its force comes from narrowing|複雑な説明を重ねず|留下.{0,8}(自身|个人|讀者|读者).{0,8}(经验|經驗|余地|空间|空間)|联系自身经验|让读者自行体会|留白.{0,8}(经历|經歷|经验|經驗)|leav(?:e|ing).{0,30}(reader|own experience|room)|room for the reader|個々の経験を重ねる余白|読者.{0,12}(余白|委ね)|这句话(告诉|启示|提醒)我们|這句話(告訴|啟示|提醒)我們|this (quote|line) (tells|teaches|reminds) us|この言葉は私たちに.{0,12}(教え|気づかせ|思い出させ)|通过.{0,8}(对比|排比|转折|句式)|借助.{0,8}(并列|节奏|修辞)|対比|並列とリズム|the (contrast|parallel|conditional movement|direct claim) in/i,
     );
     assert.ok(allowedVerificationStatuses.has(context.verification_status));
     assert.ok(allowedContentStatuses.has(context.context_content_status));

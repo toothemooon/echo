@@ -9,7 +9,7 @@ import {
 } from "@expo-google-fonts/cormorant-garamond";
 
 import SplashScreen from "../components/common/SplashScreen";
-import { COLORS } from "../constants/colors";
+import { COLORS, HIGH_CONTRAST_COLORS } from "../constants/colors";
 import {
   CATEGORIES,
   categoriesForMood,
@@ -36,6 +36,8 @@ import {
   setMoodPreference,
   getOnboardingComplete,
   setOnboardingComplete,
+  getHighContrast,
+  setHighContrast,
   type QuoteFont,
   type QuoteFontSize,
   type QuoteAnimation,
@@ -67,6 +69,7 @@ import AnimationSettingsScreen from "../screens/AnimationSettingsScreen";
 import LanguageSettingsScreen from "../screens/LanguageSettingsScreen";
 import OnboardingScreen from "../screens/OnboardingScreen";
 import QuoteContextScreen from "../screens/QuoteContextScreen";
+import AccessibilityScreen from "../screens/AccessibilityScreen";
 import { syncAppIconWithTheme } from "../services/appIcon";
 import { getNextRecommendedQuote } from "../storage/quoteRotation";
 
@@ -80,7 +83,8 @@ type Page =
   | "personalization"
   | "quote-settings"
   | "language-settings"
-  | "animation-settings";
+  | "animation-settings"
+  | "accessibility";
 
 export default function Index() {
   const [fontsLoaded] = useFonts({
@@ -112,6 +116,7 @@ export default function Index() {
     useState<QuoteLanguagePreference>("en");
 
   const [initializationReady, setInitializationReady] = useState(false);
+  const [highContrast, setHighContrastState] = useState(false);
 
   // ── Home State ──
   const [quoteHistory, setQuoteHistory] = useState<Quote[]>([]);
@@ -146,6 +151,7 @@ export default function Index() {
           savedQuoteLanguage,
           savedMood,
           savedOnboardingComplete,
+          savedHighContrast,
         ] = await Promise.all([
           getTheme(),
           getPreferredCategories(),
@@ -156,6 +162,7 @@ export default function Index() {
           getQuoteLanguage(),
           getMoodPreference(),
           getOnboardingComplete(),
+          getHighContrast(),
         ]);
 
         const resolvedTheme: ThemeMode =
@@ -179,6 +186,7 @@ export default function Index() {
         setQuoteFontSizeState(savedQuoteFontSize);
         setQuoteAnimationState(savedQuoteAnimation);
         setQuoteLanguageState(savedQuoteLanguage);
+        setHighContrastState(savedHighContrast);
 
         const firstQuote = savedOnboardingComplete
           ? await getNextRecommendedQuote(prefs, [], savedQuoteLanguage)
@@ -223,7 +231,9 @@ export default function Index() {
     );
   }
 
-  const colors = COLORS[theme];
+  const colors = highContrast
+    ? HIGH_CONTRAST_COLORS[theme]
+    : COLORS[theme];
 
   if (!onboardingComplete) {
     return (
@@ -411,8 +421,10 @@ export default function Index() {
         url: uri,
         message: formatQuoteShareText(currentQuote),
       });
+      return true;
     } catch (_error) {
       Alert.alert("Error", "Failed to generate image.");
+      return false;
     }
   };
 
@@ -650,6 +662,23 @@ export default function Index() {
     );
   }
 
+  if (currentPage === "accessibility") {
+    return (
+      <AccessibilityScreen
+        colors={colors}
+        theme={theme}
+        highContrast={highContrast}
+        onChangeHighContrast={(value) => {
+          setHighContrastState(value);
+          void setHighContrast(value).catch(() => {
+            setHighContrastState((current) => !current);
+          });
+        }}
+        onBack={() => setCurrentPage("settings")}
+      />
+    );
+  }
+
   // ── Settings 页面 ──
   if (currentPage === "settings") {
     return (
@@ -662,6 +691,7 @@ export default function Index() {
         onOpenQuoteSettings={() => setCurrentPage("quote-settings")}
         onOpenLanguageSettings={() => setCurrentPage("language-settings")}
         onOpenAnimationSettings={() => setCurrentPage("animation-settings")}
+        onOpenAccessibility={() => setCurrentPage("accessibility")}
         quoteLanguage={quoteLanguage}
         quoteAnimation={quoteAnimation}
         preferenceSummary={moodSummary(mood)}
@@ -727,10 +757,7 @@ export default function Index() {
         quote={currentQuote}
         colors={colors}
         onClose={() => setShareVisible(false)}
-        onShareAsImage={() => {
-          setShareVisible(false);
-          void shareAsImage();
-        }}
+        onShareAsImage={shareAsImage}
       />
 
       {/* 用于生成分享截图，不在屏幕中显示 */}

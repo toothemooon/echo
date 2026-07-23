@@ -26,6 +26,7 @@ type Props = {
   onOpenQuoteSettings: () => void;
   onOpenLanguageSettings: () => void;
   onOpenAnimationSettings: () => void;
+  onOpenAccessibility: () => void;
   quoteLanguage: QuoteLanguagePreference;
   quoteAnimation: QuoteAnimation;
   preferenceSummary: string;
@@ -116,6 +117,9 @@ export default function SettingsScreen(props: Props) {
             },
           ]}
           onPress={props.onBack}
+          accessibilityRole="button"
+          accessibilityLabel="Back to Quotes"
+          hitSlop={10}
         >
           <Ionicons
             name="chevron-back"
@@ -366,6 +370,8 @@ export default function SettingsScreen(props: Props) {
           <Pressable
             style={styles.cardRow}
             onPress={props.onOpenAnimationSettings}
+            accessibilityRole="button"
+            accessibilityLabel="Animation Settings"
           >
             <View style={styles.cardLeft}>
               <Ionicons
@@ -389,6 +395,35 @@ export default function SettingsScreen(props: Props) {
           </Pressable>
         </View>
 
+        <Text style={[styles.sectionTitle, { color: props.colors.label }]}>
+          ACCESSIBILITY
+        </Text>
+        <View style={[styles.card, { backgroundColor: props.colors.btnBg }]}>
+          <Pressable
+            style={styles.cardRow}
+            onPress={props.onOpenAccessibility}
+            accessibilityRole="button"
+            accessibilityLabel="Accessibility Settings"
+            accessibilityHint="VoiceOver, Dynamic Type, and color contrast options"
+          >
+            <View style={styles.cardLeft}>
+              <Ionicons
+                name="accessibility-outline"
+                size={20}
+                color={props.colors.btnIcon}
+              />
+              <Text style={[styles.cardLabel, { color: props.colors.text }]}>
+                Accessibility
+              </Text>
+            </View>
+            <Ionicons
+              name="chevron-forward"
+              size={16}
+              color={props.colors.btnIcon}
+            />
+          </Pressable>
+        </View>
+
         {/* Feedback */}
         <Text
           style={[
@@ -409,7 +444,13 @@ export default function SettingsScreen(props: Props) {
             },
           ]}
         >
-          <Pressable style={styles.cardRow} onPress={handleSendFeedback}>
+          <Pressable
+            style={styles.cardRow}
+            onPress={handleSendFeedback}
+            accessibilityRole="button"
+            accessibilityLabel="Send Feedback"
+            accessibilityHint="Copy the feedback email address or open Mail"
+          >
             <View style={styles.cardLeft}>
               <Ionicons
                 name="mail-outline"
@@ -594,18 +635,25 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
+    flexShrink: 1,
+    minWidth: 0,
   },
   cardRight: {
     flexDirection: "row",
     alignItems: "center",
     gap: 4,
+    maxWidth: "48%",
+    minWidth: 0,
   },
   cardLabel: {
     fontSize: 16,
     fontWeight: "400",
+    flexShrink: 1,
   },
   cardValue: {
     fontSize: 14,
+    flexShrink: 1,
+    textAlign: "right",
   },
   cardDivider: {
     height: StyleSheet.hairlineWidth,
