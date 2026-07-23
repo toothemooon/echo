@@ -51,3 +51,10 @@ __pycache__/
 /assets/quotes.ja.json
 /data/quote-audit/*.json
 /quotes_*.txt
+
+# Runtime quote datasets required by ECHO.
+# These files stay out of Git but are uploaded by local EAS builds.
+!/QUOTE_CONTEXTS.json
+!/assets/quotes.json
+!/assets/quotes.zh-Hans.json
+!/assets/quotes.ja.json
