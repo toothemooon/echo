@@ -770,15 +770,14 @@ role 只有 Writer / Author → 不显示泛化身份
 - `Categories` 改为 `Preferences`；
 - 数量摘要改为当前心情对应的阅读方向；
 - 新增 `Quote Language`；
-- 新增 `Content Sources`；
 - 隐私政策和服务条款继续打开正式网站；
-- 内容来源弹窗提供 inBox Card 与 Wikiquote 入口。
+- 内容来源不在应用设置页展示，改由仓库文档与 App Review Notes 披露。
 
 作用：
 
 - 设置页语言从“内部配置”转向“用户目的”；
 - 三语切换有明确入口和当前值；
-- 第三方内容来源与许可不只存在于仓库文档，也能从应用内找到。
+- 第三方内容来源与许可集中维护在仓库文档，审核说明文案记录在 README。
 
 ## 15. 自动测试模块
 
@@ -940,3 +939,70 @@ AsyncStorage 原始 JSON
 6. 升级后收藏是否保留。
 
 只有这些核心问题获得真实用户反馈后，才适合继续扩大商业化和平台功能。
+
+## 20. 作者与名言语境数据模型
+
+涉及文件：`QUOTE_CONTEXTS.json`、`src/data/quoteContexts.ts`
+
+JSON 将资料拆成 `authors` 与 `quote_contexts`，避免同一作者的生平在多条名言中
+重复保存。运行时建立两个 Map：
+
+```text
+String(quote_id) → QuoteContext
+author_ref       → AuthorContext
+```
+
+查询由每次遍历 6,000 条记录变为按 ID 直接读取。`quote_id` 必须先经过
+`String()`：英文目录主要使用数字 ID，中文和日文目录包含字符串 ID；统一键类型
+可避免同一个数字以 `1` 和 `"1"` 传入时得到不同结果。
+
+`attribution_only` 只有作者归属，`source_only` 已知作品但具体契机未核实，
+`verified` 才表示语境有来源支持。`verified_composite` 表示内容已确认是多个时点
+表达的组合，而非一次逐字发言。这些状态继续服务内部编辑与数据维护，但当前详情页
+不显示历史背景模板和核实状态；没有适合用户阅读的信息时直接省略。
+
+研究时先提取名言核心词组与作者线索，再交叉检索公开文献、Wikiquote、Google
+Books 索引和权威语录资料。原始书籍章节、演讲日期或官方记录属于一级证据；
+只有维基页面或名言网站属于二级证据；找不到原文或出现可靠误托考证时分别标记
+`unverified` 或 `disputed`。搜索引擎与 AI 生成摘要不能单独改变核实状态。
+
+`editorial_note` 属于另一层内容：它根据名言文字、分类、作者身份和已知作品提供
+简短阅读方向，并用 `editorial_note_kind: "interpretive_commentary"` 标记为编辑
+评论。生成脚本还会根据同一作者在 ECHO 中的主题分布和已知作品重写人物介绍。
+用户界面的编辑解读只保留阅读内容，不附加核实流程说明。全部内容由
+`scripts/generate-editorial-notes.mjs` 以可重复执行的三语规则生成。
+
+## 21. 作者点击到详情页的事件流
+
+涉及文件：`QuoteCard.tsx`、`index.tsx`、`QuoteContextScreen.tsx`
+
+```text
+QuoteCard 点击作者名
+        ↓ onPressAuthor(currentQuote)
+index.tsx 将 currentQuote 保存到 contextQuote
+        ↓ Page 切换为 quote-context
+使用 quote_id 查询 context
+        ↓ 使用 author_ref 查询 author
+渲染当前名言、人物介绍、编辑解读和可用的作品来源
+```
+
+详情页保存的是用户点击当刻的 Quote，而不是继续读取可能因左右翻页变化的
+`currentQuote`。因此进入详情后内容稳定，返回时仍回到原有主页浏览位置。
+
+页面沿用主题背景、颜色 token、圆形返回按钮、细分隔线和字距风格。它只回答
+“这个人是谁、这句话为何出现”，不扩展成作者全部名言列表。
+
+## 22. Git 与 EAS 数据文件分流
+
+`.gitignore` 忽略 `QUOTE_CONTEXTS.json`、三语格言目录和生成的审计 JSON，避免
+持续生成的大文件进入 Git 历史。但 Metro 构建仍需要前四个运行时 JSON，因此
+`.easignore` 在复制忽略规则后，再用 `!` 将它们包含回 EAS 上传包；研究审计资料
+继续排除，因为应用运行时不读取它们。
+
+该方案有一个明确限制：EAS Build 必须从保存完整本地数据集的电脑发起。单纯从
+远端克隆仓库无法恢复这些文件。验证分流时应同时检查：
+
+1. `git status` 不显示数据大文件；
+2. 四个运行时 JSON 在本地存在；
+3. `.easignore` 保留四条否定规则；
+4. `npm run test` 和 `tsc --noEmit` 能正常导入数据。

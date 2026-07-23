@@ -1,6 +1,7 @@
 import {
   View,
   Text,
+  Pressable,
   Animated,
   StyleSheet,
   ScrollView,
@@ -17,6 +18,7 @@ type Props = {
   slideAnim: Animated.Value;
   quoteFont: QuoteFont;
   quoteFontSize: QuoteFontSize;
+  onPressAuthor?: () => void;
 };
 
 const QUOTE_SIZE_STYLES: Record<
@@ -148,16 +150,24 @@ export default function QuoteCard(props: Props) {
       </ScrollView>
 
       {/* Author */}
-      <Text
-        style={[
-          styles.author,
-          {
-            color: props.colors.author,
-          },
-        ]}
+      <Pressable
+        onPress={props.onPressAuthor}
+        disabled={!props.onPressAuthor}
+        accessibilityRole="button"
+        accessibilityLabel={`Learn more about ${props.quote.author}`}
+        hitSlop={10}
       >
-        — {props.quote.author}
-      </Text>
+        <Text
+          style={[
+            styles.author,
+            {
+              color: props.colors.author,
+            },
+          ]}
+        >
+          — {props.quote.author}
+        </Text>
+      </Pressable>
 
       {/* Role */}
       {attributionDetail ? (
@@ -213,6 +223,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "400",
     textAlign: "right",
+    textDecorationLine: "underline",
+    textDecorationStyle: "solid",
   },
   role: {
     fontSize: 12,

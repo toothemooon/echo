@@ -34,8 +34,6 @@ type Props = {
 const FEEDBACK_EMAIL = "abc510433622@gmail.com";
 const PRIVACY_URL = "https://sarada.yachts/projects/echo/privacy";
 const TERMS_URL = "https://sarada.yachts/projects/echo/terms";
-const INBOX_CARD_URL = "https://card.gudong.site/";
-const WIKIQUOTE_URL = "https://www.wikiquote.org/";
 
 const THEME_LABELS: Record<ThemeMode, string> = {
   light: "Light",
@@ -70,31 +68,6 @@ async function safeOpenURL(url: string) {
 }
 
 export default function SettingsScreen(props: Props) {
-  const handleContentSources = () => {
-    const message =
-      "English: ECHO curated catalog and English Wikiquote\n" +
-      "Chinese: inBox Card and Chinese Wikiquote\n" +
-      "Japanese: Japanese Wikiquote\n\n" +
-      "Wikiquote-derived content is used under CC BY-SA. " +
-      "Choose a source to view its website and attribution details.";
-
-    Alert.alert("Content Sources", message, [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "inBox Card",
-        onPress: () => {
-          void safeOpenURL(INBOX_CARD_URL);
-        },
-      },
-      {
-        text: "Wikiquote",
-        onPress: () => {
-          void safeOpenURL(WIKIQUOTE_URL);
-        },
-      },
-    ]);
-  };
-
   const handleSendFeedback = () => {
     const message =
       "Your thoughts help make ECHO better.\n\n" +
@@ -548,42 +521,6 @@ export default function SettingsScreen(props: Props) {
                 ]}
               >
                 Terms of Service
-              </Text>
-            </View>
-
-            <Ionicons
-              name="chevron-forward"
-              size={16}
-              color={props.colors.btnIcon}
-            />
-          </Pressable>
-
-          <View
-            style={[
-              styles.cardDivider,
-              {
-                backgroundColor: props.colors.divider,
-              },
-            ]}
-          />
-
-          <Pressable style={styles.cardRow} onPress={handleContentSources}>
-            <View style={styles.cardLeft}>
-              <Ionicons
-                name="library-outline"
-                size={20}
-                color={props.colors.btnIcon}
-              />
-
-              <Text
-                style={[
-                  styles.cardLabel,
-                  {
-                    color: props.colors.text,
-                  },
-                ]}
-              >
-                Content Sources
               </Text>
             </View>
 

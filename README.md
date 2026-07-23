@@ -89,11 +89,31 @@ v1.1 聚焦以下目标：
 
 ### 2.6 内容来源披露
 
-设置页的 `Content Sources` 可以查看数据来源入口。数据许可、来源与使用说明见：
+应用内暂不展示内容来源入口。数据许可、来源与使用说明保留在仓库文档中：
 
 - [第三方内容说明](THIRD_PARTY_CONTENT.md)
 - [格言许可说明](assets/QUOTES_LICENSE.md)
 - [6,000 条目录审计报告](data/quote-audit/expanded-catalog-report.json)
+
+计划在 App Store Connect 的 **App Review Information / Notes** 中向审核团队说明
+内容来源，而不在当前版本的设置页展示。可使用以下审核备注：
+
+> ECHO is an offline-first trilingual quotation reading app. Its English
+> catalog combines ECHO's curated records with English Wikiquote; its Simplified
+> Chinese catalog uses inBox Card and Chinese Wikiquote; and its Japanese catalog
+> uses Japanese Wikiquote. Wikiquote-derived material is used under CC BY-SA.
+> Detailed attribution, licensing, provenance, and catalog audit records are
+> maintained in the project documentation. The app does not require an account,
+> and its core reading experience works without a server connection.
+
+### 2.7 作者与名言语境详情
+
+用户可以点击主页上的作者名，进入当前名言对应的人物详情页。详情页只展示当前
+名言、作者姓名与身份、人物介绍、编辑解读，以及存在时的作品来源。它不会展示该
+作者的全部名言。
+
+历史背景模板和核实状态属于内部编辑数据，不在当前用户界面展示。资料不足时直接
+省略对应信息，不向用户显示“尚待核实”等维护提示。
 
 ## 3. 格言数据结构
 
@@ -131,6 +151,42 @@ v1.1 聚焦以下目标：
 
 当 `source` 存在时，卡片优先显示作品来源；没有可靠作品名时显示具体
 `role`。项目不会为了填满字段而虚构作品来源。
+
+作者与语境资料保存在本地 `QUOTE_CONTEXTS.json`。当前它覆盖三语各 2,000 条、
+合计 6,000 条格言。`quote_id` 定位当前名言的语境，`author_ref` 再定位作者生平。
+
+| `context_content_status` | 含义 |
+| --- | --- |
+| `attribution_only` | 仅有作者归属，原始出处与具体语境未核实 |
+| `source_only` | 已知作品或出处，但具体章节、时间、场景或契机未核实 |
+| `verified` | 语境由 `context_sources` 中的来源支持 |
+
+`verification_status` 记录研究结论；`verified_composite` 表示已核实为多个时期
+或场合的复合表达，不应伪装成某一次逐字发言。自动测试能验证结构和来源是否存在，
+但不能替代人工事实核查。
+
+语境研究采用以下证据分级：
+
+| 研究结论 | 判定要求 |
+| --- | --- |
+| `verified` | 找到原始书籍章节、演讲日期、官方记录或同等级一手文献 |
+| `needs_context` | 原始出处已确认，但尚无证据说明表达该句的直接契机 |
+| `unverified` | 只能找到 Wikiquote、媒体整理或名言网站等二手传播 |
+| `disputed` | 可靠考证指出误托、文字改写或作者归属存在冲突 |
+
+搜索引擎摘要和 AI 摘要只用于发现候选资料，不能作为独立证据。每条升级记录必须
+保存来源 URL、证据说明，并区分作者生平来源与名言原文来源。
+浏览器核实进度和续查顺序记录在
+[Quote Context Research Ledger](docs/QUOTE_CONTEXT_RESEARCH.md)。
+
+为了让资料具有阅读价值，每位作者和每条名言还包含 `editorial_note`。人物介绍与
+编辑解读依据作者当前身份、ECHO 收录内容的主题分布、名言文字、分类和已知作品
+生成。详情页将解读放在独立区块中，内部事实状态继续保存在数据层，但不展示给
+普通用户。重新生成全部人物介绍与评论：
+
+```bash
+node scripts/generate-editorial-notes.mjs
+```
 
 ## 4. 分类体系
 
@@ -182,6 +238,7 @@ src/
 │   ├── common/                      # 启动页、Archive 背景等公共视觉组件
 │   └── home/                        # 首页、格言卡片、操作栏和弹层
 ├── constants/categories.ts         # 大小分类、心情选项和映射
+├── data/quoteContexts.ts            # 作者与当前名言语境的 ID 索引
 ├── data/quotes.ts                   # 数据验证、冻结、索引和查询
 ├── recommendation/selector.ts      # 不依赖 UI/存储的纯推荐算法
 ├── screens/                         # 设置、偏好、语言和首次启动页面
@@ -206,6 +263,8 @@ scripts/
 └── audit-quote-catalogs.mjs         # 三语目录统一质量门
 
 tests/
+├── contextLookup.test.ts            # 数字/字符串 ID 与典型语境查询
+├── quoteContexts.test.ts            # 6,000 条语境资料完整性测试
 ├── quotes.test.ts                   # 数据目录测试
 └── selector.test.ts                 # 推荐算法测试
 ```
@@ -271,6 +330,10 @@ npm run check
 2. TypeScript 严格类型检查；
 3. Expo Doctor 依赖与配置检查。
 
+目前测试覆盖三语目录、推荐算法、6,000 条语境对应关系、作者引用、核实状态、
+来源约束，以及数字和字符串 ID 的查询行为。React Native 的作者点击交互现阶段
+仍在模拟器中人工检查；若要自动模拟点击，需要引入 React Native Testing Library。
+
 单独执行三语目录审计：
 
 ```bash
@@ -298,6 +361,23 @@ node scripts/audit-quote-catalogs.mjs
 - [中文来源记录](data/quote-audit/chinese-provenance.json)
 - [日语来源记录](data/quote-audit/japanese-provenance.json)
 - [合并审计报告](data/quote-audit/expanded-catalog-report.json)
+
+### 9.1 Git 与 EAS 的大文件分流
+
+三语格言目录、`QUOTE_CONTEXTS.json` 和生成的审计资料属于本地大数据文件。
+`.gitignore` 阻止它们进入 Git 历史；`.easignore` 先使用相同规则，再用否定规则将
+应用运行时必需的四个 JSON 重新加入 EAS 上传包：
+
+```text
+!/QUOTE_CONTEXTS.json
+!/assets/quotes.json
+!/assets/quotes.zh-Hans.json
+!/assets/quotes.ja.json
+```
+
+因此 EAS Build 必须从实际保存这四个本地数据集的电脑执行。只克隆 Git 仓库的
+环境不包含这些文件，不能生成完整应用包。不要删除 `.easignore` 中的四条例外，
+否则 TypeScript/Metro 构建会因缺少 JSON 导入而失败。
 
 ## 10. 隐私、法律与支持
 

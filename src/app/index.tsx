@@ -65,6 +65,7 @@ import ArchiveBackground from "../components/common/ArchiveBackground";
 import AnimationSettingsScreen from "../screens/AnimationSettingsScreen";
 import LanguageSettingsScreen from "../screens/LanguageSettingsScreen";
 import OnboardingScreen from "../screens/OnboardingScreen";
+import QuoteContextScreen from "../screens/QuoteContextScreen";
 import { syncAppIconWithTheme } from "../services/appIcon";
 import { getNextRecommendedQuote } from "../storage/quoteRotation";
 
@@ -72,6 +73,7 @@ const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 type Page =
   | "home"
+  | "quote-context"
   | "settings"
   | "theme"
   | "personalization"
@@ -115,6 +117,7 @@ export default function Index() {
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [historyVisible, setHistoryVisible] = useState(false);
   const [shareVisible, setShareVisible] = useState(false);
+  const [contextQuote, setContextQuote] = useState<Quote | null>(null);
 
   // ── Splash Screen State ──
   const [showSplash, setShowSplash] = useState(true);
@@ -560,6 +563,25 @@ export default function Index() {
     });
   };
 
+  const openQuoteContext = (quote: Quote) => {
+    setContextQuote(quote);
+    setCurrentPage("quote-context");
+  };
+
+  if (currentPage === "quote-context" && contextQuote) {
+    return (
+      <QuoteContextScreen
+        quote={contextQuote}
+        colors={colors}
+        theme={theme}
+        onBack={() => {
+          setContextQuote(null);
+          setCurrentPage("home");
+        }}
+      />
+    );
+  }
+
   // ── Theme 页面 ──
   if (currentPage === "theme") {
     return (
@@ -677,6 +699,7 @@ export default function Index() {
         slideAnim={slideAnim}
         quoteFont={quoteFont}
         quoteFontSize={quoteFontSize}
+        onPressAuthor={() => openQuoteContext(currentQuote)}
       />
 
       <View style={{ alignItems: "center" }}>
