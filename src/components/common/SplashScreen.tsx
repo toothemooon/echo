@@ -1,10 +1,10 @@
 import React, { useEffect, useRef } from "react";
 import {
   Animated,
-  Dimensions,
   Image,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
 } from "react-native";
 import { COLORS } from "../../constants/colors";
@@ -14,8 +14,6 @@ interface SplashScreenProps {
   theme: ThemeMode;
   onAnimationComplete: () => void;
 }
-
-const { width, height } = Dimensions.get("window");
 
 const SPLASH_IMAGES = {
   light: require("../../../assets/echo-icon-light.png"),
@@ -27,6 +25,7 @@ export default function SplashScreen({
   theme,
   onAnimationComplete,
 }: SplashScreenProps) {
+  const { width, height } = useWindowDimensions();
   const logoOpacity = useRef(new Animated.Value(0)).current;
   const logoScale = useRef(new Animated.Value(0.8)).current;
   const echoProgress = useRef(new Animated.Value(0)).current;
@@ -83,6 +82,8 @@ export default function SplashScreen({
         {
           opacity: containerOpacity,
           backgroundColor: colors.background,
+          width,
+          height,
         },
       ]}
     >
@@ -101,6 +102,7 @@ export default function SplashScreen({
             source={splashImage}
             style={[
               styles.logo,
+              { width: width * 0.68, height: width * 0.68 },
               styles.echoLayer,
               {
                 opacity: echoProgress.interpolate({
@@ -124,6 +126,7 @@ export default function SplashScreen({
             source={splashImage}
             style={[
               styles.logo,
+              { width: width * 0.68, height: width * 0.68 },
               styles.echoLayer,
               {
                 opacity: echoProgress.interpolate({
@@ -145,7 +148,10 @@ export default function SplashScreen({
 
           <Image
             source={splashImage}
-            style={styles.logo}
+            style={[
+              styles.logo,
+              { width: width * 0.68, height: width * 0.68 },
+            ]}
             resizeMode="contain"
           />
         </Animated.View>
@@ -193,8 +199,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    width,
-    height,
     position: "absolute",
     top: 0,
     left: 0,
@@ -210,8 +214,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   logo: {
-    width: width * 0.68,
-    height: width * 0.68,
     maxHeight: 340,
     maxWidth: 340,
     borderRadius: 36,

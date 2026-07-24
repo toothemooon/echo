@@ -1,4 +1,11 @@
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  Pressable,
+  StyleSheet,
+  AppState,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../../constants/colors";
 
@@ -15,15 +22,27 @@ type Props = {
   onMenu: () => void;
 };
 
-// ── 日期计算（模块级常量） ──
-const today = new Date();
-const dayName = today.toLocaleDateString("en-US", { weekday: "long" });
-const monthDay = today.toLocaleDateString("en-US", {
-  month: "long",
-  day: "numeric",
-});
-
 export default function Header(props: Props) {
+  const [today, setToday] = useState(() => new Date());
+
+  useEffect(() => {
+    const refreshDate = () => setToday(new Date());
+    const subscription = AppState.addEventListener("change", (state) => {
+      if (state === "active") refreshDate();
+    });
+    const timer = setInterval(refreshDate, 60_000);
+    return () => {
+      subscription.remove();
+      clearInterval(timer);
+    };
+  }, []);
+
+  const dayName = today.toLocaleDateString("en-US", { weekday: "long" });
+  const monthDay = today.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+  });
+
   return (
     <>
       {/* 顶部行：左侧日期，右侧按钮 */}

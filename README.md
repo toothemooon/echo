@@ -18,7 +18,7 @@ v1.1 聚焦以下目标：
 - 减少短时间内重复出现相同格言、作者或内容类别；
 - 提升长文本、中文和日文的显示稳定性；
 - 建立可重复执行的数据导入、来源记录和质量检查流程；
-- 保持 MVP 简单，不加入广告、付费墙、通知、Widget、账号或云同步。
+- 保持 MVP 简单，不加入广告、付费墙、Widget、账号、云同步或远程推送。
 
 ## 2. v1.1 主要功能
 
@@ -266,6 +266,7 @@ scripts/
 tests/
 ├── accessibility.test.ts            # 三套主题 WCAG AA 对比度
 ├── contextLookup.test.ts            # 数字/字符串 ID 与典型语境查询
+├── notifications.test.ts            # 提醒时段、三语文案与权限引导规则
 ├── quoteData.test.ts                 # Quote schema 与只读目录行为
 ├── quoteContexts.test.ts            # 6,000 条语境资料完整性测试
 ├── quotes.test.ts                   # 数据目录测试
@@ -290,22 +291,29 @@ cd /Users/allen/Documents/GitHub/echo
 npm ci
 ```
 
-使用 Expo Go 启动 iOS 模拟器：
+ECHO 只使用 development build，不再使用 Expo Go。首次生成并安装本地
+iOS development build：
 
 ```bash
-npx expo start --ios
+npx expo run:ios
+```
+
+以后启动 Metro：
+
+```bash
+npm start
 ```
 
 清理 Metro 缓存后启动：
 
 ```bash
-npx expo start --ios --clear
+npm start -- --clear
 ```
 
-使用本地原生开发构建：
+使用 EAS 生成真机 development build：
 
 ```bash
-npx expo run:ios
+npx eas build --profile development --platform ios
 ```
 
 如果启动页长时间不消失，先确认没有旧目录的 Metro 仍占用 `8081`：
@@ -338,6 +346,16 @@ npm run check
 分享文案、Quote 边界数据和主题颜色对比度，
 来源约束，以及数字和字符串 ID 的查询行为。React Native 的作者点击交互现阶段
 仍在模拟器中人工检查；若要自动模拟点击，需要引入 React Native Testing Library。
+
+通知测试集中在 `tests/notifications.test.ts`，覆盖：
+
+- 07:00、12:00、21:00 三个时间档及中、英、日固定通知文案；
+- 开启提醒后替换旧 schedule ID，确保只保留一个 ECHO reminder；
+- 修改时间与切换语言时重新调度，关闭时只取消 ECHO 保存的通知 ID；
+- 权限拒绝时不启用提醒，调度失败时保留旧状态；
+- 旧通知取消失败时撤销新通知，避免留下两个提醒；
+- 浏览不足三条时不展示权限引导，关闭引导后不再自动出现；
+- 损坏或字段异常的 AsyncStorage 数据回退到安全默认值。
 
 单独执行三语目录审计：
 
@@ -398,7 +416,7 @@ ECHO 1.1 的核心功能离线运行，不要求账号。偏好、收藏和推�
 v1.1 暂不包含：
 
 - 广告和付费功能；
-- 通知和 Widget；
+- Widget 与远程推送；
 - 用户账号和云同步；
 - 跨设备收藏同步；
 - 更深入的 VoiceOver 手势与真实设备 Dynamic Type UI 自动化；
@@ -417,5 +435,5 @@ v1.1 暂不包含：
 6. 根据 TestFlight 反馈决定是否恢复浏览历史；
 7. 在用户主动发送反馈时附带版本、构建号、主题和系统版本。
 
-广告、购买、Widget、通知、账号与云同步继续后置，直到核心阅读体验获得足够的
+广告、购买、Widget、远程推送、账号与云同步继续后置，直到核心阅读体验获得足够的
 真实测试证据。

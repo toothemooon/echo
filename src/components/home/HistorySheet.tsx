@@ -4,14 +4,12 @@ import {
   Pressable,
   Animated,
   StyleSheet,
-  Dimensions,
   ScrollView,
+  useWindowDimensions,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../../constants/colors";
 import type { Quote } from "../../data/quotes";
-
-const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 // ══════════════════════════════════════════════
 //  HistorySheet — 收藏名言底部弹窗
@@ -31,6 +29,8 @@ type Props = {
 };
 
 export default function HistorySheet(props: Props) {
+  const { height } = useWindowDimensions();
+
   // ── 未显示时直接返回 ──
   if (!props.visible) return null;
 
@@ -57,6 +57,7 @@ export default function HistorySheet(props: Props) {
           styles.sheet,
           {
             backgroundColor: props.colors.sheetBg,
+            height: height * 0.7,
             transform: [{ translateY: props.sheetAnim }],
           },
         ]}
@@ -183,7 +184,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    height: SCREEN_HEIGHT * 0.7,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     zIndex: 20,

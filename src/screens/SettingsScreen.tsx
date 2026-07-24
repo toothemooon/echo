@@ -16,6 +16,7 @@ import type {
   ThemeMode,
 } from "../storage/preferences";
 import ArchiveBackground from "../components/common/ArchiveBackground";
+import { REMINDER_TIMES, type ReminderTime } from "../notifications/model";
 
 type Props = {
   colors: typeof COLORS.light;
@@ -27,6 +28,9 @@ type Props = {
   onOpenLanguageSettings: () => void;
   onOpenAnimationSettings: () => void;
   onOpenAccessibility: () => void;
+  onOpenNotifications: () => void;
+  notificationsEnabled: boolean;
+  notificationTime: ReminderTime;
   quoteLanguage: QuoteLanguagePreference;
   quoteAnimation: QuoteAnimation;
   preferenceSummary: string;
@@ -391,6 +395,37 @@ export default function SettingsScreen(props: Props) {
                 size={16}
                 color={props.colors.btnIcon}
               />
+            </View>
+          </Pressable>
+        </View>
+
+        <Text style={[styles.sectionTitle, { color: props.colors.label }]}>
+          NOTIFICATIONS
+        </Text>
+        <View style={[styles.card, { backgroundColor: props.colors.btnBg }]}>
+          <Pressable
+            style={styles.cardRow}
+            onPress={props.onOpenNotifications}
+            accessibilityRole="button"
+            accessibilityLabel="Daily Reminder Settings"
+          >
+            <View style={styles.cardLeft}>
+              <Ionicons
+                name="notifications-outline"
+                size={20}
+                color={props.colors.btnIcon}
+              />
+              <Text style={[styles.cardLabel, { color: props.colors.text }]}>
+                Daily Reminder
+              </Text>
+            </View>
+            <View style={styles.cardRight}>
+              <Text style={[styles.cardValue, { color: props.colors.author }]}>
+                {props.notificationsEnabled
+                  ? REMINDER_TIMES[props.notificationTime].label
+                  : "Off"}
+              </Text>
+              <Ionicons name="chevron-forward" size={16} color={props.colors.btnIcon} />
             </View>
           </Pressable>
         </View>

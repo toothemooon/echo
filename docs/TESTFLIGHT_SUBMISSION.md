@@ -17,14 +17,16 @@
 
 ECHO is an offline-first daily quote experience with personalized categories,
 three visual themes, typography controls, bookmarks, history, and shareable
-quote cards. No account, subscription, advertising, notification permission,
-or payment is required.
+quote cards and one optional daily local reminder. No account, subscription,
+advertising, or payment is required. Notification permission is requested only
+after the user accepts ECHO's in-app explanation or enables reminders in Settings.
 
 ## What to test
 
 Please test first launch, quote navigation, category preferences,
 Light/Dark/Archive themes, font and animation settings, bookmarks, history,
-quote sharing, and persistence after restarting the app. Please report
+quote sharing, daily reminder permission and time selection, and persistence
+after restarting the app. Please report
 incorrect quote attribution, layout issues with long quotes, broken links, or
 crashes.
 
@@ -33,7 +35,9 @@ crashes.
 ECHO does not require an account or demo credentials. All published quote
 content is bundled with the app and can be used offline. Preferences and
 bookmarks are stored locally on the device. The current build contains no ads,
-in-app purchases, subscriptions, notifications, widgets, or paywall. Internet
+in-app purchases, subscriptions, remote push notifications, widgets, or paywall.
+The optional daily reminder is scheduled locally on the device and can be
+disabled at any time in Settings. Internet
 access occurs only when the user explicitly opens the privacy policy, terms,
 email client, or an external sharing destination.
 
@@ -57,6 +61,7 @@ cloud sync, accounts, advertising, or another third-party SDK is added.
 ## Internal testing checklist
 
 - Cold launch and relaunch on a physical iPhone.
+- Daily local reminder at each preset time, including permission denial and disable flows.
 - Light, Dark, and Archive theme rendering.
 - Font, size, animation, and preference persistence.
 - Previous/next quote navigation and author rotation.

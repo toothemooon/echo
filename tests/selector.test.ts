@@ -130,3 +130,41 @@ test("selector only returns quotes from the selected language", () => {
   assert.equal(selected?.language, "ja");
   assert.equal(selected?.id, 3);
 });
+
+test("selector returns null after the current session exhausts its eligible pool", () => {
+  const onlyQuote = {
+    ...quote(1, "author_en", "WISDOM", "TRUTH"),
+    language: "en" as const,
+  };
+  const selected = selectNextQuote([onlyQuote], {
+    preferredCategories: ["WISDOM"],
+    recentQuotes: [onlyQuote],
+    rotation: {
+      ...emptyRotation,
+      shownQuoteIds: [onlyQuote.id],
+      shownAuthorIds: [onlyQuote.author_id],
+    },
+    language: "en",
+    random: () => 0,
+  });
+  assert.equal(selected, null);
+});
+
+test("daily history can be reused after a restart when the session is empty", () => {
+  const onlyQuote = {
+    ...quote(1, "author_en", "WISDOM", "TRUTH"),
+    language: "en" as const,
+  };
+  const selected = selectNextQuote([onlyQuote], {
+    preferredCategories: ["WISDOM"],
+    recentQuotes: [],
+    rotation: {
+      ...emptyRotation,
+      shownQuoteIds: [onlyQuote.id],
+      shownAuthorIds: [onlyQuote.author_id],
+    },
+    language: "en",
+    random: () => 0,
+  });
+  assert.equal(selected?.id, onlyQuote.id);
+});

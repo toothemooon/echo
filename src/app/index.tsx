@@ -1,5 +1,12 @@
 import { useState, useEffect, useRef } from "react";
-import { View, Animated, Dimensions, Alert, Appearance } from "react-native";
+import {
+  View,
+  Animated,
+  Alert,
+  Appearance,
+  AppState,
+  useWindowDimensions,
+} from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { captureRef } from "react-native-view-shot";
 import { formatQuoteShareText } from "../services/shareQuote";
@@ -58,6 +65,7 @@ import ActionBar from "../components/home/ActionBar";
 import HistorySheet from "../components/home/HistorySheet";
 import ShareCard from "../components/home/ShareCard";
 import ShareSheet from "../components/home/ShareSheet";
+import NotificationPrimerSheet from "../components/home/NotificationPrimerSheet";
 
 // 页面组件
 import SettingsScreen from "../screens/SettingsScreen";
@@ -70,10 +78,37 @@ import LanguageSettingsScreen from "../screens/LanguageSettingsScreen";
 import OnboardingScreen from "../screens/OnboardingScreen";
 import QuoteContextScreen from "../screens/QuoteContextScreen";
 import AccessibilityScreen from "../screens/AccessibilityScreen";
+import NotificationSettingsScreen from "../screens/NotificationSettingsScreen";
 import { syncAppIconWithTheme } from "../services/appIcon";
 import { getNextRecommendedQuote } from "../storage/quoteRotation";
-
-const { height: SCREEN_HEIGHT } = Dimensions.get("window");
+import {
+  addDailyReminderResponseListener,
+  cancelDailyReminder,
+  configureNotificationChannel,
+  getNotificationPermissionState,
+  openSystemNotificationSettings,
+  requestNotificationPermission,
+  scheduleDailyReminder,
+  scheduleDevelopmentTestNotification,
+} from "../services/notifications";
+import {
+  getNotificationPreferences,
+  setNotificationPreferences,
+} from "../storage/notificationPreferences";
+import {
+  DEFAULT_NOTIFICATION_PREFERENCES,
+  recordQuoteViewed,
+  shouldShowNotificationPrimer,
+  type NotificationPermissionState,
+  type NotificationPreferences,
+  type ReminderTime,
+} from "../notifications/model";
+import {
+  disableReminder,
+  enableReminder,
+  rescheduleReminder,
+  rescheduleReminderLanguage,
+} from "../notifications/lifecycle";
 
 type Page =
   | "home"
@@ -84,9 +119,11 @@ type Page =
   | "quote-settings"
   | "language-settings"
   | "animation-settings"
-  | "accessibility";
+  | "accessibility"
+  | "notification-settings";
 
 export default function Index() {
+  const { height: screenHeight } = useWindowDimensions();
   const [fontsLoaded] = useFonts({
     CormorantGaramond_400Regular_Italic,
   });
@@ -117,6 +154,13 @@ export default function Index() {
 
   const [initializationReady, setInitializationReady] = useState(false);
   const [highContrast, setHighContrastState] = useState(false);
+  const [notificationPreferences, setNotificationPreferencesState] =
+    useState<NotificationPreferences>(DEFAULT_NOTIFICATION_PREFERENCES);
+  const [notificationPermission, setNotificationPermission] =
+    useState<NotificationPermissionState>("undetermined");
+  const [notificationBusy, setNotificationBusy] = useState(false);
+  const [notificationPrimerVisible, setNotificationPrimerVisible] =
+    useState(false);
 
   // ── Home State ──
   const [quoteHistory, setQuoteHistory] = useState<Quote[]>([]);
@@ -131,7 +175,7 @@ export default function Index() {
   // ── 动画和组件引用 ──
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const slideAnim = useRef(new Animated.Value(0)).current;
-  const sheetAnim = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
+  const sheetAnim = useRef(new Animated.Value(screenHeight)).current;
   const backdropAnim = useRef(new Animated.Value(0)).current;
   const isAnimating = useRef(false);
   const isSelectingQuote = useRef(false);
@@ -152,6 +196,8 @@ export default function Index() {
           savedMood,
           savedOnboardingComplete,
           savedHighContrast,
+          savedNotificationPreferences,
+          savedNotificationPermission,
         ] = await Promise.all([
           getTheme(),
           getPreferredCategories(),
@@ -163,6 +209,8 @@ export default function Index() {
           getMoodPreference(),
           getOnboardingComplete(),
           getHighContrast(),
+          getNotificationPreferences(),
+          getNotificationPermissionState(),
         ]);
 
         const resolvedTheme: ThemeMode =
@@ -187,6 +235,21 @@ export default function Index() {
         setQuoteAnimationState(savedQuoteAnimation);
         setQuoteLanguageState(savedQuoteLanguage);
         setHighContrastState(savedHighContrast);
+        const reconciledNotificationPreferences = {
+          ...savedNotificationPreferences,
+          enabled:
+            savedNotificationPreferences.enabled &&
+            savedNotificationPermission === "authorized",
+        };
+        setNotificationPreferencesState(reconciledNotificationPreferences);
+        setNotificationPermission(savedNotificationPermission);
+        if (
+          reconciledNotificationPreferences.enabled !==
+          savedNotificationPreferences.enabled
+        ) {
+          await setNotificationPreferences(reconciledNotificationPreferences);
+        }
+        await configureNotificationChannel();
 
         const firstQuote = savedOnboardingComplete
           ? await getNextRecommendedQuote(prefs, [], savedQuoteLanguage)
@@ -210,6 +273,46 @@ export default function Index() {
 
     void init();
   }, []);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", (state) => {
+      if (state === "active") {
+        void getNotificationPermissionState()
+          .then((permission) => {
+            setNotificationPermission(permission);
+            if (
+              permission !== "authorized" &&
+              notificationPreferences.enabled
+            ) {
+              const next = {
+                ...notificationPreferences,
+                enabled: false,
+              };
+              setNotificationPreferencesState(next);
+              void setNotificationPreferences(next);
+            }
+          })
+          .catch(() => undefined);
+      }
+    });
+    return () => subscription.remove();
+  }, [notificationPreferences]);
+
+  useEffect(() => {
+    const subscription = addDailyReminderResponseListener(() => {
+      setHistoryVisible(false);
+      setShareVisible(false);
+      setNotificationPrimerVisible(false);
+      setCurrentPage("home");
+    });
+    return () => subscription.remove();
+  }, []);
+
+  useEffect(() => {
+    if (!historyVisible) {
+      sheetAnim.setValue(screenHeight);
+    }
+  }, [historyVisible, screenHeight, sheetAnim]);
 
   // ── 派生值 ──
   const currentQuote = quoteHistory[historyIndex] ?? null;
@@ -279,6 +382,109 @@ export default function Index() {
     changeTheme(theme === "dark" ? "light" : "dark");
   };
 
+  async function persistNotificationPreferences(
+    next: NotificationPreferences,
+  ) {
+    setNotificationPreferencesState(next);
+    await setNotificationPreferences(next);
+  }
+
+  async function enableDailyReminder() {
+    if (notificationBusy) return;
+    setNotificationBusy(true);
+    try {
+      const permission = await requestNotificationPermission();
+      setNotificationPermission(permission);
+      const next = await enableReminder(
+        notificationPreferences,
+        quoteLanguage,
+        async () => permission,
+        scheduleDailyReminder,
+      );
+      await persistNotificationPreferences(next);
+      if (!next.enabled) {
+        setNotificationPrimerVisible(false);
+        Alert.alert(
+          "Notifications are off",
+          "You can enable notifications later from ECHO Settings or iOS Settings.",
+        );
+        return;
+      }
+      setNotificationPrimerVisible(false);
+    } catch {
+      Alert.alert(
+        "Unable to schedule reminder",
+        "Your previous reminder has been left unchanged. Please try again.",
+      );
+    } finally {
+      setNotificationBusy(false);
+    }
+  }
+
+  async function disableDailyReminder() {
+    if (notificationBusy) return;
+    setNotificationBusy(true);
+    try {
+      const next = await disableReminder(
+        notificationPreferences,
+        cancelDailyReminder,
+      );
+      await persistNotificationPreferences(next);
+    } catch {
+      Alert.alert("Unable to turn off reminder", "Please try again.");
+    } finally {
+      setNotificationBusy(false);
+    }
+  }
+
+  async function changeReminderTime(time: ReminderTime) {
+    if (
+      notificationBusy ||
+      !notificationPreferences.enabled ||
+      time === notificationPreferences.time
+    ) {
+      return;
+    }
+    setNotificationBusy(true);
+    try {
+      const next = await rescheduleReminder(
+        notificationPreferences,
+        time,
+        quoteLanguage,
+        scheduleDailyReminder,
+      );
+      await persistNotificationPreferences(next);
+    } catch {
+      Alert.alert(
+        "Unable to change reminder",
+        "The previous reminder time is still active.",
+      );
+    } finally {
+      setNotificationBusy(false);
+    }
+  }
+
+  async function dismissNotificationPrimer() {
+    const next = { ...notificationPreferences, primerShown: true };
+    setNotificationPrimerVisible(false);
+    await persistNotificationPreferences(next);
+  }
+
+  async function recordNotificationEngagement() {
+    if (
+      notificationPreferences.enabled ||
+      notificationPreferences.primerShown ||
+      notificationPreferences.quotesViewed >= 3
+    ) {
+      return;
+    }
+    const next = recordQuoteViewed(notificationPreferences);
+    await persistNotificationPreferences(next);
+    if (shouldShowNotificationPrimer(next, onboardingComplete)) {
+      setNotificationPrimerVisible(true);
+    }
+  }
+
   // ── 字体 ──
   const changeQuoteFont = (font: QuoteFont) => {
     setQuoteFontState(font);
@@ -326,6 +532,20 @@ export default function Index() {
       if (firstMatchingQuote) {
         setQuoteHistory([firstMatchingQuote]);
         setHistoryIndex(0);
+      }
+      if (notificationPreferences.enabled) {
+        try {
+          const next = await rescheduleReminderLanguage(
+            notificationPreferences,
+            nextLanguage,
+            scheduleDailyReminder,
+          );
+          await persistNotificationPreferences(next);
+        } catch {
+          if (__DEV__) {
+            console.warn("Failed to update reminder language.");
+          }
+        }
       }
     } catch {
       if (__DEV__) {
@@ -500,6 +720,7 @@ export default function Index() {
       runQuoteTransition("right", () => {
         setHistoryIndex((previous) => previous + 1);
       });
+      void recordNotificationEngagement();
 
       return;
     }
@@ -522,6 +743,7 @@ export default function Index() {
 
       setHistoryIndex((previous) => previous + 1);
     });
+    void recordNotificationEngagement();
   };
 
   // ── 上一条名言 ──
@@ -558,7 +780,7 @@ export default function Index() {
   const closeHistory = () => {
     Animated.parallel([
       Animated.spring(sheetAnim, {
-        toValue: SCREEN_HEIGHT,
+        toValue: screenHeight,
         useNativeDriver: true,
         damping: 18,
         stiffness: 120,
@@ -679,6 +901,38 @@ export default function Index() {
     );
   }
 
+  if (currentPage === "notification-settings") {
+    return (
+      <NotificationSettingsScreen
+        colors={colors}
+        theme={theme}
+        enabled={notificationPreferences.enabled}
+        time={notificationPreferences.time}
+        permission={notificationPermission}
+        busy={notificationBusy}
+        onToggle={(enabled) => {
+          void (enabled ? enableDailyReminder() : disableDailyReminder());
+        }}
+        onChangeTime={(time) => {
+          void changeReminderTime(time);
+        }}
+        onOpenSystemSettings={() => {
+          void openSystemNotificationSettings();
+        }}
+        onTestNotification={() => {
+          void scheduleDevelopmentTestNotification()
+            .then(() => {
+              Alert.alert("Test scheduled", "A notification will appear in 60 seconds.");
+            })
+            .catch(() => {
+              Alert.alert("Unable to schedule test", "Check notification permission.");
+            });
+        }}
+        onBack={() => setCurrentPage("settings")}
+      />
+    );
+  }
+
   // ── Settings 页面 ──
   if (currentPage === "settings") {
     return (
@@ -692,6 +946,9 @@ export default function Index() {
         onOpenLanguageSettings={() => setCurrentPage("language-settings")}
         onOpenAnimationSettings={() => setCurrentPage("animation-settings")}
         onOpenAccessibility={() => setCurrentPage("accessibility")}
+        onOpenNotifications={() => setCurrentPage("notification-settings")}
+        notificationsEnabled={notificationPreferences.enabled}
+        notificationTime={notificationPreferences.time}
         quoteLanguage={quoteLanguage}
         quoteAnimation={quoteAnimation}
         preferenceSummary={moodSummary(mood)}
@@ -758,6 +1015,17 @@ export default function Index() {
         colors={colors}
         onClose={() => setShareVisible(false)}
         onShareAsImage={shareAsImage}
+      />
+
+      <NotificationPrimerSheet
+        visible={notificationPrimerVisible}
+        colors={colors}
+        onEnable={() => {
+          void enableDailyReminder();
+        }}
+        onNotNow={() => {
+          void dismissNotificationPrimer();
+        }}
       />
 
       {/* 用于生成分享截图，不在屏幕中显示 */}

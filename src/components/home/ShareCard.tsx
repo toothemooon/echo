@@ -1,9 +1,7 @@
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { View, Text, StyleSheet, useWindowDimensions } from "react-native";
 import { COLORS } from "../../constants/colors";
 import type { Quote } from "../../data/quotes";
 
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
-const CARD_WIDTH = SCREEN_WIDTH - 64;
 const CARD_HEIGHT = 400;
 
 // ══════════════════════════════════════════════
@@ -23,6 +21,8 @@ type Props = {
  * Not rendered in the main UI — used offscreen for screenshot generation.
  */
 export default function ShareCard(props: Props) {
+  const { width } = useWindowDimensions();
+  const cardWidth = Math.max(240, width - 64);
   const textLength = props.quote.text.length;
   const quoteFontSize =
     textLength > 260 ? 15 : textLength > 190 ? 17 : textLength > 120 ? 19 : 22;
@@ -39,7 +39,7 @@ export default function ShareCard(props: Props) {
         styles.card,
         {
           backgroundColor: props.colors.background,
-          width: CARD_WIDTH,
+          width: cardWidth,
           height: CARD_HEIGHT,
         },
       ]}
