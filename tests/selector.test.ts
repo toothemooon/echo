@@ -6,6 +6,7 @@ import {
   selectNextQuote,
   type RotationState,
 } from "../src/recommendation/selector";
+import { recordExposure } from "../src/recommendation/exposure";
 
 function quote(
   id: number,
@@ -46,6 +47,7 @@ test("selector excludes the previous five authors", () => {
       preferredCategories: ["WISDOM"],
       recentQuotes: recent,
       rotation: emptyRotation,
+      exposure: {},
       random: () => 0,
     },
   );
@@ -67,6 +69,7 @@ test("selector favors the least-used category and subcategory", () => {
         categoryCounts: { WISDOM: 2, LOVE: 0 },
         subcategoryCounts: { "WISDOM/TRUTH": 2, "WISDOM/PERSPECTIVE": 0 },
       },
+      exposure: {},
       random: () => 0,
     },
   );
@@ -100,6 +103,7 @@ test("selector balances three languages inside an equally eligible pool", () => 
       ...emptyRotation,
       languageCounts: { en: 3, "zh-Hans": 2, ja: 0 },
     },
+    exposure: {},
     random: () => 0,
   });
   assert.equal(selected?.language, "ja");
@@ -123,6 +127,7 @@ test("selector only returns quotes from the selected language", () => {
     preferredCategories: ["WISDOM"],
     recentQuotes: [],
     rotation: emptyRotation,
+    exposure: {},
     language: "ja",
     random: () => 0,
   });
@@ -144,6 +149,7 @@ test("selector returns null after the current session exhausts its eligible pool
       shownQuoteIds: [onlyQuote.id],
       shownAuthorIds: [onlyQuote.author_id],
     },
+    exposure: {},
     language: "en",
     random: () => 0,
   });
@@ -163,8 +169,55 @@ test("daily history can be reused after a restart when the session is empty", ()
       shownQuoteIds: [onlyQuote.id],
       shownAuthorIds: [onlyQuote.author_id],
     },
+    exposure: {},
     language: "en",
     random: () => 0,
   });
   assert.equal(selected?.id, onlyQuote.id);
+});
+
+test("selector serves unread quotes before ones already read", () => {
+  const read = { ...quote(1, "a", "WISDOM", "TRUTH"), language: "en" as const };
+  const unread = {
+    ...quote(3, "c", "WISDOM", "TRUTH"),
+    language: "en" as const,
+  };
+
+  const selected = selectNextQuote([read, unread], {
+    preferredCategories: ["WISDOM"],
+    recentQuotes: [],
+    rotation: emptyRotation,
+    exposure: { "number:1": 1 },
+    language: "en",
+    random: () => 0,
+  });
+
+  assert.equal(selected?.id, unread.id);
+});
+
+test("the pool reopens for a second sweep once every quote has been read", () => {
+  const first = { ...quote(1, "a", "WISDOM", "TRUTH"), language: "en" as const };
+  const second = {
+    ...quote(3, "c", "WISDOM", "TRUTH"),
+    language: "en" as const,
+  };
+
+  const selected = selectNextQuote([first, second], {
+    preferredCategories: ["WISDOM"],
+    recentQuotes: [],
+    rotation: emptyRotation,
+    exposure: { "number:1": 1, "number:3": 1 },
+    language: "en",
+    random: () => 0,
+  });
+
+  assert.notEqual(selected, null);
+});
+
+test("recordExposure returns a new object and leaves its input untouched", () => {
+  const before = { "number:1": 2 };
+  const after = recordExposure(before, quote(1, "a", "WISDOM", "TRUTH"));
+
+  assert.deepEqual(before, { "number:1": 2 });
+  assert.equal(after["number:1"], 3);
 });

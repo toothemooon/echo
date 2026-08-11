@@ -1,5 +1,6 @@
 import { CATEGORIES, type Category } from "../constants/categories";
 import type { Quote, QuoteId, QuoteLanguage } from "../data/quotes";
+import { exposureOf, type ExposureCounts } from "./exposure";
 
 export type RotationState = {
   date: string;
@@ -14,6 +15,12 @@ export type SelectionOptions = {
   preferredCategories: Category[];
   recentQuotes: Quote[];
   rotation: RotationState;
+  /**
+   * Long-lived, cross-day read counts. Unlike `rotation`, this survives local
+   * midnight, and it is what lets a reader work through their whole pool
+   * instead of re-rolling the same subset every day.
+   */
+  exposure: ExposureCounts;
   language?: QuoteLanguage;
   random?: () => number;
 };
@@ -82,6 +89,21 @@ function chooseFromPool(
   return null;
 }
 
+function lowestExposurePool(
+  pool: readonly Quote[],
+  exposure: ExposureCounts,
+): Quote[] {
+  let lowest = Infinity;
+  for (const quote of pool) {
+    const count = exposureOf(exposure, quote);
+    if (count < lowest) lowest = count;
+    if (lowest === 0) break;
+  }
+  if (lowest === Infinity) return [];
+
+  return pool.filter((quote) => exposureOf(exposure, quote) === lowest);
+}
+
 export function selectNextQuote(
   quotes: readonly Quote[],
   options: SelectionOptions,
@@ -103,7 +125,18 @@ export function selectNextQuote(
       (!options.language || quote.language === options.language),
   );
 
-  const strictPool = preferredPool.filter(
+  // Serve the least-read quotes first so the pool is swept end to end. Once
+  // every quote has been read once the minimum rises to 1 and the whole pool
+  // reopens, which is how "reset only after finishing the pool" falls out
+  // without any explicit epoch bookkeeping. Taking the minimum over the
+  // eligible pool means a mood change re-bases the sweep automatically.
+  //
+  // Alternative if small categories ever feel absent for too long: compute
+  // the minimum per category instead of pool-wide. That holds the category
+  // mix steady but drops one-year coverage from ~100% to ~83%.
+  const sweepPool = lowestExposurePool(preferredPool, options.exposure);
+
+  const strictPool = sweepPool.filter(
     (quote) =>
       !recentQuoteIds.has(quote.id) &&
       !dailyQuoteIds.has(quote.id) &&
@@ -116,7 +149,7 @@ export function selectNextQuote(
   // A narrow preference can exhaust all authors in one day. Relax the
   // day-wide author rule, while still protecting the last five authors and
   // every quote already shown in the current session/day.
-  const relaxedDailyAuthors = preferredPool.filter(
+  const relaxedDailyAuthors = sweepPool.filter(
     (quote) =>
       !recentQuoteIds.has(quote.id) &&
       !dailyQuoteIds.has(quote.id) &&
@@ -126,7 +159,9 @@ export function selectNextQuote(
   if (relaxedChoice) return relaxedChoice;
 
   // Final fallback keeps immediate quote and author repetition out, even
-  // after a very long session.
+  // after a very long session. It deliberately searches the full preferred
+  // pool rather than the sweep, so a session that has already covered the
+  // least-read tier still gets a quote instead of a blank screen.
   return chooseFromPool(
     preferredPool.filter(
       (quote) =>

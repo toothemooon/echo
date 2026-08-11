@@ -10,8 +10,25 @@ import {
   selectNextQuote,
   type RotationState,
 } from "../recommendation/selector";
+import { recordExposure } from "../recommendation/exposure";
+import { getExposure, saveExposure } from "./quoteExposure";
 
 const ROTATION_KEY = "@echo/quote_rotation_v1";
+
+/**
+ * Serializes the read-select-write cycle. Rotation and exposure are both
+ * read-modify-write, and the UI's `isSelectingQuote` ref only guards the
+ * "next" button — it does not cover a mood or language change overlapping a
+ * cold-start selection. A dropped write there would re-serve a quote the
+ * reader has already seen.
+ */
+let mutationQueue: Promise<unknown> = Promise.resolve();
+
+function enqueue<T>(operation: () => Promise<T>): Promise<T> {
+  const result = mutationQueue.catch(() => undefined).then(operation);
+  mutationQueue = result.catch(() => undefined);
+  return result;
+}
 
 function localDate(): string {
   const date = new Date();
@@ -62,22 +79,31 @@ export async function getNextRecommendedQuote(
   recentQuotes: Quote[],
   language: QuoteLanguage,
 ): Promise<Quote | null> {
-  const rotation = await getRotationState();
-  const quote = selectNextQuote(BUILT_IN_QUOTES, {
-    preferredCategories,
-    recentQuotes,
-    rotation,
-    language,
-  });
-  if (!quote) return null;
+  return enqueue(async () => {
+    const [rotation, exposure] = await Promise.all([
+      getRotationState(),
+      getExposure(language),
+    ]);
+    const quote = selectNextQuote(BUILT_IN_QUOTES, {
+      preferredCategories,
+      recentQuotes,
+      rotation,
+      exposure,
+      language,
+    });
+    if (!quote) return null;
 
-  try {
-    await AsyncStorage.setItem(
-      ROTATION_KEY,
-      JSON.stringify(recordSelection(rotation, quote)),
-    );
-  } catch {
-    // Recommendation still works in memory when persistence is unavailable.
-  }
-  return quote;
+    try {
+      await Promise.all([
+        AsyncStorage.setItem(
+          ROTATION_KEY,
+          JSON.stringify(recordSelection(rotation, quote)),
+        ),
+        saveExposure(language, recordExposure(exposure, quote)),
+      ]);
+    } catch {
+      // Recommendation still works in memory when persistence is unavailable.
+    }
+    return quote;
+  });
 }

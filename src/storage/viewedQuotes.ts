@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { isQuote, type Quote, type QuoteId } from "../data/quotes";
+import { isQuote, type Quote } from "../data/quotes";
+import { quoteKey } from "../recommendation/exposure";
 
 const VIEWED_QUOTES_KEY = "@echo/viewed_quotes_v1";
 const MAX_VIEWED_QUOTES = 100;
@@ -15,10 +16,6 @@ function isIsoTimestamp(value: unknown): value is string {
   if (typeof value !== "string") return false;
   const timestamp = Date.parse(value);
   return Number.isFinite(timestamp) && new Date(timestamp).toISOString() === value;
-}
-
-function quoteKey(id: QuoteId): string {
-  return `${typeof id}:${String(id)}`;
 }
 
 function isViewedQuoteRecord(value: unknown): value is ViewedQuoteRecord {
