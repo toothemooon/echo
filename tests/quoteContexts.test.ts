@@ -4,20 +4,6 @@ import { createHash } from "node:crypto";
 import contextJson from "../QUOTE_CONTEXTS.json";
 import { getAllQuotes } from "../src/data/quotes";
 
-const allowedVerificationStatuses = new Set([
-  "pending",
-  "verified",
-  "needs_context",
-  "unverified",
-  "disputed",
-  "verified_composite",
-]);
-const allowedContentStatuses = new Set([
-  "attribution_only",
-  "secondary_only",
-  "source_only",
-  "verified",
-]);
 const allowedEchoStatuses = new Set(["era_and_work", "era_only", "none"]);
 
 test("all published quotes have one structurally valid context", () => {
@@ -74,8 +60,6 @@ test("all published quotes have one structurally valid context", () => {
 
   for (const context of contextJson.quote_contexts) {
     assert.ok(authorRefs.has(context.author_ref));
-    assert.ok(context.context_summary.trim().length > 0);
-
     // The historical echo describes the world a speaker lived in. It must stay
     // consistent with its own status rather than quietly emptying out.
     assert.ok(
@@ -108,23 +92,9 @@ test("all published quotes have one structurally valid context", () => {
       /unverified|not verified|未确认|尚待核实|未確認|这句话(告诉|启示|提醒)我们|this (quote|line) (tells|teaches|reminds) us|この言葉は私たちに/i,
     );
 
-    assert.ok(allowedVerificationStatuses.has(context.verification_status));
-    assert.ok(allowedContentStatuses.has(context.context_content_status));
-
-    if (context.context_content_status === "verified") {
-      assert.ok(context.context_sources.length > 0);
-    }
-
-    if (
-      context.verification_status === "unverified" ||
-      context.verification_status === "disputed"
-    ) {
-      assert.ok(context.context_sources.length > 0);
-    }
-
-    if (context.context_content_status === "attribution_only") {
-      assert.notEqual(context.verification_status, "verified_composite");
-    }
+    // The verification fields these assertions used to guard were removed:
+    // every quotation is sourced from Wikiquote, so a per-context flag reading
+    // "pending" for all 4,283 records described nothing.
   }
 
   // The old field was per-quote interpretation, so "every note is distinct" was

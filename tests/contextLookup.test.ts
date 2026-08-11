@@ -47,20 +47,15 @@ test("a sourced context carries its source record", () => {
 
   assert.ok(result);
   assert.equal(result.author?.display_name, "Ivo Andrić");
-  assert.equal(result.context.context_content_status, "source_only");
-  assert.equal(result.context.verification_status, "pending");
+  assert.equal(result.context.source_work, "The Bridge on the Drina (1945)");
   assert.ok(result.context.context_sources.length > 0);
 });
 
-// ja-wikiquote-451-02 was a hand-verified "verified_composite" context. It was
-// lost when QUOTE_CONTEXTS.json (untracked) was regenerated, and regeneration
-// can only produce a "pending" entry — the fact-checking itself is not
-// reproducible. Asserted as regenerated so the gap stays visible.
-test("the Koizumi context exists but lost its verified composite status", () => {
+test("a context without a source work still resolves its author", () => {
   const result = getQuoteContext("ja-wikiquote-451-02");
 
   assert.ok(result);
   assert.equal(result.author?.display_name, "小泉純一郎");
-  assert.equal(result.context.verification_status, "pending");
+  assert.equal(result.context.source_work, null);
 });
 

@@ -10,7 +10,6 @@ import { StatusBar } from "expo-status-bar";
 import ArchiveBackground from "../components/common/ArchiveBackground";
 import { COLORS } from "../constants/colors";
 import { getAuthorContext, getQuoteContext } from "../data/quoteContexts";
-import type { AuthorContext, ContextSource } from "../data/quoteContexts";
 import type { Quote } from "../data/quotes";
 import type { ThemeMode } from "../storage/preferences";
 
@@ -118,20 +117,12 @@ export default function QuoteContextScreen(props: Props) {
             </View>
 
             {author?.biography ? (
-              <Section
-                label={copy.life}
-                colors={props.colors}
-                credit={biographyCredit(author)}
-              >
+              <Section label={copy.life} colors={props.colors}>
                 {author.biography}
               </Section>
             ) : null}
             {result?.context.historical_echo ? (
-              <Section
-                label={copy.echo}
-                colors={props.colors}
-                credit={sourceCredit(result.context.historical_echo_sources)}
-              >
+              <Section label={copy.echo} colors={props.colors}>
                 {result.context.historical_echo}
               </Section>
             ) : null}
@@ -151,28 +142,14 @@ export default function QuoteContextScreen(props: Props) {
   );
 }
 
-// Text taken from Wikipedia is CC BY-SA, which requires every article it came
-// from to be credited wherever the text is shown. The historical echo can draw
-// on two: the person and the work.
-function sourceCredit(sources: ContextSource[]): string | undefined {
-  const titles = [
-    ...new Set(sources.map((source) => source.title).filter(Boolean)),
-  ];
-  if (!titles.length) {
-    return undefined;
-  }
-  return `${titles.join(" · ")} — Wikipedia (CC BY-SA 4.0)`;
-}
-
-function biographyCredit(author: AuthorContext): string | undefined {
-  return sourceCredit(author.biography_sources);
-}
-
+// Attribution for the Wikipedia-derived text lives on the Content Sources
+// screen, not here: repeating it under every section crowded the page. The
+// per-record article URLs stay in the data (biography_sources /
+// historical_echo_sources) so provenance is still traceable.
 function Section(props: {
   label: string;
   colors: typeof COLORS.light;
   children: string;
-  credit?: string;
 }) {
   return (
     <View style={styles.section}>
@@ -182,11 +159,6 @@ function Section(props: {
       <Text style={[styles.body, { color: props.colors.text }]}>
         {props.children}
       </Text>
-      {props.credit ? (
-        <Text style={[styles.credit, { color: props.colors.label }]}>
-          {props.credit}
-        </Text>
-      ) : null}
     </View>
   );
 }
@@ -265,11 +237,6 @@ const styles = StyleSheet.create({
   body: {
     fontSize: 15,
     lineHeight: 25,
-  },
-  credit: {
-    marginTop: 8,
-    fontSize: 11,
-    lineHeight: 16,
   },
   empty: {
     marginTop: 40,

@@ -116,9 +116,67 @@ function trimToLength(text, language) {
   return output;
 }
 
+// Wikipedia leads open by restating the article title, and the profile screen
+// already shows the name as its heading plus the role line beneath it. Drop the
+// opening name — and the naming/pronunciation parenthetical that trails it —
+// so the section starts on the first thing the reader does not already know.
+function stripLeadingName(paragraph, author) {
+  const cached = biographyCache[author.author_ref];
+  const names = [
+    author.display_name,
+    cached?.title,
+    ...Object.values(cached?.names ?? {}),
+  ]
+    .filter(Boolean)
+    .map((value) => value.trim())
+    .filter(Boolean)
+    // Longest first so "伊曼努尔·康德" wins over a bare surname.
+    .sort((left, right) => right.length - left.length);
+
+  for (const name of names) {
+    // Japanese articles space out personal names ("小泉 純一郎") while the
+    // catalog stores them closed up, so allow whitespace between characters.
+    const pattern = new RegExp(
+      `^${[...name]
+        .map((character) => character.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+        .join("\\s*")}`,
+    );
+    const matched = pattern.exec(paragraph);
+    if (!matched) continue;
+
+    let rest = paragraph.slice(matched[0].length).trimStart();
+    // A parenthetical straight after the name holds alternate spellings, the
+    // original-language form and dates: all already covered by the role line.
+    rest = rest.replace(/^[（(][^）)]*[）)]/, "").trimStart();
+    rest = rest.replace(/^[，,、:：;；—–-]+\s*/, "").trimStart();
+    // Chinese and Japanese leads often continue "…は、" or "…，是".
+    rest = rest.replace(/^(?:是|為|为|は|が)\s*/, "").trimStart();
+    // English leads read "<name> was an English playwright". Dropping only the
+    // name would leave "Was an English playwright"; drop the verb too so the
+    // section opens as a noun phrase.
+    rest = rest.replace(/^(?:was|is|were|are)\s+/i, "");
+    // Stripping "は" can expose the comma that followed it.
+    rest = rest.replace(/^[，,、:：;；]+\s*/, "").trimStart();
+
+    // Too little left to be worth a section of its own — the role line already
+    // carries it. Signal "nothing to say" rather than falling back to the
+    // paragraph, which would put the name back at the top.
+    return rest.length >= 12
+      ? rest.charAt(0).toUpperCase() + rest.slice(1)
+      : null;
+  }
+  return paragraph;
+}
+
+// A common name resolves to a disambiguation page rather than a person, and
+// its lead ("Drake may refer to:") is not a biography of anyone.
+const DISAMBIGUATION =
+  /(?:may|can) refer to|is the name of|may also refer to|的名字可以指|可以指[：:]|是下列人物|以下の人物|曖昧さ回避|につい(?:て|ての)一覧/i;
+
 function wikipediaBiography(author) {
   const cached = biographyCache[author.author_ref];
-  if (!cached) return null;
+  if (!cached?.extract) return null;
+  if (DISAMBIGUATION.test(cached.extract.slice(0, 120))) return null;
 
   // The lead's first paragraph is the definitional one; later paragraphs drift
   // into career detail that does not belong on a quote card.
@@ -128,7 +186,12 @@ function wikipediaBiography(author) {
     .filter(Boolean)[0];
   if (!paragraph) return null;
 
-  const biography = trimToLength(paragraph, author.language);
+  const stripped = stripLeadingName(paragraph, author);
+  // Nothing survived beyond the name: whatever the article says is already in
+  // the role line above, so leave the section out rather than repeat it.
+  if (!stripped) return null;
+
+  const biography = trimToLength(stripped, author.language);
   if (!biography) return null;
 
   return {
@@ -218,13 +281,28 @@ function labelFor(entry, language) {
   return entry.en ?? null;
 }
 
-function labelList(entries, language, limit = 2) {
-  const labels = (entries ?? [])
-    .map((entry) => labelFor(entry, language))
-    .filter(Boolean)
-    .slice(0, limit);
+const HAS_CJK = /[぀-ヿ㐀-䶿一-鿿]/;
+
+// `requireCjk` is for descriptive terms — occupation, position, movement,
+// field. Some Wikidata items hold English text in the zh/ja label field, which
+// surfaces as "曾任Member of the 1689-90 Parliament". Titles of works are
+// exempt: those are routinely cited in their original language.
+function labelList(entries, language, limit = 2, requireCjk = false) {
+  const labels = [
+    ...new Set(
+      (entries ?? [])
+        .map((entry) => labelFor(entry, language))
+        .filter(Boolean)
+        .filter(
+          (label) =>
+            !requireCjk || language === "en" || HAS_CJK.test(label),
+        ),
+    ),
+  ].slice(0, limit);
   if (!labels.length) return null;
-  return language === "en" ? labels.join(" and ") : labels.join("、");
+  if (language !== "en") return labels.join("、");
+  if (labels.length === 1) return labels[0];
+  return `${labels.slice(0, -1).join(", ")} and ${labels.at(-1)}`;
 }
 
 // "statelessness" and similar are legal states, not places a reader can picture.
@@ -273,6 +351,8 @@ function workSentence(sourceWork, language, author) {
   if (!title) return null;
   const cached = workCache[`${language}:${title}`];
   if (!cached) return null;
+  // A work title can land on a disambiguation page just as a personal name can.
+  if (DISAMBIGUATION.test(cached.extract.slice(0, 120))) return null;
   if (!mentionsAuthor(cached.extract, author)) return null;
 
   const paragraph = cleanExtract(cached.extract)
@@ -309,45 +389,70 @@ function historicalEcho(quote, author) {
     const era = eraPhrase(facts, language);
     const place = placePhrase(facts, language);
     const years = lifeYears(facts, language);
-    const occupation = labelList(facts.occupation, language);
-    let movement = labelList(facts.movement ?? facts.era, language);
+    const occupation = labelList(facts.occupation, language, 2, true);
+    let movement = labelList(facts.movement ?? facts.era, language, 2, true);
     // Wikidata often files a period ("19th-century philosophy") as a movement,
     // which just repeats the era sentence.
     if (movement && era && movement.replace(/\s/g, "").includes(era.replace(/\s/g, ""))) {
       movement = null;
     }
-    const name = author.display_name;
+    // The author's name is the heading of the screen this text sits under, so
+    // repeating it here just says the same thing three times.
+    const works = labelList(facts.notableWork, language, 3);
+    const post = labelList(facts.position, language, 1, true);
+    const employer = labelList(facts.employer, language, 1, true);
+    const award = labelList(facts.award, language, 1, true);
+    const field = labelList(facts.fieldOfWork, language, 2, true);
 
     // Sentence one: era, calling, and birthplace. P19 is where someone was
     // *born*, not where they lived, so the wording must not overclaim. Each
     // element is optional and the sentence contracts around what is missing.
     if (language === "zh-Hans") {
       const who = [era, occupation].filter(Boolean).join("的");
-      if (who) {
+      if (who || place) {
         sentences.push(
-          `${name}${years ? `（${years}）` : ""}是${who}${place ? `，生于${place}` : ""}。`,
+          who
+            ? `${who}${place ? `，生于${place}` : ""}。`
+            : `生于${place}。`,
         );
       }
+      if (works) sentences.push(`代表作有《${works.split("、").join("》《")}》。`);
+      if (post) sentences.push(`曾任${post}。`);
+      else if (employer) sentences.push(`曾任职于${employer}。`);
+      if (award) sentences.push(`获${award}。`);
       if (movement) sentences.push(`其思想归入${movement}。`);
+      else if (field) sentences.push(`研究领域包括${field}。`);
     } else if (language === "ja") {
       const who = [era, occupation].filter(Boolean).join("の");
-      if (who) {
+      if (who || place) {
         sentences.push(
-          `${name}${years ? `（${years}）` : ""}は${who}${place ? `。${place}の生まれ` : ""}。`,
+          who ? `${who}${place ? `。${place}の生まれ` : ""}。` : `${place}の生まれ。`,
         );
       }
+      if (works) sentences.push(`代表作に『${works.split("、").join("』『")}』がある。`);
+      if (post) sentences.push(`${post}を務めた。`);
+      else if (employer) sentences.push(`${employer}に在職した。`);
+      if (award) sentences.push(`${award}を受けた。`);
       if (movement) sentences.push(`その思想は${movement}に位置づけられる。`);
+      else if (field) sentences.push(`研究領域は${field}。`);
     } else {
       const who = [era, occupation].filter(Boolean).join(" ");
-      if (who) {
-        const article = /^[aeiou]/i.test(who) ? "an" : "a";
-        // Movement folds into this sentence: a separate clause would have to
-        // name the person again or guess a pronoun.
+      if (who || place) {
+        const article = /^[aeiou]/i.test(who) ? "An" : "A";
+        // Movement folds in here: a separate clause would have to name the
+        // person again or guess a pronoun.
         const within = movement ? `, associated with ${movement}` : "";
         sentences.push(
-          `${name}${years ? ` (${years})` : ""} was ${article} ${who}${place ? `, born in ${place}` : ""}${within}.`,
+          who
+            ? `${article} ${who}${place ? `, born in ${place}` : ""}${within}.`
+            : `Born in ${place}.`,
         );
       }
+      if (works) sentences.push(`Best known for ${works}.`);
+      if (post) sentences.push(`Held the office of ${post}.`);
+      else if (employer) sentences.push(`Worked at ${employer}.`);
+      if (award) sentences.push(`Received the ${award}.`);
+      if (!movement && field) sentences.push(`Worked in ${field}.`);
     }
   }
 
@@ -438,29 +543,6 @@ for (const author of contextDocument.authors) {
   delete author.editorial_note_kind;
 }
 
-// Factual summary shown as background. It states only what the catalog records
-// and what is still unverified — it never asserts an occasion or intent.
-const CONTEXT_SUMMARIES = {
-  en: {
-    withSource: (author, work) =>
-      `The current catalog attributes this quotation to ${author} and records its source as ${work}. The available evidence does not yet identify the exact chapter, date, audience, or surrounding event. The work can therefore be presented as known background, but the quotation's immediate occasion and single intended purpose remain unverified.`,
-    withoutSource: (author) =>
-      `The current catalog attributes this quotation to ${author}, but no original work, date, occasion, or audience has yet been verified. Only the attribution record is currently available; the historical setting, immediate occasion, and intended purpose require confirmation from reliable primary or scholarly sources.`,
-  },
-  "zh-Hans": {
-    withSource: (author, work) =>
-      `当前目录将这句话归于${author}，并记录其出处为「${work}」。现有证据尚未确认具体的篇章、时间、场合与听者。这部作品可作为已知背景呈现，但这句话当时的具体情境与单一意图仍待考证。`,
-    withoutSource: (author) =>
-      `当前目录将这句话归于${author}，但尚未考证其原始出处、时间、场合与听者。目前可确认的只有归属记录；历史背景、当时情境与具体意图，仍需可靠的原始文献或研究成果加以确认。`,
-  },
-  ja: {
-    withSource: (author, work) =>
-      `現在のカタログはこの言葉を${author}に帰し、出典を「${work}」と記録している。ただし具体的な章、日付、聞き手、周辺の出来事を特定するだけの証拠はまだない。作品は既知の背景として示せるが、この言葉が語られた状況と意図は未検証のままである。`,
-    withoutSource: (author) =>
-      `現在のカタログはこの言葉を${author}に帰しているが、原典、日付、場、聞き手はいずれも未検証である。現時点で確認できるのは帰属の記録のみであり、歴史的背景、語られた状況、意図については信頼できる一次資料または研究による確認が必要である。`,
-  },
-};
-
 const authorsByRef = new Map(
   contextDocument.authors.map((author) => [author.author_ref, author]),
 );
@@ -474,7 +556,6 @@ function buildContext(quote) {
   const author = authorsByRef.get(authorRef);
   if (!author) throw new Error(`Missing author record for ${authorRef}`);
   const sourceWork = quote.source ?? null;
-  const summaries = CONTEXT_SUMMARIES[quote.language];
 
   return {
     quote_id: quote.id,
@@ -482,14 +563,7 @@ function buildContext(quote) {
     author_ref: authorRef,
     text_fingerprint: fingerprint(quote.text),
     source_work: sourceWork,
-    context_summary: sourceWork
-      ? summaries.withSource(author.display_name, sourceWork)
-      : summaries.withoutSource(author.display_name),
-    context_type: sourceWork ? "work_identified_context_pending" : "source_unknown",
     context_sources: [],
-    verification_status: "pending",
-    editorial_note: "",
-    context_content_status: sourceWork ? "source_only" : "attribution_only",
   };
 }
 
@@ -531,6 +605,17 @@ for (const context of contextDocument.quote_contexts) {
   context.historical_echo = echo;
   context.historical_echo_sources = sources;
   context.historical_echo_status = status;
+
+  // Every quotation is sourced from Wikiquote, so a per-context verification
+  // flag that reads "pending" for all 4,283 records carried no information.
+  // These three fields existed only to express that flag: context_type and
+  // context_content_status restate whether source_work is set, and
+  // context_summary was 829 KB of prose saying the occasion was unconfirmed.
+  // context_sources stays — it holds real per-record provenance.
+  delete context.verification_status;
+  delete context.context_type;
+  delete context.context_content_status;
+  delete context.context_summary;
   delete context.editorial_note;
   delete context.editorial_note_kind;
 }

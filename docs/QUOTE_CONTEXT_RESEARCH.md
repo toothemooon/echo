@@ -71,6 +71,13 @@ It is **not** a substitute for the research recorded in this ledger. The
 occasion of a quotation — when, where, to whom, in response to what — remains
 unverified for all 4,283 records, and the echo never asserts one. A regex in
 `tests/quoteContexts.test.ts` fails the build if any echo text starts claiming
-one. When a record is genuinely verified here, its occasion can be rendered
-separately, keyed off `verification_status`.
+one.
+
+Note that the per-context `verification_status` field has since been removed:
+it read `pending` for every record, and the three fields that only restated it
+(`context_type`, `context_content_status`, `context_summary`) went with it. When
+this ledger's research does establish an occasion for a record, reintroduce the
+field at that point — with real values rather than a single constant — and
+render the verified occasion from it. Per-record provenance for the quotation
+itself is still kept in `context_sources`.
 

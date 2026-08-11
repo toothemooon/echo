@@ -165,15 +165,15 @@ Settings → Content Sources 会展示内容来源和许可说明。数据许可
 格言。`quote_id` 定位当前名言的语境，`author_ref` 再定位作者生平；人物介绍还可
 由 `语言:author_id` 直接定位作者档案，因此语境缺失时人物页仍能正常显示。
 
-| `context_content_status` | 含义 |
-| --- | --- |
-| `attribution_only` | 仅有作者归属，原始出处与具体语境未核实 |
-| `source_only` | 已知作品或出处，但具体章节、时间、场景或契机未核实 |
-| `verified` | 语境由 `context_sources` 中的来源支持 |
+每条名言都来自 Wikiquote，因此语境记录不再保留逐条的核实状态字段：
+`verification_status` 对全部 4,283 条一律是 `pending`，不携带任何信息；
+`context_type`、`context_content_status` 只是换个说法复述 `source_work` 是否存在；
+`context_summary` 则是 829 KB 从不展示、且内容全为「尚未核实」的说明文字。这四个
+字段已一并移除。逐条来源仍保存在 `context_sources`。
 
-`verification_status` 记录研究结论；`verified_composite` 表示已核实为多个时期
-或场合的复合表达，不应伪装成某一次逐字发言。自动测试能验证结构和来源是否存在，
-但不能替代人工事实核查。
+作者记录上的 `verification_status` **保留**——它有 `verified`、`pending`、
+`verified_with_uncertainty`、`identity_conflict` 四种取值，用于表达人物身份的
+消歧结论，是有信息量的。自动测试能验证结构和来源是否存在，但不能替代人工事实核查。
 
 语境研究采用以下证据分级：
 

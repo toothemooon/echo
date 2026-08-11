@@ -163,6 +163,15 @@ const CLAIM_PROPERTIES = {
   occupation: "P106",
   movement: "P135",
   era: "P2348",
+  // What this person is actually known for, which is what makes the section
+  // worth reading rather than a restatement of their job title.
+  notableWork: "P800",
+  award: "P166",
+  position: "P39",
+  significantEvent: "P793",
+  fieldOfWork: "P101",
+  employer: "P108",
+  educatedAt: "P69",
 };
 
 function claimValues(entity, property) {
@@ -191,11 +200,12 @@ async function resolveClaims(qids) {
           // string so the generator can decide how precise to be.
           facts[name] = values[0].time ?? null;
         } else {
-          // Referenced entities: keep up to two, resolved to labels later.
+          // Referenced entities, resolved to labels later. Notable works get a
+          // wider window since three titles read better than two.
           facts[name] = values
             .map((value) => value.id)
             .filter(Boolean)
-            .slice(0, 2);
+            .slice(0, name === "notableWork" ? 3 : 2);
         }
       }
       byQid.set(qid, facts);
@@ -206,6 +216,17 @@ async function resolveClaims(qids) {
 
 // Referenced QIDs (places, countries, occupations, movements) -> readable
 // labels in each catalog language.
+// Language families a fallback may stay inside. Wikidata often stores only a
+// Traditional "zh" label; languagefallback=1 converts it to Simplified for
+// zh-hans, which is the whole reason this uses fallback at all. Any fallback
+// that crosses families (a Japanese label served from English) is rejected —
+// an English word inside Japanese prose reads as a bug.
+const LABEL_FAMILY = {
+  "zh-hans": /^zh/,
+  ja: /^ja/,
+  en: /^en/,
+};
+
 async function resolveLabels(qids, languages) {
   const byQid = new Map();
   for (const batch of chunk(qids, 50)) {
@@ -214,13 +235,18 @@ async function resolveLabels(qids, languages) {
       ids: batch.join("|"),
       props: "labels",
       languages: languages.join("|"),
+      languagefallback: 1,
       format: "json",
       formatversion: 2,
     });
     for (const [qid, entity] of Object.entries(response.entities ?? {})) {
       const labels = {};
       for (const [language, label] of Object.entries(entity.labels ?? {})) {
-        if (label?.value) labels[language] = label.value;
+        if (!label?.value) continue;
+        const family = LABEL_FAMILY[language];
+        const from = label["source-language"] ?? language;
+        if (family && !family.test(from)) continue;
+        labels[language] = label.value;
       }
       if (Object.keys(labels).length) byQid.set(qid, labels);
     }
@@ -370,7 +396,7 @@ for (const [language, authors] of authorsByLanguage) {
   for (const qid of qidByRef.values()) referencedQids.add(qid);
   const labelsByQid = await resolveLabels(
     [...referencedQids],
-    ["en", "ja", "zh", "zh-hans"],
+    ["en", "ja", "zh-hans"],
   );
 
   let found = 0;

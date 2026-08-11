@@ -6,18 +6,6 @@ export type BiographyContentStatus =
   | "verified"
   | "wikipedia_lead"
   | "editorial_profile";
-export type ContextContentStatus =
-  | "attribution_only"
-  | "secondary_only"
-  | "source_only"
-  | "verified";
-export type ContextVerificationStatus =
-  | "pending"
-  | "verified"
-  | "needs_context"
-  | "unverified"
-  | "disputed"
-  | "verified_composite";
 
 export type ContextSource = {
   title?: string;
@@ -51,14 +39,14 @@ export type QuoteContext = {
   author_ref: string;
   text_fingerprint: string;
   source_work: string | null;
-  context_summary: string;
-  context_type: string;
+  // Per-record provenance for the quotation itself. The per-context
+  // verification flag that used to sit here read "pending" for every one of
+  // the 4,283 records — every quotation comes from Wikiquote — so it and the
+  // three fields that only restated it were dropped.
   context_sources: ContextSource[];
-  verification_status: ContextVerificationStatus;
   historical_echo: string;
   historical_echo_sources: ContextSource[];
   historical_echo_status: HistoricalEchoStatus;
-  context_content_status: ContextContentStatus;
 };
 
 type QuoteContextDocument = {

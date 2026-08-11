@@ -22,6 +22,8 @@ const LINKS = [
   ["English Wikiquote", "https://en.wikiquote.org/"],
   ["Chinese Wikiquote", "https://zh.wikiquote.org/"],
   ["Japanese Wikiquote", "https://ja.wikiquote.org/"],
+  ["Wikipedia", "https://www.wikipedia.org/"],
+  ["Wikidata", "https://www.wikidata.org/"],
   ["CC BY-SA 4.0", "https://creativecommons.org/licenses/by-sa/4.0/"],
   ["ECHO privacy policy", "https://sarada.yachts/projects/echo/privacy"],
 ] as const;
@@ -72,9 +74,24 @@ export default function ContentSourcesScreen(props: Props) {
             used for attribution. Records without reliable attribution or rights
             evidence are excluded from the published catalog.
           </Text>
-          <Text style={[styles.body, { color: props.colors.author }]}> 
+          <Text style={[styles.body, { color: props.colors.author }]}>
             ECHO-created editorial notes and original catalog records are maintained
             separately from third-party quotation rights.
+          </Text>
+        </View>
+
+        <View style={[styles.card, { backgroundColor: props.colors.btnBg }]}>
+          <Text style={[styles.cardTitle, { color: props.colors.text }]}>Author profiles</Text>
+          <Text style={[styles.body, { color: props.colors.author }]}>
+            The LIFE section on a profile is taken from the lead section of the
+            matching Wikipedia article, used under CC BY-SA 4.0. The ECHO section
+            is assembled from Wikidata statements — dates, birthplace, occupation,
+            notable works, positions and awards — which are released under CC0.
+          </Text>
+          <Text style={[styles.body, { color: props.colors.author }]}>
+            Each record stores the article it came from, so any profile can be
+            traced back to its source. Profiles describe the period a person lived
+            in; they do not claim the occasion on which a quotation was spoken.
           </Text>
         </View>
 
