@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import contextJson from "../QUOTE_CONTEXTS.json";
 import { getAllQuotes } from "../src/data/quotes";
 
@@ -36,17 +37,39 @@ test("all published quotes have one structurally valid context", () => {
   );
 
   for (const author of contextJson.authors) {
-    assert.ok(author.biography.trim().length > 0);
-    assert.equal(author.biography_content_status, "editorial_profile");
+    // An empty biography is a deliberate state: the catalog knows only the
+    // one-line role, which the screen already prints under the name, so the
+    // LIFE section is omitted rather than padded with a restatement of it.
+    if (author.biography.trim().length === 0) {
+      assert.equal(author.biography_content_status, "catalog_identity_only");
+    } else {
+      assert.ok(
+        ["wikipedia_lead", "verified", "editorial_profile"].includes(
+          author.biography_content_status,
+        ),
+        `unexpected status ${author.biography_content_status}`,
+      );
+    }
+
+    // CC BY-SA requires attribution wherever the text is shown, so a Wikipedia
+    // biography without a resolvable source must never ship.
+    if (author.biography_content_status === "wikipedia_lead") {
+      assert.ok(author.biography_sources.length > 0);
+      assert.ok(author.biography_sources[0].title);
+      assert.match(author.biography_sources[0].url, /^https:\/\/\w+\.wikipedia\.org\/wiki\//);
+    }
+
     assert.doesNotMatch(
       author.biography,
-      /identified in the current ECHO catalog|presented in ECHO|在\s*ECHO|ECHOでは|紹介されて|完整生平尚待|本調査ファイル/i,
+      // "紹介されて" alone is ordinary Japanese ("…と紹介されている") and appears
+      // in real Wikipedia prose; only the ECHO-referential form is boilerplate.
+      /identified in the current ECHO catalog|presented in ECHO|在\s*ECHO|ECHOでは|ECHO.{0,8}紹介されて|完整生平尚待|本調査ファイル/i,
     );
     assert.ok(author.editorial_note.trim().length > 0);
     assert.equal(author.editorial_note_kind, "interpretive_commentary");
     assert.doesNotMatch(
       author.editorial_note,
-      /presented in ECHO|在\s*ECHO|ECHOでは|紹介されて/i,
+      /presented in ECHO|在\s*ECHO|ECHOでは|ECHO.{0,8}紹介されて/i,
     );
     assert.doesNotMatch(
       `${author.known_role} ${author.biography}`,
@@ -91,5 +114,24 @@ test("all published quotes have one structurally valid context", () => {
 
   for (const quote of allQuotes) {
     assert.doesNotMatch(quote.role, /CBDB\s*[=(]?\s*\d+/i);
+  }
+});
+
+// A context is written about one exact wording. If the catalog text is edited
+// afterwards, the fingerprint is the only thing that reveals the context now
+// describes different words — so it must never be allowed to drift silently.
+test("every context fingerprint matches its current quote text", () => {
+  const quotesById = new Map(
+    getAllQuotes().map((quote) => [String(quote.id), quote]),
+  );
+
+  for (const context of contextJson.quote_contexts) {
+    const quote = quotesById.get(String(context.quote_id));
+    assert.ok(quote, `no quote for context ${String(context.quote_id)}`);
+    assert.equal(
+      createHash("sha256").update(quote.text).digest("hex"),
+      context.text_fingerprint,
+      `stale fingerprint for ${String(context.quote_id)}`,
+    );
   }
 });

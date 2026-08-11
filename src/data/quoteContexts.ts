@@ -4,6 +4,7 @@ import type { QuoteId, QuoteLanguage } from "./quotes";
 export type BiographyContentStatus =
   | "catalog_identity_only"
   | "verified"
+  | "wikipedia_lead"
   | "editorial_profile";
 export type ContextContentStatus =
   | "attribution_only"

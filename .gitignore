@@ -45,7 +45,9 @@ __pycache__/
 *.pyc
 
 # Local quote datasets, research and generated audit data
+# data/author-biographies.json is rebuilt by scripts/fetch-author-biographies.mjs
 /QUOTE_CONTEXTS.json
+/data/author-biographies.json
 /assets/quotes.json
 /assets/quotes.zh-Hans.json
 /assets/quotes.ja.json

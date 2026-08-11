@@ -17,6 +17,19 @@ const quotes = [
 ];
 const quotesById = new Map(quotes.map((quote) => [String(quote.id), quote]));
 
+// Written by scripts/fetch-author-biographies.mjs. Absent on a fresh checkout,
+// in which case authors fall back to catalog identity only.
+const biographyCachePath = path.join(root, "data/author-biographies.json");
+const biographyCache = fs.existsSync(biographyCachePath)
+  ? JSON.parse(fs.readFileSync(biographyCachePath, "utf8")).biographies
+  : {};
+
+const WIKIPEDIA_HOSTS = {
+  en: "en.wikipedia.org",
+  ja: "ja.wikipedia.org",
+  "zh-Hans": "zh.wikipedia.org",
+};
+
 // CBDB numbers are research identifiers, not reader-facing occupations.
 const ROLE_CORRECTIONS = {
   zh_wikiquote_9482: "北宋诗人、学者，《神童诗》传为其作",
@@ -152,71 +165,97 @@ function shortRole(role, language) {
   return language === "en" ? cleaned : cleaned.split(/[。]/, 1)[0].trim();
 }
 
-function englishRolePhrase(role) {
-  const value = shortRole(role, "en");
-  const lower = value.charAt(0).toLowerCase() + value.slice(1);
-  return `${/^[aeiou]/i.test(lower) ? "an" : "a"} ${lower}`;
+// Split on sentence boundaries only. The previous generation truncated by
+// character count, which cut words in half; nothing here may do that.
+function splitSentences(text, language) {
+  if (language === "en") {
+    return text
+      .split(/(?<=[.!?])\s+(?=[A-Z"“'(])/)
+      .map((sentence) => sentence.trim())
+      .filter(Boolean);
+  }
+  return (text.match(/[^。！？]*[。！？]|[^。！？]+$/g) ?? [])
+    .map((sentence) => sentence.trim())
+    .filter(Boolean);
 }
 
-function usefulSources(authorQuotes) {
-  return [
-    ...new Set(
-      authorQuotes
-        .map((quote) =>
-          quote.source
-            ?.trim()
-            .replace(/^[《『「“"]+|[》』」”"]+$/g, ""),
-        )
-        .filter(
-          (source) =>
-            source &&
-            !/^(external links?|外部リンク|外部链接|リンク|website|web|unknown|不详|不詳)$/i.test(
-              source,
-            ) &&
-            !/^https?:/i.test(source) &&
-            !/^\d+$/.test(source),
-        ),
-    ),
-  ].slice(0, 3);
+// Wikipedia leads carry pronunciation glosses, IPA and stray reference debris
+// that read as noise in a profile card.
+function cleanExtract(text) {
+  return text
+    .replace(/ /g, " ")
+    .replace(/\[\d+\]/g, "")
+    .replace(/\s*\([^)]*(?:pronunciation|IPA|listen|help·info)[^)]*\)/gi, "")
+    .replace(/\s+([,，、。;；:：!！?？])/g, "$1")
+    .replace(/[ \t]+/g, " ")
+    .trim();
 }
 
-function sourceKind(role) {
-  const value = role.toLowerCase();
-  if (/poet|writer|author|novelist|playwright|philosoph|歌人|作家|诗人|詩人|哲学|思想/.test(value)) return "works";
-  if (/politic|president|minister|statesman|政治|首相|大臣|皇帝|官员|官僚/.test(value)) return "public";
-  if (/athlete|coach|player|baseball|football|sport|選手|指導者|野球|运动/.test(value)) return "career";
-  return "records";
+// Keep whole sentences up to a comfortable card length. English is far less
+// dense per character than Chinese or Japanese, so the budgets differ.
+function trimToLength(text, language) {
+  const budget = language === "en" ? 340 : 150;
+  const sentences = splitSentences(text, language);
+  if (!sentences.length) return "";
+
+  let output = sentences[0];
+  for (const sentence of sentences.slice(1)) {
+    const joined = language === "en" ? `${output} ${sentence}` : output + sentence;
+    if (joined.length > budget) break;
+    output = joined;
+  }
+  return output;
 }
 
-function authorBiography(author, authorQuotes) {
+function wikipediaBiography(author) {
+  const cached = biographyCache[author.author_ref];
+  if (!cached) return null;
+
+  // The lead's first paragraph is the definitional one; later paragraphs drift
+  // into career detail that does not belong on a quote card.
+  const paragraph = cleanExtract(cached.extract)
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)[0];
+  if (!paragraph) return null;
+
+  const biography = trimToLength(paragraph, author.language);
+  if (!biography) return null;
+
+  return {
+    biography,
+    source: {
+      title: cached.title,
+      url: `https://${WIKIPEDIA_HOSTS[author.language]}/wiki/${encodeURIComponent(
+        cached.title.replace(/ /g, "_"),
+      )}`,
+      note: "Wikipedia, CC BY-SA 4.0",
+    },
+  };
+}
+
+function authorBiography(author) {
   if (FACTUAL_BIOGRAPHIES[author.author_ref]) {
-    return FACTUAL_BIOGRAPHIES[author.author_ref];
+    return {
+      biography: FACTUAL_BIOGRAPHIES[author.author_ref],
+      sources: [],
+      status: "verified",
+    };
   }
-  const role = shortRole(author.known_role, author.language);
-  const sources = usefulSources(authorQuotes);
-  const kind = sourceKind(role);
-  if (author.language === "zh-Hans") {
-    const base = `${author.display_name}，${role}。`;
-    if (!sources.length) return base;
-    if (kind === "works") return `${base}现有条目涉及的作品包括《${sources.join("》《")}》。`;
-    if (kind === "public") return `${base}现有资料收录了${sources.join("、")}等公开讲话或活动记录。`;
-    if (kind === "career") return `${base}${sources.join("、")}等记录反映了其职业经历。`;
-    return `${base}相关资料包括${sources.join("、")}。`;
+
+  const fromWikipedia = wikipediaBiography(author);
+  if (fromWikipedia) {
+    return {
+      biography: fromWikipedia.biography,
+      sources: [fromWikipedia.source],
+      status: "wikipedia_lead",
+    };
   }
-  if (author.language === "ja") {
-    const base = `${author.display_name}は${role}。`;
-    if (!sources.length) return base;
-    if (kind === "works") return `${base}関連作品には『${sources.join("』『")}』がある。`;
-    if (kind === "public") return `${base}「${sources.join("」「")}」などの演説・活動記録が残る。`;
-    if (kind === "career") return `${base}「${sources.join("」「")}」などの記録は、その職歴に関わる。`;
-    return `${base}関連資料には「${sources.join("」「")}」がある。`;
-  }
-  const base = `${author.display_name} is ${englishRolePhrase(role)}.`;
-  if (!sources.length) return base;
-  if (kind === "works") return `${base} Works or texts represented here include ${sources.join(", ")}.`;
-  if (kind === "public") return `${base} The record represented here includes ${sources.join(", ")}.`;
-  if (kind === "career") return `${base} Career records represented here include ${sources.join(", ")}.`;
-  return `${base} Related records include ${sources.join(", ")}.`;
+
+  // Nothing beyond the one-line catalog identity, which the profile screen
+  // already prints under the name. Repeating it as a "life" paragraph was the
+  // old behaviour and told the reader nothing, so leave it empty instead.
+  return { biography: "", sources: [], status: "catalog_identity_only" };
 }
 
 function authorNote(author) {
@@ -226,15 +265,47 @@ function authorNote(author) {
   return `This profile follows ${author.display_name} through biographical facts, related works, and the selected quotation.`;
 }
 
-function quoteFocus(text, language, seed) {
+// Quote a whole clause, never a character-count slice. The previous version
+// joined the head and tail with an ellipsis, producing fragments that broke
+// mid-word ("那些...然拥有希望") and read as machine output.
+function quoteFocus(text, language) {
   const normalized = text.replace(/\s+/g, " ").trim();
-  if (language === "en") {
-    const words = normalized.split(" ");
-    if (words.length <= 12) return normalized;
-    return `${words.slice(0, 8).join(" ")}…${words.slice(-4).join(" ")}`;
+  const budget = language === "en" ? 96 : 32;
+  const strip = (value) =>
+    value.replace(/^[\s“”"'「」『』]+|[\s，,、。；;：:！!？?…—～~]+$/g, "").trim();
+
+  if (normalized.length <= budget) return strip(normalized);
+
+  const clauses = (
+    language === "en"
+      ? normalized.split(/(?<=[,;:.!?…—])\s+/)
+      : normalized.split(/(?<=[，,、。；;！!？?…—])/)
+  )
+    .map(strip)
+    .filter(Boolean);
+
+  // Longest clause that still fits: the most substantive fragment a reader can
+  // take in at a glance. Ties keep the earliest, so the excerpt stays natural.
+  const fitting = clauses.filter((clause) => clause.length <= budget);
+  if (fitting.length) {
+    return fitting.reduce((best, clause) =>
+      clause.length > best.length ? clause : best,
+    );
   }
-  if (normalized.length <= 24) return normalized;
-  return `${normalized.slice(0, 16)}…${normalized.slice(-6)}`;
+
+  // One long run-on with no usable break. Cut at a word boundary for English;
+  // Chinese and Japanese have none, so cut at the budget and mark the elision.
+  const longest = clauses[0] ?? normalized;
+  if (language === "en") {
+    const words = longest.split(" ");
+    const kept = [];
+    for (const word of words) {
+      if ([...kept, word].join(" ").length > budget) break;
+      kept.push(word);
+    }
+    return `${strip(kept.join(" ") || words[0])}…`;
+  }
+  return `${strip(longest.slice(0, budget))}…`;
 }
 
 function semanticSubcategory(quote) {
@@ -264,7 +335,7 @@ function capitalizeFirst(value) {
 function contextNote(_context, quote) {
   const language = quote.language;
   const text = quote.text.replace(/\s+/g, " ").trim();
-  const focus = quoteFocus(text, language, String(quote.id));
+  const focus = quoteFocus(text, language);
   const languageIndex = language === "en" ? 0 : language === "zh-Hans" ? 1 : 2;
   const semanticCategory = semanticSubcategory(quote);
   const concept = CONCEPTS[semanticCategory]?.[
@@ -335,12 +406,10 @@ for (const author of contextDocument.authors) {
   if (ROLE_CORRECTIONS[author.author_id]) {
     author.known_role = ROLE_CORRECTIONS[author.author_id];
   }
-  const authorQuotes = quotes.filter(
-    (quote) =>
-      quote.language === author.language && quote.author_id === author.author_id,
-  );
-  author.biography = authorBiography(author, authorQuotes);
-  author.biography_content_status = "editorial_profile";
+  const { biography, sources, status } = authorBiography(author);
+  author.biography = biography;
+  author.biography_sources = sources;
+  author.biography_content_status = status;
   author.editorial_note = authorNote(author);
   author.editorial_note_kind = "interpretive_commentary";
 }
@@ -372,6 +441,10 @@ const authorsByRef = new Map(
   contextDocument.authors.map((author) => [author.author_ref, author]),
 );
 
+function fingerprint(text) {
+  return crypto.createHash("sha256").update(text).digest("hex");
+}
+
 function buildContext(quote) {
   const authorRef = `${quote.language}:${quote.author_id}`;
   const author = authorsByRef.get(authorRef);
@@ -383,10 +456,7 @@ function buildContext(quote) {
     quote_id: quote.id,
     language: quote.language,
     author_ref: authorRef,
-    text_fingerprint: crypto
-      .createHash("sha256")
-      .update(quote.text)
-      .digest("hex"),
+    text_fingerprint: fingerprint(quote.text),
     source_work: sourceWork,
     context_summary: sourceWork
       ? summaries.withSource(author.display_name, sourceWork)
@@ -415,6 +485,9 @@ contextDocument.quote_contexts = quotes.map(
 for (const context of contextDocument.quote_contexts) {
   const quote = quotesById.get(String(context.quote_id));
   if (!quote) throw new Error(`Missing quote for context ${String(context.quote_id)}`);
+  // Recompute rather than trust the stored value: 29 English entries carried a
+  // fingerprint taken before quote text was normalized from "..." to "…".
+  context.text_fingerprint = fingerprint(quote.text);
   context.editorial_note = contextNote(context, quote);
   context.editorial_note_kind = "interpretive_commentary";
 }

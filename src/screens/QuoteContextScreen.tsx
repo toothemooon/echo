@@ -10,6 +10,7 @@ import { StatusBar } from "expo-status-bar";
 import ArchiveBackground from "../components/common/ArchiveBackground";
 import { COLORS } from "../constants/colors";
 import { getAuthorContext, getQuoteContext } from "../data/quoteContexts";
+import type { AuthorContext } from "../data/quoteContexts";
 import type { Quote } from "../data/quotes";
 import type { ThemeMode } from "../storage/preferences";
 
@@ -116,9 +117,15 @@ export default function QuoteContextScreen(props: Props) {
               </Text>
             </View>
 
-            <Section label={copy.life} colors={props.colors}>
-              {author?.biography ?? props.quote.role}
-            </Section>
+            {author?.biography ? (
+              <Section
+                label={copy.life}
+                colors={props.colors}
+                credit={biographyCredit(author)}
+              >
+                {author.biography}
+              </Section>
+            ) : null}
             {result ? (
               <Section label={copy.editorial} colors={props.colors}>
                 {result.context.editorial_note}
@@ -140,10 +147,21 @@ export default function QuoteContextScreen(props: Props) {
   );
 }
 
+// Biographies taken from Wikipedia are CC BY-SA, which requires the source to
+// be credited wherever the text is shown.
+function biographyCredit(author: AuthorContext): string | undefined {
+  const source = author.biography_sources[0];
+  if (!source?.title) {
+    return undefined;
+  }
+  return `${source.title} — Wikipedia (CC BY-SA 4.0)`;
+}
+
 function Section(props: {
   label: string;
   colors: typeof COLORS.light;
   children: string;
+  credit?: string;
 }) {
   return (
     <View style={styles.section}>
@@ -153,6 +171,11 @@ function Section(props: {
       <Text style={[styles.body, { color: props.colors.text }]}>
         {props.children}
       </Text>
+      {props.credit ? (
+        <Text style={[styles.credit, { color: props.colors.label }]}>
+          {props.credit}
+        </Text>
+      ) : null}
     </View>
   );
 }
@@ -231,6 +254,11 @@ const styles = StyleSheet.create({
   body: {
     fontSize: 15,
     lineHeight: 25,
+  },
+  credit: {
+    marginTop: 8,
+    fontSize: 11,
+    lineHeight: 16,
   },
   empty: {
     marginTop: 40,

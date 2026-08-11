@@ -24,6 +24,18 @@ ECHO 应用中的引文内容来自以下来源，使用 CC BY-SA 协议：
 - 协议：CC BY-SA 4.0
 - 署名：https://ja.wikiquote.org/
 
+## 人物生平
+
+人物介绍页「生平 / LIFE」一节的正文取自维基百科条目的导言段。
+
+- 来源：English / 日本語 / 中文 Wikipedia
+- 覆盖：1,214 位作者中的 994 位（其余作者不显示生平段落）
+- 协议：CC BY-SA 4.0
+- 署名：每条生平在应用内显示条目名与「Wikipedia (CC BY-SA 4.0)」，
+  条目 URL 存放在作者记录的 `biography_sources` 字段
+- 抓取脚本：`scripts/fetch-author-biographies.mjs`
+  （缓存写入 `data/author-biographies.json`，未纳入版本控制，可随时重新抓取）
+
 ## 署名要求
 
 根据 CC BY-SA 协议，使用这些内容时需要：
