@@ -1,9 +1,12 @@
+import { useState, useEffect } from "react";
 import {
   View,
   Text,
   Pressable,
   ScrollView,
   StyleSheet,
+  ActivityIndicator,
+  Linking,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
@@ -12,6 +15,11 @@ import { COLORS } from "../constants/colors";
 import { getAuthorContext, getQuoteContext } from "../data/quoteContexts";
 import type { Quote } from "../data/quotes";
 import type { ThemeMode } from "../storage/preferences";
+import {
+  generateDefiningMoment,
+  getCachedDefiningMoment,
+  type DefiningMomentResult,
+} from "../services/definingMoment";
 
 type Props = {
   quote: Quote;
@@ -24,23 +32,26 @@ const COPY = {
   en: {
     title: "ABOUT",
     life: "LIFE",
-    echo: "ECHO",
+    echo: "DEFINING MOMENT",
     source: "SOURCE",
     missing: "No additional profile is available for this quote.",
+    loading: "Loading...",
   },
   "zh-Hans": {
     title: "人物",
     life: "生平",
-    echo: "历史回声",
+    echo: "闪光时刻",
     source: "作品来源",
     missing: "这条名言暂时没有更多人物资料",
+    loading: "加载中...",
   },
   ja: {
     title: "人物",
     life: "人物像",
-    echo: "歴史の残響",
+    echo: "人生の転機",
     source: "出典",
     missing: "この言葉に関する人物情報はまだありません",
+    loading: "読み込み中...",
   },
 } as const;
 
@@ -55,6 +66,66 @@ export default function QuoteContextScreen(props: Props) {
   const source = (
     result?.context.source_work ?? props.quote.source
   )?.replace(/\s*\(secondary attribution only\)$/i, "");
+
+  // Defining moment state
+  const [definingMoment, setDefiningMoment] =
+    useState<DefiningMomentResult | null>(null);
+  const [isLoadingMoment, setIsLoadingMoment] = useState(false);
+  const [momentError, setMomentError] = useState<string | null>(null);
+
+  // Fetch defining moment on mount
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadDefiningMoment() {
+      if (!author) return;
+
+      const authorRef = `${props.quote.language}:${props.quote.author_id}`;
+      const authorName = author.display_name ?? props.quote.author;
+
+      // 1. Check cache first
+      const cached = await getCachedDefiningMoment(authorRef);
+      if (!cancelled && cached) {
+        setDefiningMoment(cached);
+        return;
+      }
+
+      // 2. Fetch from Wikipedia + LLM
+      setIsLoadingMoment(true);
+      setMomentError(null);
+
+      try {
+        const result = await generateDefiningMoment(
+          authorRef,
+          authorName,
+          props.quote.language
+        );
+        if (!cancelled && result) {
+          setDefiningMoment(result);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setMomentError(
+            error instanceof Error ? error.message : "Failed to load"
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoadingMoment(false);
+        }
+      }
+    }
+
+    loadDefiningMoment();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [author, props.quote.language, props.quote.author_id, props.quote.author]);
+
+  // Determine what to show in the echo section
+  const echoContent = definingMoment?.definingMoment;
+  const showEchoSection = echoContent || isLoadingMoment || momentError;
 
   return (
     <View
@@ -95,7 +166,7 @@ export default function QuoteContextScreen(props: Props) {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.content}
       >
-        <Text style={[styles.quoteMark, { color: props.colors.dot }]}>“</Text>
+        <Text style={[styles.quoteMark, { color: props.colors.dot }]}>"</Text>
         <Text style={[styles.quote, { color: props.colors.text }]}>
           {props.quote.text}
         </Text>
@@ -121,11 +192,49 @@ export default function QuoteContextScreen(props: Props) {
                 {author.biography}
               </Section>
             ) : null}
-            {result?.context.historical_echo ? (
+
+            {/* Defining Moment Section */}
+            {showEchoSection ? (
               <Section label={copy.echo} colors={props.colors}>
-                {result.context.historical_echo}
+                {isLoadingMoment ? (
+                  <View style={styles.loadingContainer}>
+                    <ActivityIndicator
+                      size="small"
+                      color={props.colors.author}
+                    />
+                    <Text
+                      style={[
+                        styles.loadingText,
+                        { color: props.colors.author },
+                      ]}
+                    >
+                      {copy.loading}
+                    </Text>
+                  </View>
+                ) : echoContent ? (
+                  echoContent
+                ) : (
+                  <Text style={{ color: props.colors.author }}>
+                    {momentError ?? "—"}
+                  </Text>
+                )}
               </Section>
             ) : null}
+
+            {/* Wikipedia link */}
+            {definingMoment?.wikiPageUrl ? (
+              <Pressable
+                style={styles.wikiLink}
+                onPress={() => Linking.openURL(definingMoment.wikiPageUrl)}
+              >
+                <Text
+                  style={[styles.wikiLinkText, { color: props.colors.author }]}
+                >
+                  Read more on Wikipedia →
+                </Text>
+              </Pressable>
+            ) : null}
+
             {source ? (
               <Section label={copy.source} colors={props.colors}>
                 {source}
@@ -149,16 +258,20 @@ export default function QuoteContextScreen(props: Props) {
 function Section(props: {
   label: string;
   colors: typeof COLORS.light;
-  children: string;
+  children: React.ReactNode;
 }) {
   return (
     <View style={styles.section}>
       <Text style={[styles.sectionLabel, { color: props.colors.label }]}>
         {props.label}
       </Text>
-      <Text style={[styles.body, { color: props.colors.text }]}>
-        {props.children}
-      </Text>
+      {typeof props.children === "string" ? (
+        <Text style={[styles.body, { color: props.colors.text }]}>
+          {props.children}
+        </Text>
+      ) : (
+        props.children
+      )}
     </View>
   );
 }
@@ -243,5 +356,21 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 24,
     textAlign: "center",
+  },
+  loadingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  loadingText: {
+    fontSize: 13,
+    fontStyle: "italic",
+  },
+  wikiLink: {
+    marginTop: 12,
+  },
+  wikiLinkText: {
+    fontSize: 12,
+    textDecorationLine: "underline",
   },
 });
