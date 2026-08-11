@@ -42,3 +42,21 @@ Browser research completed in the first evidence-graded batch:
 The next research pass should resume with quote 140 (Abigail Adams) and quote
 151 (Aesop), followed by the remaining English `attribution_only` records.
 
+## 2026-08-11 — regeneration data loss
+
+`QUOTE_CONTEXTS.json` is untracked, so a regeneration that dropped every
+Chinese and Japanese `quote_contexts` entry (4,283 → 1,465, English only) could
+not be rolled back. The 1,214 author records were unaffected.
+
+The missing 2,818 entries were rebuilt by `scripts/generate-editorial-notes.mjs`
+from the published catalog. What could **not** be restored, because it was
+hand-verified rather than derived:
+
+- `ja-wikiquote-451-02` (Koizumi) — was `verified_composite`, now `pending`.
+- The four `verified` biographies above retain their text but lost their
+  `biography_sources`; all author records now carry `editorial_profile`.
+
+Re-verification of these records should be prioritised in the next pass. Note
+that 29 English contexts carry a `text_fingerprint` that no longer matches the
+current quote text — this predates the incident and is tracked separately.
+

@@ -1,7 +1,7 @@
 # ECHO 架构文档
 
 > ECHO 是一个**完全离线**的每日名言 App(Expo / React Native,iOS 为主)。
-> 4,894 条三语名言(英/简中/日)与作者语境全部打包进应用,没有后端、没有网络请求;
+> 4,283 条三语名言(英/简中/日)与作者语境全部打包进应用,没有后端、没有网络请求;
 > 所有"数据交互"都发生在 打包 JSON(只读目录) 与 AsyncStorage(用户状态) 之间。
 > 核心体验:启动 → 按心情偏好推荐一条名言 → 左右切换/收藏/历史/分享。
 
@@ -11,11 +11,11 @@
 
 ```
 echo/
-├── assets/                  # 打包资源:三份名言目录 JSON(2000/894/2000 条)、图标、字体贴图
+├── assets/                  # 打包资源:三份名言目录 JSON(1465/891/1927 条)、图标、字体贴图
 │   ├── quotes.json          #   英文名言目录
 │   ├── quotes.zh-Hans.json  #   简中名言目录
 │   └── quotes.ja.json       #   日文名言目录
-├── QUOTE_CONTEXTS.json      # 作者生平 + 每条名言的语境(9.7MB,供 context 页使用)
+├── QUOTE_CONTEXTS.json      # 作者生平 + 每条名言的语境(6.5MB,供 context 页使用)
 ├── src/
 │   ├── app/                 # expo-router 入口层
 │   │   ├── _layout.tsx      #   路由壳(Stack,单路由)

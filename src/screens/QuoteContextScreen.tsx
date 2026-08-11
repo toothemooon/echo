@@ -9,7 +9,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import ArchiveBackground from "../components/common/ArchiveBackground";
 import { COLORS } from "../constants/colors";
-import { getQuoteContext } from "../data/quoteContexts";
+import { getAuthorContext, getQuoteContext } from "../data/quoteContexts";
 import type { Quote } from "../data/quotes";
 import type { ThemeMode } from "../storage/preferences";
 
@@ -47,7 +47,11 @@ const COPY = {
 export default function QuoteContextScreen(props: Props) {
   const copy = COPY[props.quote.language];
   const result = getQuoteContext(props.quote.id);
-  const author = result?.author;
+  // Fall back to the author archive when this quote has no context entry, so a
+  // missing context only costs the editorial reading, not the whole profile.
+  const author =
+    result?.author ??
+    getAuthorContext(props.quote.language, props.quote.author_id);
   const source = (
     result?.context.source_work ?? props.quote.source
   )?.replace(/\s*\(secondary attribution only\)$/i, "");
@@ -99,7 +103,7 @@ export default function QuoteContextScreen(props: Props) {
           — {props.quote.author}
         </Text>
 
-        {result ? (
+        {author || result ? (
           <>
             <View style={styles.authorBlock}>
               <Text style={[styles.authorName, { color: props.colors.text }]}>
@@ -115,9 +119,11 @@ export default function QuoteContextScreen(props: Props) {
             <Section label={copy.life} colors={props.colors}>
               {author?.biography ?? props.quote.role}
             </Section>
-            <Section label={copy.editorial} colors={props.colors}>
-              {result.context.editorial_note}
-            </Section>
+            {result ? (
+              <Section label={copy.editorial} colors={props.colors}>
+                {result.context.editorial_note}
+              </Section>
+            ) : null}
             {source ? (
               <Section label={copy.source} colors={props.colors}>
                 {source}

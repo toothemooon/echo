@@ -74,6 +74,15 @@ const contextsByQuoteId = new Map(
   ]),
 );
 
+// Author profiles are keyed independently of quote contexts so that a gap in
+// the per-quote data cannot take the whole profile screen down with it.
+export function getAuthorContext(
+  language: QuoteLanguage,
+  authorId: string,
+): AuthorContext | undefined {
+  return authorsByRef.get(`${language}:${authorId}`);
+}
+
 export function getQuoteContext(id: QuoteId):
   | {
       context: QuoteContext;

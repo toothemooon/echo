@@ -45,8 +45,8 @@ test("bundled quote snapshots cannot mutate the in-memory catalog", () => {
 });
 
 test("ID lookup preserves the distinction between numeric and string IDs", () => {
-  assert.ok(getQuoteById(1));
-  assert.equal(getQuoteById("1"), undefined);
+  assert.ok(getQuoteById(61));
+  assert.equal(getQuoteById("61"), undefined);
   assert.equal(getQuoteById("does-not-exist"), undefined);
 });
 

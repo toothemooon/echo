@@ -1,3 +1,4 @@
+import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -344,6 +345,73 @@ for (const author of contextDocument.authors) {
   author.editorial_note_kind = "interpretive_commentary";
 }
 
+// Factual summary shown as background. It states only what the catalog records
+// and what is still unverified — it never asserts an occasion or intent.
+const CONTEXT_SUMMARIES = {
+  en: {
+    withSource: (author, work) =>
+      `The current catalog attributes this quotation to ${author} and records its source as ${work}. The available evidence does not yet identify the exact chapter, date, audience, or surrounding event. The work can therefore be presented as known background, but the quotation's immediate occasion and single intended purpose remain unverified.`,
+    withoutSource: (author) =>
+      `The current catalog attributes this quotation to ${author}, but no original work, date, occasion, or audience has yet been verified. Only the attribution record is currently available; the historical setting, immediate occasion, and intended purpose require confirmation from reliable primary or scholarly sources.`,
+  },
+  "zh-Hans": {
+    withSource: (author, work) =>
+      `当前目录将这句话归于${author}，并记录其出处为「${work}」。现有证据尚未确认具体的篇章、时间、场合与听者。这部作品可作为已知背景呈现，但这句话当时的具体情境与单一意图仍待考证。`,
+    withoutSource: (author) =>
+      `当前目录将这句话归于${author}，但尚未考证其原始出处、时间、场合与听者。目前可确认的只有归属记录；历史背景、当时情境与具体意图，仍需可靠的原始文献或研究成果加以确认。`,
+  },
+  ja: {
+    withSource: (author, work) =>
+      `現在のカタログはこの言葉を${author}に帰し、出典を「${work}」と記録している。ただし具体的な章、日付、聞き手、周辺の出来事を特定するだけの証拠はまだない。作品は既知の背景として示せるが、この言葉が語られた状況と意図は未検証のままである。`,
+    withoutSource: (author) =>
+      `現在のカタログはこの言葉を${author}に帰しているが、原典、日付、場、聞き手はいずれも未検証である。現時点で確認できるのは帰属の記録のみであり、歴史的背景、語られた状況、意図については信頼できる一次資料または研究による確認が必要である。`,
+  },
+};
+
+const authorsByRef = new Map(
+  contextDocument.authors.map((author) => [author.author_ref, author]),
+);
+
+function buildContext(quote) {
+  const authorRef = `${quote.language}:${quote.author_id}`;
+  const author = authorsByRef.get(authorRef);
+  if (!author) throw new Error(`Missing author record for ${authorRef}`);
+  const sourceWork = quote.source ?? null;
+  const summaries = CONTEXT_SUMMARIES[quote.language];
+
+  return {
+    quote_id: quote.id,
+    language: quote.language,
+    author_ref: authorRef,
+    text_fingerprint: crypto
+      .createHash("sha256")
+      .update(quote.text)
+      .digest("hex"),
+    source_work: sourceWork,
+    context_summary: sourceWork
+      ? summaries.withSource(author.display_name, sourceWork)
+      : summaries.withoutSource(author.display_name),
+    context_type: sourceWork ? "work_identified_context_pending" : "source_unknown",
+    context_sources: [],
+    verification_status: "pending",
+    editorial_note: "",
+    context_content_status: sourceWork ? "source_only" : "attribution_only",
+  };
+}
+
+// Rebuild the context list from the published catalog: existing entries are
+// preserved as-is, missing ones are generated, and orphans that no longer match
+// a published quote are dropped. Order follows the catalog, so runs are stable.
+const existingContexts = new Map(
+  contextDocument.quote_contexts.map((context) => [
+    String(context.quote_id),
+    context,
+  ]),
+);
+contextDocument.quote_contexts = quotes.map(
+  (quote) => existingContexts.get(String(quote.id)) ?? buildContext(quote),
+);
+
 for (const context of contextDocument.quote_contexts) {
   const quote = quotesById.get(String(context.quote_id));
   if (!quote) throw new Error(`Missing quote for context ${String(context.quote_id)}`);
@@ -351,13 +419,55 @@ for (const context of contextDocument.quote_contexts) {
   context.editorial_note_kind = "interpretive_commentary";
 }
 
-contextDocument.editorial_policy = [
-  ...contextDocument.editorial_policy.filter(
-    (entry) => !entry.startsWith("editorial_note"),
-  ),
+const EDITORIAL_POLICY_ENTRIES = [
   "editorial_note 是从名言涉及的人生处境与情感经验出发的编辑解读，不代表作者原意或史实判断。",
   "事实状态只由 verification_status、content_status 和 sources 字段决定。",
 ];
+
+// Filter by exact match: an earlier startsWith("editorial_note") check missed
+// the second sentence, so every run appended another copy of it.
+contextDocument.editorial_policy = [
+  ...contextDocument.editorial_policy.filter(
+    (entry) => !EDITORIAL_POLICY_ENTRIES.includes(entry),
+  ),
+  ...EDITORIAL_POLICY_ENTRIES,
+];
+
+// Recount rather than carrying stale numbers forward, so the statistics block
+// surfaces data loss instead of hiding it.
+const countBy = (items, predicate) => items.filter(predicate).length;
+contextDocument.statistics = {
+  quotes: quotes.length,
+  language_scoped_authors: contextDocument.authors.length,
+  quotes_with_source_work: countBy(
+    contextDocument.quote_contexts,
+    (context) => Boolean(context.source_work),
+  ),
+  quotes_without_source_work: countBy(
+    contextDocument.quote_contexts,
+    (context) => !context.source_work,
+  ),
+  quote_contexts_verified: countBy(
+    contextDocument.quote_contexts,
+    (context) => context.verification_status === "verified",
+  ),
+  quote_contexts_unverified: countBy(
+    contextDocument.quote_contexts,
+    (context) => context.verification_status === "unverified",
+  ),
+  quote_contexts_disputed: countBy(
+    contextDocument.quote_contexts,
+    (context) => context.verification_status === "disputed",
+  ),
+  biographies_verified: countBy(
+    contextDocument.authors,
+    (author) => author.biography_content_status === "verified",
+  ),
+  biographies_populated: countBy(contextDocument.authors, (author) =>
+    Boolean(author.biography),
+  ),
+  quote_contexts_populated: contextDocument.quote_contexts.length,
+};
 
 fs.writeFileSync(contextsPath, `${JSON.stringify(contextDocument, null, 2)}\n`);
 console.log(

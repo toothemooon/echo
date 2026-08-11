@@ -5,9 +5,11 @@
 ECHO 应用中的引文内容来自以下来源，使用 CC BY-SA 协议：
 
 ### 英文引文
-- 来源：English Wikiquote
+- 来源：English Wikiquote + ECHO 原始目录
 - 数量：1,465 条
-- 协议：CC BY-SA 4.0
+  - Wikiquote 来源：约 1,391 条
+  - ECHO 原始目录：约 74 条（有明确来源）
+- 协议：CC BY-SA 4.0（Wikiquote）+ 原始授权（ECHO 原始）
 - 署名：https://en.wikiquote.org/
 
 ### 简体中文引文

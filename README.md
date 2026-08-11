@@ -44,10 +44,10 @@ v1.0 聚焦以下目标：
 
 | 语言 | 文件 | 数量 |
 | --- | --- | ---: |
-| 英文 | `assets/quotes.json` | 2,000 |
-| 简体中文 | `assets/quotes.zh-Hans.json` | 894 |
-| 日语 | `assets/quotes.ja.json` | 2,000 |
-| 合计 | 三个目录 | 4,894 |
+| 英文 | `assets/quotes.json` | 1,465 |
+| 简体中文 | `assets/quotes.zh-Hans.json` | 891 |
+| 日语 | `assets/quotes.ja.json` | 1,927 |
+| 合计 | 三个目录 | 4,283 |
 
 设置页提供 `Quote Language`，用户可以在 English、简体中文和日本語之间切换。
 切换后，当前浏览栈会重建，后续推荐和左右翻页只使用所选语言的数据。
@@ -156,8 +156,9 @@ Settings → Content Sources 会展示内容来源和许可说明。数据许可
 当 `source` 存在时，卡片优先显示作品来源；没有可靠作品名时显示具体
 `role`。项目不会为了填满字段而虚构作品来源。
 
-作者与语境资料保存在本地 `QUOTE_CONTEXTS.json`。当前它覆盖发布目录的 4,894 条
-格言。`quote_id` 定位当前名言的语境，`author_ref` 再定位作者生平。
+作者与语境资料保存在本地 `QUOTE_CONTEXTS.json`。当前它覆盖发布目录的 4,283 条
+格言。`quote_id` 定位当前名言的语境，`author_ref` 再定位作者生平；人物介绍还可
+由 `语言:author_id` 直接定位作者档案，因此语境缺失时人物页仍能正常显示。
 
 | `context_content_status` | 含义 |
 | --- | --- |
@@ -209,7 +210,7 @@ node scripts/generate-editorial-notes.mjs
 
 当前发布目录必须满足：
 
-- 英文 2,000 条、简体中文 894 条、日语 2,000 条，共 4,894 条；
+- 英文 1,465 条、简体中文 891 条、日语 1,927 条，共 4,283 条；
 - 全部 ID 在三个目录之间保持唯一；
 - 标准化后的正文不存在重复；
 - 每条记录都通过运行时 Quote schema 验证；
