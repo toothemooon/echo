@@ -2,7 +2,7 @@
   "expo": {
     "name": "ECHO",
     "slug": "ECHO",
-    "version": "1.1.0",
+    "version": "1.0.0",
     "scheme": "echo",
     "orientation": "portrait",
     "icon": "./assets/echo-icon-light.png",
@@ -16,11 +16,7 @@
         "usesNonExemptEncryption": false
       },
       "infoPlist": {
-        "LSApplicationQueriesSchemes": [
-          "itms-apps",
-          "mailto",
-          "market"
-        ]
+        "LSApplicationQueriesSchemes": ["itms-apps", "mailto", "market"]
       }
     },
     "android": {
@@ -37,13 +33,6 @@
       "favicon": "./assets/echo-icon-light.png"
     },
     "plugins": [
-      [
-        "expo-notifications",
-        {
-          "color": "#496946",
-          "defaultChannel": "daily-reminders"
-        }
-      ],
       "expo-font",
       "expo-router",
       "expo-asset",

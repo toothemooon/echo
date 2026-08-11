@@ -22,7 +22,7 @@ export function createWikiquoteClient(api, languageLabel) {
       const response = await fetch(url, {
         headers: {
           "User-Agent":
-            `ECHO-Quote-App/1.1 (${languageLabel} content import; ` +
+            `ECHO-Quote-App/1.0 (${languageLabel} content import; ` +
             "contact: abc510433622@gmail.com)",
         },
       });

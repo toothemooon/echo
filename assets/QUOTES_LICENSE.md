@@ -15,10 +15,11 @@ CC BY-SA, with revision links in
 
 ## Simplified Chinese catalog
 
-`quotes.zh-Hans.json` was generated from inBox Card's public collections.
-Provider and per-record traceability information is retained in
-`data/quote-audit/chinese-provenance.json`. Records added beyond the available
-inBox Card collection are adapted from Chinese Wikiquote under CC BY-SA.
+`quotes.zh-Hans.json` contains published Chinese Wikiquote records. Per-record
+revision traceability is retained in
+`data/quote-audit/chinese-provenance.json`. The inBox Card records are not
+bundled because the repository does not contain verifiable redistribution
+permission; they remain in the local unpublished audit archive.
 
 ## Japanese catalog
 

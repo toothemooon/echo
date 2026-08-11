@@ -1,6 +1,6 @@
 {
   "name": "echo",
-  "version": "1.1.0",
+  "version": "1.0.0",
   "main": "expo-router/entry",
   "dependencies": {
     "@expo-google-fonts/cormorant-garamond": "^0.4.1",
@@ -14,7 +14,6 @@
     "expo-dev-client": "~57.0.10",
     "expo-font": "~57.0.1",
     "expo-linking": "~57.0.4",
-    "expo-notifications": "~57.0.8",
     "expo-router": "~57.0.9",
     "expo-splash-screen": "~57.0.5",
     "expo-status-bar": "~57.0.1",
@@ -31,10 +30,11 @@
     "typescript": "~6.0.3"
   },
   "scripts": {
-    "start": "expo start --dev-client",
-    "dev": "expo start --dev-client",
+    "start": "REACT_NATIVE_PACKAGER_HOSTNAME=127.0.0.1 expo start --dev-client --host lan --port 8082",
+    "dev": "REACT_NATIVE_PACKAGER_HOSTNAME=127.0.0.1 expo start --dev-client --host lan --port 8082",
     "android": "expo run:android",
-    "ios": "expo run:ios",
+    "ios": "node scripts/run-ios-simulator.mjs",
+    "ios:metro": "REACT_NATIVE_PACKAGER_HOSTNAME=127.0.0.1 expo start --dev-client --host lan --port 8082",
     "web": "expo start --web",
     "test": "node --import tsx --test tests/**/*.test.ts",
     "check": "npm run test && tsc --noEmit && npx expo-doctor"

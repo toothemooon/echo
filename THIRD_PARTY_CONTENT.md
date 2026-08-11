@@ -1,10 +1,11 @@
 # Third-Party Content
 
-## inBox Card
+## inBox Card (unpublished)
 
-The Simplified Chinese quote catalog in `assets/quotes.zh-Hans.json` was
-generated from the public inBox Card collection files associated with its open
-random-note API.
+The inBox Card records are retained only in the local unpublished audit
+archive. They are not bundled in the 1.0.0 catalog because the repository does
+not contain verifiable permission or licensing evidence for republishing the
+collection.
 
 - Website: https://card.gudong.site/
 - API: https://card.gudong.site/api/random-note
@@ -12,10 +13,11 @@ random-note API.
   `data/quote-audit/chinese-provenance.json`
 
 The provider describes the API as free, open, and requiring no authentication.
-The source is maintained by an individual and does not provide the same level
-of editorial or licensing assurance as a primary-source quotation archive.
-Records should therefore remain subject to editorial review and removal
-requests.
+That statement is not treated as a redistribution license. The unpublished
+records and their provenance are stored in:
+
+- `data/quote-audit/chinese-inbox-unpublished.json`
+- `data/quote-audit/chinese-inbox-provenance-unpublished.json`
 
 ## Hitokoto
 
@@ -77,12 +79,10 @@ revision-traceable records from English Wikiquote.
 
 ## Chinese Wikiquote
 
-inBox Card contains fewer than 2,000 unique records after normalization. The
-remaining Simplified Chinese records are therefore supplied by Chinese
-Wikiquote.
+The published Simplified Chinese records are supplied by Chinese Wikiquote.
 
 - Website: https://zh.wikiquote.org/
-- inBox Card and Wikiquote provenance:
+- Wikiquote provenance:
   `data/quote-audit/chinese-provenance.json`
 - Wikiquote-derived records: CC BY-SA
 

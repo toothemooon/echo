@@ -146,6 +146,8 @@ export default function QuoteCard(props: Props) {
             },
           ]}
           accessibilityRole="text"
+          adjustsFontSizeToFit
+          minimumFontScale={0.72}
         >
           {props.quote.text}
         </Text>
@@ -166,6 +168,9 @@ export default function QuoteCard(props: Props) {
               color: props.colors.author,
             },
           ]}
+          numberOfLines={3}
+          adjustsFontSizeToFit
+          minimumFontScale={0.72}
         >
           — {props.quote.author}
         </Text>

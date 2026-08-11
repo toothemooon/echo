@@ -1,4 +1,4 @@
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { ActivityIndicator, View, Text, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../../constants/colors";
 
@@ -11,6 +11,7 @@ import { COLORS } from "../../constants/colors";
 type Props = {
   colors: typeof COLORS.light;
   isSaved: boolean;
+  isBookmarkBusy: boolean;
   onPrev?: () => void;
   onNext: () => void;
   onBookmark: () => void;
@@ -47,15 +48,20 @@ export default function ActionBar(props: Props) {
         <Pressable
           style={[styles.actionBtn, { backgroundColor: props.colors.btnBg }]}
           onPress={props.onBookmark}
+          disabled={props.isBookmarkBusy}
           accessibilityRole="button"
           accessibilityLabel={props.isSaved ? "Remove Bookmark" : "Bookmark Quote"}
-          accessibilityState={{ selected: props.isSaved }}
+          accessibilityState={{ selected: props.isSaved, busy: props.isBookmarkBusy, disabled: props.isBookmarkBusy }}
         >
-          <Ionicons
-            name={props.isSaved ? "bookmark" : "bookmark-outline"}
-            size={20}
-            color={props.isSaved ? props.colors.label : props.colors.btnIcon}
-          />
+          {props.isBookmarkBusy ? (
+            <ActivityIndicator size="small" color={props.colors.btnIcon} />
+          ) : (
+            <Ionicons
+              name={props.isSaved ? "bookmark" : "bookmark-outline"}
+              size={20}
+              color={props.isSaved ? props.colors.label : props.colors.btnIcon}
+            />
+          )}
         </Pressable>
 
         <Pressable

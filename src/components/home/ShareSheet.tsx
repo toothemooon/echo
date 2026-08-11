@@ -31,6 +31,7 @@ export default function ShareSheet(props: Props) {
   const { height } = useWindowDimensions();
   const [copied, setCopied] = useState(false);
   const [isSharingImage, setIsSharingImage] = useState(false);
+  const [isSharingText, setIsSharingText] = useState(false);
   const copy = getShareCopy(props.quote.language);
   const shareText = formatQuoteShareText(props.quote);
 
@@ -38,15 +39,20 @@ export default function ShareSheet(props: Props) {
     if (!props.visible) {
       setCopied(false);
       setIsSharingImage(false);
+      setIsSharingText(false);
     }
   }, [props.visible]);
 
   if (!props.visible) return null;
 
   const handleCopyText = async () => {
-    await setStringAsync(shareText);
-    setCopied(true);
-    AccessibilityInfo.announceForAccessibility(copy.copied);
+    try {
+      await setStringAsync(shareText);
+      setCopied(true);
+      AccessibilityInfo.announceForAccessibility(copy.copied);
+    } catch {
+      // Clipboard failures should not interrupt the reading experience.
+    }
   };
 
   const handleImageShare = async () => {
@@ -58,8 +64,16 @@ export default function ShareSheet(props: Props) {
   };
 
   const handleSystemShare = async () => {
-    await Share.share({ message: shareText });
-    props.onClose();
+    if (isSharingText) return;
+    setIsSharingText(true);
+    try {
+      await Share.share({ message: shareText });
+      props.onClose();
+    } catch {
+      // The user can close the sheet and continue reading if sharing is cancelled.
+    } finally {
+      setIsSharingText(false);
+    }
   };
 
   const options = [
@@ -79,7 +93,7 @@ export default function ShareSheet(props: Props) {
       icon: "share-outline" as const,
       label: copy.more,
       onPress: handleSystemShare,
-      busy: false,
+      busy: isSharingText,
     },
   ];
 

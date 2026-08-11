@@ -2,7 +2,11 @@ import { View, Text, StyleSheet, useWindowDimensions } from "react-native";
 import { COLORS } from "../../constants/colors";
 import type { Quote } from "../../data/quotes";
 
-const CARD_HEIGHT = 400;
+function getCardHeight(textLength: number): number {
+  if (textLength > 220) return 520;
+  if (textLength > 140) return 460;
+  return 400;
+}
 
 // ══════════════════════════════════════════════
 //  ShareCard — 离屏分享卡片
@@ -25,7 +29,7 @@ export default function ShareCard(props: Props) {
   const cardWidth = Math.max(240, width - 64);
   const textLength = props.quote.text.length;
   const quoteFontSize =
-    textLength > 260 ? 15 : textLength > 190 ? 17 : textLength > 120 ? 19 : 22;
+    textLength > 260 ? 13 : textLength > 190 ? 15 : textLength > 120 ? 18 : 22;
   const normalizedRole = props.quote.role.trim();
   const displayRole =
     normalizedRole === "Writer" || normalizedRole === "Author"
@@ -40,7 +44,7 @@ export default function ShareCard(props: Props) {
         {
           backgroundColor: props.colors.background,
           width: cardWidth,
-          height: CARD_HEIGHT,
+          height: getCardHeight(textLength),
         },
       ]}
     >
@@ -73,6 +77,8 @@ export default function ShareCard(props: Props) {
             lineHeight: Math.round(quoteFontSize * 1.45),
           },
         ]}
+        adjustsFontSizeToFit
+        minimumFontScale={0.72}
       >
         {props.quote.text}
       </Text>
@@ -87,6 +93,7 @@ export default function ShareCard(props: Props) {
           style={[styles.role, { color: props.colors.roleText }]}
           numberOfLines={2}
           adjustsFontSizeToFit
+          minimumFontScale={0.72}
         >
           {attributionDetail}
         </Text>

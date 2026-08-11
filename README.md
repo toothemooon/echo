@@ -4,14 +4,14 @@ ECHO 是一款使用 Expo 与 React Native 开发的离线优先三语格言阅�
 它以安静、克制的每日阅读体验为核心，提供主题切换、字体设置、收藏、
 心情偏好、三语内容和带有防重复机制的推荐轮换。
 
-当前版本：**1.1.0**
+当前版本：**1.0.0**
 
 ## 1. 产品定位
 
 ECHO 不要求注册账号，也不依赖服务器才能完成核心阅读流程。应用内置格言目录，
 主题、偏好、收藏和当日推荐状态均保存在设备本地。
 
-v1.1 聚焦以下目标：
+v1.0 聚焦以下目标：
 
 - 让首次使用者无需理解分类系统，也能获得合适的阅读内容；
 - 将英文、简体中文和日语内容统一到同一套数据结构；
@@ -20,7 +20,7 @@ v1.1 聚焦以下目标：
 - 建立可重复执行的数据导入、来源记录和质量检查流程；
 - 保持 MVP 简单，不加入广告、付费墙、Widget、账号、云同步或远程推送。
 
-## 2. v1.1 主要功能
+## 2. v1.0 主要功能
 
 ### 2.1 首次启动心情问答
 
@@ -45,9 +45,9 @@ v1.1 聚焦以下目标：
 | 语言 | 文件 | 数量 |
 | --- | --- | ---: |
 | 英文 | `assets/quotes.json` | 2,000 |
-| 简体中文 | `assets/quotes.zh-Hans.json` | 2,000 |
+| 简体中文 | `assets/quotes.zh-Hans.json` | 894 |
 | 日语 | `assets/quotes.ja.json` | 2,000 |
-| 合计 | 三个目录 | 6,000 |
+| 合计 | 三个目录 | 4,894 |
 
 设置页提供 `Quote Language`，用户可以在 English、简体中文和日本語之间切换。
 切换后，当前浏览栈会重建，后续推荐和左右翻页只使用所选语言的数据。
@@ -78,29 +78,32 @@ v1.1 聚焦以下目标：
 - 超长格言在正文区域内滚动，避免作者与来源被挤出屏幕；
 - 中文和日文自动使用系统 CJK 字体，避免西文字体缺字或排版异常。
 
-### 2.5 收藏与兼容迁移
+### 2.5 收藏、历史与兼容迁移
 
-收藏以完整格言快照和收藏时间保存在 AsyncStorage 中。v1.1 增加旧收藏迁移：
+收藏以完整格言快照和收藏时间保存在 AsyncStorage 中。旧版本收藏会在读取时迁移：
 
 - 如果旧 ID 在新目录中仍然存在，自动使用新版规范记录；
 - 如果旧 ID 已经从内置目录删除，尽量保留旧文本和作者；
 - 补齐 `language`、`author_id`、`subcategory` 等新版必需字段；
 - 自动排序并去除重复收藏。
 
+浏览历史与收藏分开保存，最多保留最近 100 条阅读记录。Settings 中的 Clear All
+Data 会清除收藏、历史、主题、偏好和首次启动状态。
+
 ### 2.6 内容来源披露
 
-应用内暂不展示内容来源入口。数据许可、来源与使用说明保留在仓库文档中：
+Settings → Content Sources 会展示内容来源和许可说明。数据许可、来源与使用说明也保留在仓库文档中：
 
 - [第三方内容说明](THIRD_PARTY_CONTENT.md)
 - [格言许可说明](assets/QUOTES_LICENSE.md)
-- [6,000 条目录审计报告](data/quote-audit/expanded-catalog-report.json)
+- [目录审计报告](data/quote-audit/expanded-catalog-report.json)
 
 计划在 App Store Connect 的 **App Review Information / Notes** 中向审核团队说明
-内容来源，而不在当前版本的设置页展示。可使用以下审核备注：
+内容来源。可使用以下审核备注：
 
 > ECHO is an offline-first trilingual quotation reading app. Its English
 > catalog combines ECHO's curated records with English Wikiquote; its Simplified
-> Chinese catalog uses inBox Card and Chinese Wikiquote; and its Japanese catalog
+> Chinese catalog uses Chinese Wikiquote; and its Japanese catalog
 > uses Japanese Wikiquote. Wikiquote-derived material is used under CC BY-SA.
 > Detailed attribution, licensing, provenance, and catalog audit records are
 > maintained in the project documentation. The app does not require an account,
@@ -153,8 +156,8 @@ v1.1 聚焦以下目标：
 当 `source` 存在时，卡片优先显示作品来源；没有可靠作品名时显示具体
 `role`。项目不会为了填满字段而虚构作品来源。
 
-作者与语境资料保存在本地 `QUOTE_CONTEXTS.json`。当前它覆盖三语各 2,000 条、
-合计 6,000 条格言。`quote_id` 定位当前名言的语境，`author_ref` 再定位作者生平。
+作者与语境资料保存在本地 `QUOTE_CONTEXTS.json`。当前它覆盖发布目录的 4,894 条
+格言。`quote_id` 定位当前名言的语境，`author_ref` 再定位作者生平。
 
 | `context_content_status` | 含义 |
 | --- | --- |
@@ -206,7 +209,7 @@ node scripts/generate-editorial-notes.mjs
 
 当前发布目录必须满足：
 
-- 英文、简体中文、日语各 2,000 条，共 6,000 条；
+- 英文 2,000 条、简体中文 894 条、日语 2,000 条，共 4,894 条；
 - 全部 ID 在三个目录之间保持唯一；
 - 标准化后的正文不存在重复；
 - 每条记录都通过运行时 Quote schema 验证；
@@ -228,7 +231,60 @@ node scripts/generate-editorial-notes.mjs
 测试和程序化审计不能代替人工事实核查。社区协作来源中的作者归属、译文和作品名
 仍需要持续抽样复核。
 
-## 6. 项目结构
+## 6. 架构概览
+
+ECHO 采用分层架构，数据从内层向外层单向流动：
+
+```text
+┌─────────────────────────────────────────────────────────┐
+│                 app/index.tsx                           │
+│              (状态机 + 业务编排)                         │
+├─────────────────────────────────────────────────────────┤
+│   screens/          │        components/                │
+│   (10个页面组件)     │     (UI组件: 卡片/弹层/背景)      │
+├─────────────────────────────────────────────────────────┤
+│   services/         │      recommendation/             │
+│   (分享/图标)        │     (纯函数推荐算法)              │
+├─────────────────────────────────────────────────────────┤
+│   storage/          │          data/                    │
+│   (AsyncStorage)    │    (JSON校验/索引/查询)            │
+├─────────────────────────────────────────────────────────┤
+│                    constants/                           │
+│            (调色板、类目、心情映射)                        │
+└─────────────────────────────────────────────────────────┘
+```
+
+### 核心数据流
+
+```text
+用户操作
+    ↓
+setState (乐观更新，UI立即响应)
+    ↓
+AsyncStorage.setItem (异步持久化，失败不回滚)
+    ↓
+下次启动: Promise.all 读回全部状态
+```
+
+### 状态管理
+
+- **工具**: React `useState` + AsyncStorage 手动持久化
+- **无 Redux/Zustand/Jotai**，无 Context
+- **全部状态集中在 `app/index.tsx`**，约 20 个 `useState`
+- **持久化策略**: 乐观更新（先 setState，后写盘）
+
+### 关键模块职责
+
+| 模块 | 职责 | 特点 |
+|------|------|------|
+| `constants/` | 配色、类目、心情定义 | 纯静态，无依赖 |
+| `data/quotes.ts` | JSON → 校验 → 冻结 → Map索引 | 只读，启动时加载 |
+| `storage/` | AsyncStorage 读写 | 每个领域一个文件 |
+| `recommendation/` | 纯函数推荐算法 | 三档回退 + 均衡 |
+| `app/index.tsx` | 状态机 + 页面导航 | 手写状态机，非路由 |
+
+
+## 7. 项目结构
 
 ```text
 src/
@@ -247,7 +303,9 @@ src/
 └── storage/
     ├── preferences.ts               # 主题、字体、动画、语言和心情偏好
     ├── quoteRotation.ts             # 当日推荐状态持久化
-    └── savedQuotes.ts               # 收藏、去重和旧数据迁移
+    ├── savedQuotes.ts               # 收藏、去重和旧数据迁移
+    ├── viewedQuotes.ts              # 浏览历史持久化
+    └── clearLocalData.ts            # 清理 ECHO 本地数据
 
 assets/
 ├── quotes.json                      # 英文目录
@@ -256,7 +314,7 @@ assets/
 └── QUOTES_LICENSE.md                # 格言数据许可说明
 
 scripts/
-├── prepare-v1.1-quotes.mjs          # v1.1 英文受控数据迁移
+├── prepare-v1.1-quotes.mjs          # 历史英文受控数据迁移脚本
 ├── import-english-quotes.mjs        # 英文补充与来源记录
 ├── import-chinese-quotes.mjs        # 中文导入与来源记录
 ├── import-japanese-quotes.mjs       # 日语导入与来源记录
@@ -266,15 +324,14 @@ scripts/
 tests/
 ├── accessibility.test.ts            # 三套主题 WCAG AA 对比度
 ├── contextLookup.test.ts            # 数字/字符串 ID 与典型语境查询
-├── notifications.test.ts            # 提醒时段、三语文案与权限引导规则
 ├── quoteData.test.ts                 # Quote schema 与只读目录行为
-├── quoteContexts.test.ts            # 6,000 条语境资料完整性测试
+├── quoteContexts.test.ts            # 已发布目录的语境完整性测试
 ├── quotes.test.ts                   # 数据目录测试
 ├── selector.test.ts                 # 推荐算法测试
 └── shareQuote.test.ts               # 分享文字与三语界面文案
 ```
 
-## 7. 本地开发
+## 8. 本地开发
 
 项目正确根目录是：
 
@@ -295,14 +352,23 @@ ECHO 只使用 development build，不再使用 Expo Go。首次生成并安装�
 iOS development build：
 
 ```bash
-npx expo run:ios
+npm run ios
 ```
 
-以后启动 Metro：
+以后只启动本地 Metro：
 
 ```bash
 npm start
 ```
+
+在 iPhone 17 模拟器中重新构建并启动 development build：
+
+```bash
+npm run ios
+```
+
+该命令会从当前项目重新构建原生包，等待 `127.0.0.1:8082` 的 iOS bundle 健康检查
+通过后再打开 App，不会连接旧项目的 8081 端口。
 
 清理 Metro 缓存后启动：
 
@@ -322,7 +388,7 @@ npx eas build --profile development --platform ios
 lsof -nP -iTCP:8081 -sTCP:LISTEN
 ```
 
-## 8. 测试与质量检查
+## 9. 测试与质量检查
 
 只运行自动测试：
 
@@ -342,20 +408,10 @@ npm run check
 2. TypeScript 严格类型检查；
 3. Expo Doctor 依赖与配置检查。
 
-目前测试覆盖三语目录、推荐算法、6,000 条语境对应关系、作者引用、核实状态、
+目前测试覆盖三语目录、推荐算法、已发布目录的语境对应关系、作者引用、核实状态、
 分享文案、Quote 边界数据和主题颜色对比度，
 来源约束，以及数字和字符串 ID 的查询行为。React Native 的作者点击交互现阶段
 仍在模拟器中人工检查；若要自动模拟点击，需要引入 React Native Testing Library。
-
-通知测试集中在 `tests/notifications.test.ts`，覆盖：
-
-- 07:00、12:00、21:00 三个时间档及中、英、日固定通知文案；
-- 开启提醒后替换旧 schedule ID，确保只保留一个 ECHO reminder；
-- 修改时间与切换语言时重新调度，关闭时只取消 ECHO 保存的通知 ID；
-- 权限拒绝时不启用提醒，调度失败时保留旧状态；
-- 旧通知取消失败时撤销新通知，避免留下两个提醒；
-- 浏览不足三条时不展示权限引导，关闭引导后不再自动出现；
-- 损坏或字段异常的 AsyncStorage 数据回退到安全默认值。
 
 单独执行三语目录审计：
 
@@ -366,7 +422,7 @@ node scripts/audit-quote-catalogs.mjs
 `expo-doctor` 的在线配置检查需要访问 Expo 服务。如果只出现
 `ECONNRESET`，应先排查网络，而不是立即判断为源代码错误。
 
-## 9. 数据重建
+## 10. 数据重建
 
 以下命令会重新生成或修改格言目录，不应在不了解数据来源和差异的情况下随意运行：
 
@@ -378,14 +434,14 @@ node scripts/import-japanese-quotes.mjs
 node scripts/audit-quote-catalogs.mjs
 ```
 
-来源记录：
+来源记录（未发布的 inBox Card 审计文件不会被 EAS 打包）：
 
 - [英文来源记录](data/quote-audit/english-provenance.json)
 - [中文来源记录](data/quote-audit/chinese-provenance.json)
 - [日语来源记录](data/quote-audit/japanese-provenance.json)
 - [合并审计报告](data/quote-audit/expanded-catalog-report.json)
 
-### 9.1 Git 与 EAS 的大文件分流
+### 10.1 Git 与 EAS 的大文件分流
 
 三语格言目录、`QUOTE_CONTEXTS.json` 和生成的审计资料属于本地大数据文件。
 `.gitignore` 阻止它们进入 Git 历史；`.easignore` 先使用相同规则，再用否定规则将
@@ -402,30 +458,30 @@ node scripts/audit-quote-catalogs.mjs
 环境不包含这些文件，不能生成完整应用包。不要删除 `.easignore` 中的四条例外，
 否则 TypeScript/Metro 构建会因缺少 JSON 导入而失败。
 
-## 10. 隐私、法律与支持
+## 11. 隐私、法律与支持
 
-ECHO 1.1 的核心功能离线运行，不要求账号。偏好、收藏和推荐状态保存在本机。
+ECHO 1.0 的核心功能离线运行，不要求账号。偏好、收藏、历史和主题保存在本机。
 
 - [隐私政策](https://sarada.yachts/projects/echo/privacy)
 - [服务条款](https://sarada.yachts/projects/echo/terms)
 - 反馈邮箱：`abc510433622@gmail.com`
 - [TestFlight 提交流程](docs/TESTFLIGHT_SUBMISSION.md)
 
-## 11. 当前范围限制
+## 12. 当前范围限制
 
-v1.1 暂不包含：
+v1.0 暂不包含：
 
 - 广告和付费功能；
-- Widget 与远程推送；
+- Widget、通知和远程推送；
 - 用户账号和云同步；
 - 跨设备收藏同步；
 - 更深入的 VoiceOver 手势与真实设备 Dynamic Type UI 自动化；
 - 后台内容管理系统；
-- Saved / History 命名重构。
+- 云端内容管理和数据导入导出。
 
 这些功能应在 TestFlight 验证内容质量、推荐体验和稳定性之后再决定优先级。
 
-## 12. v1.2 建议方向
+## 13. v1.2 建议方向
 
 1. 建立内容复核报告，优先人工核查最常展示的 200 条格言；
 2. 建立作者规范表，统一别名、时代、国籍与身份；

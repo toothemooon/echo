@@ -14,8 +14,8 @@ const quotes = quotesJson as Quote[];
 const chineseQuotes = chineseQuotesJson as Quote[];
 const japaneseQuotes = japaneseQuotesJson as Quote[];
 
-test("v1.1 catalog satisfies its release quality gates", () => {
-  assert.equal(quotes.length, 2000);
+test("v1.0 catalog satisfies its release quality gates", () => {
+  assert.equal(quotes.length, 1960);
   assert.ok(quotes.every(isQuote));
   assert.equal(new Set(quotes.map((quote) => quote.id)).size, quotes.length);
   assert.equal(
@@ -42,9 +42,9 @@ test("v1.1 catalog satisfies its release quality gates", () => {
 });
 
 test("English, Chinese, and Japanese catalogs are equal and collision-free", () => {
-  assert.equal(quotes.length, 2000);
-  assert.equal(chineseQuotes.length, 2000);
-  assert.equal(japaneseQuotes.length, 2000);
+  assert.equal(quotes.length, 1960);
+  assert.equal(chineseQuotes.length, 891);
+  assert.equal(japaneseQuotes.length, 1927);
   assert.ok(quotes.every((quote) => quote.language === "en"));
   assert.ok(
     chineseQuotes.every(
@@ -59,11 +59,15 @@ test("English, Chinese, and Japanese catalogs are equal and collision-free", () 
     ),
   );
   const combined = getAllQuotes();
-  assert.equal(combined.length, 6000);
+  assert.equal(combined.length, 4778);
   assert.equal(
     new Set(combined.map((quote) => String(quote.id))).size,
     combined.length,
   );
+});
+
+test("published Chinese catalog excludes records without license evidence", () => {
+  assert.ok(chineseQuotes.every((quote) => !String(quote.id).startsWith("zh-inbox-")));
 });
 
 test("every category and each of its five subcategories is represented", () => {

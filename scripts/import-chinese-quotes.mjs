@@ -8,10 +8,21 @@ import {
 
 const SITE = "https://card.gudong.site";
 const WIKIQUOTE_API = "https://zh.wikiquote.org/w/api.php";
-const TARGET_COUNT = 2000;
+// Only records with a verifiable, redistributable source enter the published
+// catalog. inBox Card records are still collected below for the unpublished
+// audit archive, but are never bundled into the app.
+const TARGET_COUNT = 894;
 const outputPath = new URL("../assets/quotes.zh-Hans.json", import.meta.url);
 const provenancePath = new URL(
   "../data/quote-audit/chinese-provenance.json",
+  import.meta.url,
+);
+const unpublishedOutputPath = new URL(
+  "../data/quote-audit/chinese-inbox-unpublished.json",
+  import.meta.url,
+);
+const unpublishedProvenancePath = new URL(
+  "../data/quote-audit/chinese-inbox-provenance-unpublished.json",
   import.meta.url,
 );
 
@@ -405,7 +416,7 @@ const pagePools = pages
 const wikiquoteSelected = [];
 for (
   let quoteRound = 0;
-  inboxOutput.length + wikiquoteSelected.length < TARGET_COUNT;
+  wikiquoteSelected.length < TARGET_COUNT;
   quoteRound += 1
 ) {
   let added = false;
@@ -421,17 +432,17 @@ for (
       quoteIndex: quoteRound + 1,
     });
     added = true;
-    if (inboxOutput.length + wikiquoteSelected.length === TARGET_COUNT) {
+    if (wikiquoteSelected.length === TARGET_COUNT) {
       break;
     }
   }
   if (!added) break;
 }
 
-if (inboxOutput.length + wikiquoteSelected.length !== TARGET_COUNT) {
+if (wikiquoteSelected.length !== TARGET_COUNT) {
   throw new Error(
-    `Expected ${TARGET_COUNT} Chinese quotes, found ` +
-      `${inboxOutput.length + wikiquoteSelected.length}.`,
+    `Expected ${TARGET_COUNT} Chinese quotes, found `
+      `${wikiquoteSelected.length}.`,
   );
 }
 
@@ -474,18 +485,28 @@ const wikiquoteProvenance = wikiquoteSelected.map((item, index) => ({
   page_id: item.page.pageid,
   revision_id: item.page.revisions[0].revid,
   revision_url:
-    `https://zh.wikiquote.org/w/index.php?title=` +
+    `https://zh.wikiquote.org/w/index.php?title=`
     `${encodeURIComponent(item.page.title)}&oldid=${item.page.revisions[0].revid}`,
   license: "CC BY-SA",
 }));
 
-const output = [...inboxOutput, ...wikiquoteOutput];
-const provenance = [...inboxProvenance, ...wikiquoteProvenance];
+const output = wikiquoteOutput;
+const provenance = wikiquoteProvenance;
 
 fs.writeFileSync(outputPath, `${JSON.stringify(output, null, 2)}\n`);
 fs.writeFileSync(provenancePath, `${JSON.stringify(provenance, null, 2)}\n`);
+fs.writeFileSync(
+  unpublishedOutputPath,
+  `${JSON.stringify(inboxOutput, null, 2)}\n`,
+);
+fs.writeFileSync(
+  unpublishedProvenancePath,
+  `${JSON.stringify(inboxProvenance, null, 2)}\n`,
+);
 
 console.log(`Wrote ${output.length} Chinese quotes to ${outputPath.pathname}`);
-console.log(`inBox Card records: ${inboxOutput.length}`);
+console.log(
+  `Archived ${inboxOutput.length} inBox Card records outside the published catalog.`,
+);
 console.log(`Chinese Wikiquote additions: ${wikiquoteOutput.length}`);
 console.log("Subcategory distribution:", subcategoryCounts);

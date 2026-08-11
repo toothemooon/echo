@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 import {
   View,
+  Text,
+  Pressable,
   Animated,
   Alert,
   Appearance,
-  AppState,
   useWindowDimensions,
 } from "react-native";
+import Constants from "expo-constants";
 import { StatusBar } from "expo-status-bar";
 import { captureRef } from "react-native-view-shot";
 import { formatQuoteShareText } from "../services/shareQuote";
@@ -65,7 +67,6 @@ import ActionBar from "../components/home/ActionBar";
 import HistorySheet from "../components/home/HistorySheet";
 import ShareCard from "../components/home/ShareCard";
 import ShareSheet from "../components/home/ShareSheet";
-import NotificationPrimerSheet from "../components/home/NotificationPrimerSheet";
 
 // 页面组件
 import SettingsScreen from "../screens/SettingsScreen";
@@ -78,37 +79,16 @@ import LanguageSettingsScreen from "../screens/LanguageSettingsScreen";
 import OnboardingScreen from "../screens/OnboardingScreen";
 import QuoteContextScreen from "../screens/QuoteContextScreen";
 import AccessibilityScreen from "../screens/AccessibilityScreen";
-import NotificationSettingsScreen from "../screens/NotificationSettingsScreen";
+import ContentSourcesScreen from "../screens/ContentSourcesScreen";
 import { syncAppIconWithTheme } from "../services/appIcon";
 import { getNextRecommendedQuote } from "../storage/quoteRotation";
 import {
-  addDailyReminderResponseListener,
-  cancelDailyReminder,
-  configureNotificationChannel,
-  getNotificationPermissionState,
-  openSystemNotificationSettings,
-  requestNotificationPermission,
-  scheduleDailyReminder,
-  scheduleDevelopmentTestNotification,
-} from "../services/notifications";
-import {
-  getNotificationPreferences,
-  setNotificationPreferences,
-} from "../storage/notificationPreferences";
-import {
-  DEFAULT_NOTIFICATION_PREFERENCES,
-  recordQuoteViewed,
-  shouldShowNotificationPrimer,
-  type NotificationPermissionState,
-  type NotificationPreferences,
-  type ReminderTime,
-} from "../notifications/model";
-import {
-  disableReminder,
-  enableReminder,
-  rescheduleReminder,
-  rescheduleReminderLanguage,
-} from "../notifications/lifecycle";
+  clearViewedQuotes,
+  getViewedQuotes,
+  recordViewedQuote,
+  type ViewedQuoteRecord,
+} from "../storage/viewedQuotes";
+import { clearLocalData } from "../storage/clearLocalData";
 
 type Page =
   | "home"
@@ -120,7 +100,7 @@ type Page =
   | "language-settings"
   | "animation-settings"
   | "accessibility"
-  | "notification-settings";
+  | "content-sources";
 
 export default function Index() {
   const { height: screenHeight } = useWindowDimensions();
@@ -140,6 +120,7 @@ export default function Index() {
   const [onboardingComplete, setOnboardingCompleteState] = useState(false);
 
   const [savedQuotes, setSavedQuotes] = useState<Quote[]>([]);
+  const [viewedQuotes, setViewedQuotes] = useState<ViewedQuoteRecord[]>([]);
 
   const [quoteFont, setQuoteFontState] = useState<QuoteFont>("elegant");
 
@@ -154,13 +135,8 @@ export default function Index() {
 
   const [initializationReady, setInitializationReady] = useState(false);
   const [highContrast, setHighContrastState] = useState(false);
-  const [notificationPreferences, setNotificationPreferencesState] =
-    useState<NotificationPreferences>(DEFAULT_NOTIFICATION_PREFERENCES);
-  const [notificationPermission, setNotificationPermission] =
-    useState<NotificationPermissionState>("undetermined");
-  const [notificationBusy, setNotificationBusy] = useState(false);
-  const [notificationPrimerVisible, setNotificationPrimerVisible] =
-    useState(false);
+  const [retryingQuote, setRetryingQuote] = useState(false);
+  const [isBookmarkBusy, setIsBookmarkBusy] = useState(false);
 
   // ── Home State ──
   const [quoteHistory, setQuoteHistory] = useState<Quote[]>([]);
@@ -196,8 +172,7 @@ export default function Index() {
           savedMood,
           savedOnboardingComplete,
           savedHighContrast,
-          savedNotificationPreferences,
-          savedNotificationPermission,
+          savedViewedQuotes,
         ] = await Promise.all([
           getTheme(),
           getPreferredCategories(),
@@ -209,8 +184,7 @@ export default function Index() {
           getMoodPreference(),
           getOnboardingComplete(),
           getHighContrast(),
-          getNotificationPreferences(),
-          getNotificationPermissionState(),
+          getViewedQuotes(),
         ]);
 
         const resolvedTheme: ThemeMode =
@@ -235,21 +209,7 @@ export default function Index() {
         setQuoteAnimationState(savedQuoteAnimation);
         setQuoteLanguageState(savedQuoteLanguage);
         setHighContrastState(savedHighContrast);
-        const reconciledNotificationPreferences = {
-          ...savedNotificationPreferences,
-          enabled:
-            savedNotificationPreferences.enabled &&
-            savedNotificationPermission === "authorized",
-        };
-        setNotificationPreferencesState(reconciledNotificationPreferences);
-        setNotificationPermission(savedNotificationPermission);
-        if (
-          reconciledNotificationPreferences.enabled !==
-          savedNotificationPreferences.enabled
-        ) {
-          await setNotificationPreferences(reconciledNotificationPreferences);
-        }
-        await configureNotificationChannel();
+        setViewedQuotes(savedViewedQuotes);
 
         const firstQuote = savedOnboardingComplete
           ? await getNextRecommendedQuote(prefs, [], savedQuoteLanguage)
@@ -275,40 +235,6 @@ export default function Index() {
   }, []);
 
   useEffect(() => {
-    const subscription = AppState.addEventListener("change", (state) => {
-      if (state === "active") {
-        void getNotificationPermissionState()
-          .then((permission) => {
-            setNotificationPermission(permission);
-            if (
-              permission !== "authorized" &&
-              notificationPreferences.enabled
-            ) {
-              const next = {
-                ...notificationPreferences,
-                enabled: false,
-              };
-              setNotificationPreferencesState(next);
-              void setNotificationPreferences(next);
-            }
-          })
-          .catch(() => undefined);
-      }
-    });
-    return () => subscription.remove();
-  }, [notificationPreferences]);
-
-  useEffect(() => {
-    const subscription = addDailyReminderResponseListener(() => {
-      setHistoryVisible(false);
-      setShareVisible(false);
-      setNotificationPrimerVisible(false);
-      setCurrentPage("home");
-    });
-    return () => subscription.remove();
-  }, []);
-
-  useEffect(() => {
     if (!historyVisible) {
       sheetAnim.setValue(screenHeight);
     }
@@ -316,6 +242,14 @@ export default function Index() {
 
   // ── 派生值 ──
   const currentQuote = quoteHistory[historyIndex] ?? null;
+
+  useEffect(() => {
+    if (!currentQuote) return;
+    void recordViewedQuote(currentQuote)
+      .then(() => getViewedQuotes())
+      .then(setViewedQuotes)
+      .catch(() => undefined);
+  }, [currentQuote?.id]);
 
   // ── 启动页 ──
   if (!fontsLoaded || !initializationReady || showSplash) {
@@ -351,7 +285,59 @@ export default function Index() {
   }
 
   if (!currentQuote) {
-    return <View style={{ flex: 1, backgroundColor: colors.background }} />;
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: colors.background,
+          alignItems: "center",
+          justifyContent: "center",
+          padding: 32,
+        }}
+      >
+        <Text style={{ color: colors.text, fontSize: 22, textAlign: "center" }}>
+          No quote is available right now.
+        </Text>
+        <Text
+          style={{
+            color: colors.author,
+            fontSize: 15,
+            lineHeight: 22,
+            textAlign: "center",
+            marginTop: 10,
+          }}
+        >
+          Your saved preferences are safe. Try loading the local catalog again.
+        </Text>
+        <Pressable
+          style={{
+            marginTop: 24,
+            paddingHorizontal: 22,
+            paddingVertical: 13,
+            borderRadius: 22,
+            backgroundColor: colors.btnBg,
+          }}
+          disabled={retryingQuote}
+          onPress={() => {
+            setRetryingQuote(true);
+            void getNextRecommendedQuote(preferredCategories, [], quoteLanguage)
+              .then((quote) => {
+                if (quote) {
+                  setQuoteHistory([quote]);
+                  setHistoryIndex(0);
+                }
+              })
+              .finally(() => setRetryingQuote(false));
+          }}
+          accessibilityRole="button"
+          accessibilityLabel="Try loading a quote again"
+        >
+          <Text style={{ color: colors.text, fontSize: 15 }}>
+            {retryingQuote ? "Loading…" : "Try Again"}
+          </Text>
+        </Pressable>
+      </View>
+    );
   }
 
   const isSaved = savedQuotes.some((quote) => quote.id === currentQuote.id);
@@ -381,109 +367,6 @@ export default function Index() {
   const toggleTheme = () => {
     changeTheme(theme === "dark" ? "light" : "dark");
   };
-
-  async function persistNotificationPreferences(
-    next: NotificationPreferences,
-  ) {
-    setNotificationPreferencesState(next);
-    await setNotificationPreferences(next);
-  }
-
-  async function enableDailyReminder() {
-    if (notificationBusy) return;
-    setNotificationBusy(true);
-    try {
-      const permission = await requestNotificationPermission();
-      setNotificationPermission(permission);
-      const next = await enableReminder(
-        notificationPreferences,
-        quoteLanguage,
-        async () => permission,
-        scheduleDailyReminder,
-      );
-      await persistNotificationPreferences(next);
-      if (!next.enabled) {
-        setNotificationPrimerVisible(false);
-        Alert.alert(
-          "Notifications are off",
-          "You can enable notifications later from ECHO Settings or iOS Settings.",
-        );
-        return;
-      }
-      setNotificationPrimerVisible(false);
-    } catch {
-      Alert.alert(
-        "Unable to schedule reminder",
-        "Your previous reminder has been left unchanged. Please try again.",
-      );
-    } finally {
-      setNotificationBusy(false);
-    }
-  }
-
-  async function disableDailyReminder() {
-    if (notificationBusy) return;
-    setNotificationBusy(true);
-    try {
-      const next = await disableReminder(
-        notificationPreferences,
-        cancelDailyReminder,
-      );
-      await persistNotificationPreferences(next);
-    } catch {
-      Alert.alert("Unable to turn off reminder", "Please try again.");
-    } finally {
-      setNotificationBusy(false);
-    }
-  }
-
-  async function changeReminderTime(time: ReminderTime) {
-    if (
-      notificationBusy ||
-      !notificationPreferences.enabled ||
-      time === notificationPreferences.time
-    ) {
-      return;
-    }
-    setNotificationBusy(true);
-    try {
-      const next = await rescheduleReminder(
-        notificationPreferences,
-        time,
-        quoteLanguage,
-        scheduleDailyReminder,
-      );
-      await persistNotificationPreferences(next);
-    } catch {
-      Alert.alert(
-        "Unable to change reminder",
-        "The previous reminder time is still active.",
-      );
-    } finally {
-      setNotificationBusy(false);
-    }
-  }
-
-  async function dismissNotificationPrimer() {
-    const next = { ...notificationPreferences, primerShown: true };
-    setNotificationPrimerVisible(false);
-    await persistNotificationPreferences(next);
-  }
-
-  async function recordNotificationEngagement() {
-    if (
-      notificationPreferences.enabled ||
-      notificationPreferences.primerShown ||
-      notificationPreferences.quotesViewed >= 3
-    ) {
-      return;
-    }
-    const next = recordQuoteViewed(notificationPreferences);
-    await persistNotificationPreferences(next);
-    if (shouldShowNotificationPrimer(next, onboardingComplete)) {
-      setNotificationPrimerVisible(true);
-    }
-  }
 
   // ── 字体 ──
   const changeQuoteFont = (font: QuoteFont) => {
@@ -533,20 +416,6 @@ export default function Index() {
         setQuoteHistory([firstMatchingQuote]);
         setHistoryIndex(0);
       }
-      if (notificationPreferences.enabled) {
-        try {
-          const next = await rescheduleReminderLanguage(
-            notificationPreferences,
-            nextLanguage,
-            scheduleDailyReminder,
-          );
-          await persistNotificationPreferences(next);
-        } catch {
-          if (__DEV__) {
-            console.warn("Failed to update reminder language.");
-          }
-        }
-      }
     } catch {
       if (__DEV__) {
         console.warn("Failed to change quote language.");
@@ -590,6 +459,8 @@ export default function Index() {
 
   // ── 收藏 ──
   const toggleBookmark = async () => {
+    if (isBookmarkBusy) return;
+    setIsBookmarkBusy(true);
     try {
       if (isSaved) {
         await removeSavedQuote(currentQuote.id);
@@ -609,6 +480,8 @@ export default function Index() {
       if (__DEV__) {
         console.warn("Bookmark state was not updated because saving failed.");
       }
+    } finally {
+      setIsBookmarkBusy(false);
     }
   };
 
@@ -720,7 +593,6 @@ export default function Index() {
       runQuoteTransition("right", () => {
         setHistoryIndex((previous) => previous + 1);
       });
-      void recordNotificationEngagement();
 
       return;
     }
@@ -743,7 +615,6 @@ export default function Index() {
 
       setHistoryIndex((previous) => previous + 1);
     });
-    void recordNotificationEngagement();
   };
 
   // ── 上一条名言 ──
@@ -798,6 +669,33 @@ export default function Index() {
   const openQuoteContext = (quote: Quote) => {
     setContextQuote(quote);
     setCurrentPage("quote-context");
+  };
+
+  const clearAllData = async () => {
+    try {
+      await clearViewedQuotes();
+      await clearLocalData();
+      setThemeState("light");
+      setPreferredCategories([...CATEGORIES]);
+      setMood("surprise");
+      setOnboardingCompleteState(false);
+      setSavedQuotes([]);
+      setViewedQuotes([]);
+      setQuoteFontState("elegant");
+      setQuoteFontSizeState("medium");
+      setQuoteAnimationState("horizontal");
+      setQuoteLanguageState("en");
+      setHighContrastState(false);
+      setQuoteHistory([]);
+      setHistoryIndex(-1);
+      setHistoryVisible(false);
+      setShareVisible(false);
+      setContextQuote(null);
+      setCurrentPage("home");
+      await syncAppIconWithTheme("light");
+    } catch {
+      Alert.alert("Unable to clear data", "Your local data was not changed. Please try again.");
+    }
   };
 
   if (currentPage === "quote-context" && contextQuote) {
@@ -901,33 +799,11 @@ export default function Index() {
     );
   }
 
-  if (currentPage === "notification-settings") {
+  if (currentPage === "content-sources") {
     return (
-      <NotificationSettingsScreen
+      <ContentSourcesScreen
         colors={colors}
         theme={theme}
-        enabled={notificationPreferences.enabled}
-        time={notificationPreferences.time}
-        permission={notificationPermission}
-        busy={notificationBusy}
-        onToggle={(enabled) => {
-          void (enabled ? enableDailyReminder() : disableDailyReminder());
-        }}
-        onChangeTime={(time) => {
-          void changeReminderTime(time);
-        }}
-        onOpenSystemSettings={() => {
-          void openSystemNotificationSettings();
-        }}
-        onTestNotification={() => {
-          void scheduleDevelopmentTestNotification()
-            .then(() => {
-              Alert.alert("Test scheduled", "A notification will appear in 60 seconds.");
-            })
-            .catch(() => {
-              Alert.alert("Unable to schedule test", "Check notification permission.");
-            });
-        }}
         onBack={() => setCurrentPage("settings")}
       />
     );
@@ -946,12 +822,13 @@ export default function Index() {
         onOpenLanguageSettings={() => setCurrentPage("language-settings")}
         onOpenAnimationSettings={() => setCurrentPage("animation-settings")}
         onOpenAccessibility={() => setCurrentPage("accessibility")}
-        onOpenNotifications={() => setCurrentPage("notification-settings")}
-        notificationsEnabled={notificationPreferences.enabled}
-        notificationTime={notificationPreferences.time}
+        onOpenContentSources={() => setCurrentPage("content-sources")}
+        onClearData={clearAllData}
         quoteLanguage={quoteLanguage}
         quoteAnimation={quoteAnimation}
         preferenceSummary={moodSummary(mood)}
+        appVersion={Constants.nativeApplicationVersion ?? Constants.expoConfig?.version ?? "1.0.0"}
+        buildVersion={Constants.nativeBuildVersion ?? "1"}
       />
     );
   }
@@ -988,9 +865,10 @@ export default function Index() {
       />
 
       <View style={{ alignItems: "center" }}>
-        <ActionBar
-          colors={colors}
-          isSaved={isSaved}
+      <ActionBar
+        colors={colors}
+        isSaved={isSaved}
+        isBookmarkBusy={isBookmarkBusy}
           onPrev={canGoPrev ? goPrev : undefined}
           onNext={goNext}
           onBookmark={toggleBookmark}
@@ -1002,11 +880,17 @@ export default function Index() {
       <HistorySheet
         visible={historyVisible}
         savedQuotes={savedQuotes}
+        viewedQuotes={viewedQuotes}
         colors={colors}
         sheetAnim={sheetAnim}
         backdropAnim={backdropAnim}
         onClose={closeHistory}
-        onRemove={handleRemoveSaved}
+        onRemoveSaved={handleRemoveSaved}
+        onClearHistory={() => {
+          void clearViewedQuotes()
+            .then(() => setViewedQuotes([]))
+            .catch(() => Alert.alert("Unable to clear history", "Please try again."));
+        }}
       />
 
       <ShareSheet
@@ -1015,17 +899,6 @@ export default function Index() {
         colors={colors}
         onClose={() => setShareVisible(false)}
         onShareAsImage={shareAsImage}
-      />
-
-      <NotificationPrimerSheet
-        visible={notificationPrimerVisible}
-        colors={colors}
-        onEnable={() => {
-          void enableDailyReminder();
-        }}
-        onNotNow={() => {
-          void dismissNotificationPrimer();
-        }}
       />
 
       {/* 用于生成分享截图，不在屏幕中显示 */}

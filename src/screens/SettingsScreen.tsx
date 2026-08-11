@@ -6,6 +6,7 @@ import {
   Linking,
   Alert,
   ScrollView,
+  Share,
 } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import { Ionicons } from "@expo/vector-icons";
@@ -16,7 +17,6 @@ import type {
   ThemeMode,
 } from "../storage/preferences";
 import ArchiveBackground from "../components/common/ArchiveBackground";
-import { REMINDER_TIMES, type ReminderTime } from "../notifications/model";
 
 type Props = {
   colors: typeof COLORS.light;
@@ -28,17 +28,19 @@ type Props = {
   onOpenLanguageSettings: () => void;
   onOpenAnimationSettings: () => void;
   onOpenAccessibility: () => void;
-  onOpenNotifications: () => void;
-  notificationsEnabled: boolean;
-  notificationTime: ReminderTime;
+  onOpenContentSources: () => void;
+  onClearData: () => Promise<void>;
   quoteLanguage: QuoteLanguagePreference;
   quoteAnimation: QuoteAnimation;
   preferenceSummary: string;
+  appVersion: string;
+  buildVersion: string;
 };
 
 const FEEDBACK_EMAIL = "abc510433622@gmail.com";
 const PRIVACY_URL = "https://sarada.yachts/projects/echo/privacy";
 const TERMS_URL = "https://sarada.yachts/projects/echo/terms";
+const APP_URL = "https://sarada.yachts/projects/echo";
 
 const THEME_LABELS: Record<ThemeMode, string> = {
   light: "Light",
@@ -73,11 +75,35 @@ async function safeOpenURL(url: string) {
 }
 
 export default function SettingsScreen(props: Props) {
+  const handleShareApp = async () => {
+    await Share.share({
+      title: "ECHO — Daily Quotes",
+      message: `ECHO — Daily Quotes\n\nA quiet, offline-first quote reader.\n${APP_URL}`,
+    });
+  };
+
+  const handleClearData = () => {
+    Alert.alert(
+      "Clear All Data?",
+      "This removes saved quotes, reading history, themes, preferences, and onboarding data from this device.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Clear Data",
+          style: "destructive",
+          onPress: () => {
+            void props.onClearData();
+          },
+        },
+      ],
+    );
+  };
+
   const handleSendFeedback = () => {
     const message =
-      "Your thoughts help make ECHO better.\n\n" +
-      "Feel free to send me your feedback, ideas, or suggestions. " +
-      "Every message is read and greatly appreciated.\n\n" +
+      "Your thoughts help make ECHO better.\n\n"
+      "Feel free to send me your feedback, ideas, or suggestions. "
+      "Every message is read and greatly appreciated.\n\n"
       FEEDBACK_EMAIL;
 
     Alert.alert("Send Feedback", message, [
@@ -400,37 +426,6 @@ export default function SettingsScreen(props: Props) {
         </View>
 
         <Text style={[styles.sectionTitle, { color: props.colors.label }]}>
-          NOTIFICATIONS
-        </Text>
-        <View style={[styles.card, { backgroundColor: props.colors.btnBg }]}>
-          <Pressable
-            style={styles.cardRow}
-            onPress={props.onOpenNotifications}
-            accessibilityRole="button"
-            accessibilityLabel="Daily Reminder Settings"
-          >
-            <View style={styles.cardLeft}>
-              <Ionicons
-                name="notifications-outline"
-                size={20}
-                color={props.colors.btnIcon}
-              />
-              <Text style={[styles.cardLabel, { color: props.colors.text }]}>
-                Daily Reminder
-              </Text>
-            </View>
-            <View style={styles.cardRight}>
-              <Text style={[styles.cardValue, { color: props.colors.author }]}>
-                {props.notificationsEnabled
-                  ? REMINDER_TIMES[props.notificationTime].label
-                  : "Off"}
-              </Text>
-              <Ionicons name="chevron-forward" size={16} color={props.colors.btnIcon} />
-            </View>
-          </Pressable>
-        </View>
-
-        <Text style={[styles.sectionTitle, { color: props.colors.label }]}>
           ACCESSIBILITY
         </Text>
         <View style={[styles.card, { backgroundColor: props.colors.btnBg }]}>
@@ -606,7 +601,101 @@ export default function SettingsScreen(props: Props) {
               color={props.colors.btnIcon}
             />
           </Pressable>
+
+          <View
+            style={[
+              styles.cardDivider,
+              { backgroundColor: props.colors.divider },
+            ]}
+          />
+
+          <Pressable
+            style={styles.cardRow}
+            onPress={props.onOpenContentSources}
+            accessibilityRole="button"
+            accessibilityLabel="Content Sources and Licensing"
+          >
+            <View style={styles.cardLeft}>
+              <Ionicons
+                name="library-outline"
+                size={20}
+                color={props.colors.btnIcon}
+              />
+              <Text style={[styles.cardLabel, { color: props.colors.text }]}>
+                Content Sources
+              </Text>
+            </View>
+            <Ionicons
+              name="chevron-forward"
+              size={16}
+              color={props.colors.btnIcon}
+            />
+          </Pressable>
         </View>
+
+        <Text style={[styles.sectionTitle, { color: props.colors.label }]}>
+          APP
+        </Text>
+        <View style={[styles.card, { backgroundColor: props.colors.btnBg }]}>
+          <Pressable
+            style={styles.cardRow}
+            onPress={() => {
+              void handleShareApp();
+            }}
+            accessibilityRole="button"
+            accessibilityLabel="Share ECHO App"
+          >
+            <View style={styles.cardLeft}>
+              <Ionicons
+                name="share-social-outline"
+                size={20}
+                color={props.colors.btnIcon}
+              />
+              <Text style={[styles.cardLabel, { color: props.colors.text }]}>
+                Share App
+              </Text>
+            </View>
+            <Ionicons
+              name="chevron-forward"
+              size={16}
+              color={props.colors.btnIcon}
+            />
+          </Pressable>
+
+          <View
+            style={[
+              styles.cardDivider,
+              { backgroundColor: props.colors.divider },
+            ]}
+          />
+
+          <Pressable
+            style={styles.cardRow}
+            onPress={handleClearData}
+            accessibilityRole="button"
+            accessibilityLabel="Clear All Local Data"
+          >
+            <View style={styles.cardLeft}>
+              <Ionicons
+                name="trash-outline"
+                size={20}
+                color={props.colors.btnIcon}
+              />
+              <Text style={[styles.cardLabel, { color: props.colors.text }]}>
+                Clear All Data
+              </Text>
+            </View>
+            <Ionicons
+              name="chevron-forward"
+              size={16}
+              color={props.colors.btnIcon}
+            />
+          </Pressable>
+        </View>
+
+        <Text style={[styles.version, { color: props.colors.author }]}>
+          Version {props.appVersion} ({props.buildVersion})
+        </Text>
       </ScrollView>
     </View>
   );
@@ -689,6 +778,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     flexShrink: 1,
     textAlign: "right",
+  },
+  version: {
+    fontSize: 12,
+    lineHeight: 18,
+    textAlign: "center",
+    marginTop: 4,
+    marginBottom: 20,
   },
   cardDivider: {
     height: StyleSheet.hairlineWidth,

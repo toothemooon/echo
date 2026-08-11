@@ -4,14 +4,17 @@ const catalogs = [
   {
     language: "en",
     path: new URL("../assets/quotes.json", import.meta.url),
+    expectedCount: 2000,
   },
   {
     language: "zh-Hans",
     path: new URL("../assets/quotes.zh-Hans.json", import.meta.url),
+    expectedCount: 894,
   },
   {
     language: "ja",
     path: new URL("../assets/quotes.ja.json", import.meta.url),
+    expectedCount: 2000,
   },
 ];
 const reportPath = new URL(
@@ -62,7 +65,7 @@ for (const catalog of catalogs) {
   };
 
   if (
-    quotes.length !== 2000 ||
+    quotes.length !== catalog.expectedCount ||
     Object.values(problems).some((value) => value !== 0)
   ) {
     throw new Error(
@@ -104,14 +107,11 @@ const report = {
       "Controlled ECHO English catalog",
       "English Wikiquote",
     ],
-    simplified_chinese: [
-      "inBox Card",
-      "Chinese Wikiquote",
-    ],
+    simplified_chinese: ["Chinese Wikiquote"],
     japanese: ["Japanese Wikiquote"],
   },
   quality_rules: [
-    "Exactly 2,000 records per language.",
+    "Exactly 2,000 English records, 894 published Chinese records, and 2,000 Japanese records.",
     "No duplicate ID or normalized text.",
     "No empty author or role.",
     "No generic Writer, Author, unknown, or generic historical-person role.",
@@ -121,9 +121,9 @@ const report = {
 };
 
 if (
-  report.total_records !== 6000 ||
-  report.unique_ids !== 6000 ||
-  report.unique_texts !== 6000
+  report.total_records !== 4894 ||
+  report.unique_ids !== 4894 ||
+  report.unique_texts !== 4894
 ) {
   throw new Error("Combined catalog uniqueness check failed.");
 }
