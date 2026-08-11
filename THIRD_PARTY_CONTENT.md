@@ -36,6 +36,22 @@ ECHO 应用中的引文内容来自以下来源，使用 CC BY-SA 协议：
 - 抓取脚本：`scripts/fetch-author-biographies.mjs`
   （缓存写入 `data/author-biographies.json`，未纳入版本控制，可随时重新抓取）
 
+## 历史回声
+
+「历史回声 / ECHO / 歴史の残響」一节描述说话者所处的时代与环境，由两类素材拼装：
+
+- **作者结构化事实**：Wikidata 声明 `P569` 生年、`P570` 卒年、`P19` 出生地、
+  `P27` 国籍、`P106` 职业、`P135` 流派、`P2348` 时代（CC0，无署名义务）
+- **作品导言段**：名言出处对应的维基百科条目首句，共解析出 264 部作品
+  （CC BY-SA 4.0）
+
+署名同样显示在应用内，作者条目与作品条目一并列出，URL 存放在
+`historical_echo_sources`。抓取脚本与生平共用同一个。
+
+**边界**：这一节只陈述抓取到的事实，**不声称任何一句名言被说出的具体场合**。
+全部 4,283 条记录的 `verification_status` 仍为 `pending`，出处考证另见
+`docs/QUOTE_CONTEXT_RESEARCH.md`。
+
 ## 署名要求
 
 根据 CC BY-SA 协议，使用这些内容时需要：

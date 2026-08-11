@@ -37,10 +37,13 @@ export type AuthorContext = {
   biography: string;
   biography_sources: ContextSource[];
   verification_status: string;
-  editorial_note: string;
-  editorial_note_kind?: "interpretive_commentary";
   biography_content_status: BiographyContentStatus;
 };
+
+// How much of the historical background could be assembled from verifiable
+// sources. It never describes the occasion of the quotation itself, which no
+// catalog record has verified.
+export type HistoricalEchoStatus = "era_and_work" | "era_only" | "none";
 
 export type QuoteContext = {
   quote_id: QuoteId;
@@ -52,8 +55,9 @@ export type QuoteContext = {
   context_type: string;
   context_sources: ContextSource[];
   verification_status: ContextVerificationStatus;
-  editorial_note: string;
-  editorial_note_kind?: "interpretive_commentary";
+  historical_echo: string;
+  historical_echo_sources: ContextSource[];
+  historical_echo_status: HistoricalEchoStatus;
   context_content_status: ContextContentStatus;
 };
 

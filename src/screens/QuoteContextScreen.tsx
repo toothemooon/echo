@@ -10,7 +10,7 @@ import { StatusBar } from "expo-status-bar";
 import ArchiveBackground from "../components/common/ArchiveBackground";
 import { COLORS } from "../constants/colors";
 import { getAuthorContext, getQuoteContext } from "../data/quoteContexts";
-import type { AuthorContext } from "../data/quoteContexts";
+import type { AuthorContext, ContextSource } from "../data/quoteContexts";
 import type { Quote } from "../data/quotes";
 import type { ThemeMode } from "../storage/preferences";
 
@@ -25,21 +25,21 @@ const COPY = {
   en: {
     title: "ABOUT",
     life: "LIFE",
-    editorial: "EDITORIAL READING",
+    echo: "ECHO",
     source: "SOURCE",
     missing: "No additional profile is available for this quote.",
   },
   "zh-Hans": {
     title: "人物",
     life: "生平",
-    editorial: "编辑解读",
+    echo: "历史回声",
     source: "作品来源",
     missing: "这条名言暂时没有更多人物资料",
   },
   ja: {
     title: "人物",
     life: "人物像",
-    editorial: "編集者の解釈",
+    echo: "歴史の残響",
     source: "出典",
     missing: "この言葉に関する人物情報はまだありません",
   },
@@ -126,9 +126,13 @@ export default function QuoteContextScreen(props: Props) {
                 {author.biography}
               </Section>
             ) : null}
-            {result ? (
-              <Section label={copy.editorial} colors={props.colors}>
-                {result.context.editorial_note}
+            {result?.context.historical_echo ? (
+              <Section
+                label={copy.echo}
+                colors={props.colors}
+                credit={sourceCredit(result.context.historical_echo_sources)}
+              >
+                {result.context.historical_echo}
               </Section>
             ) : null}
             {source ? (
@@ -147,14 +151,21 @@ export default function QuoteContextScreen(props: Props) {
   );
 }
 
-// Biographies taken from Wikipedia are CC BY-SA, which requires the source to
-// be credited wherever the text is shown.
-function biographyCredit(author: AuthorContext): string | undefined {
-  const source = author.biography_sources[0];
-  if (!source?.title) {
+// Text taken from Wikipedia is CC BY-SA, which requires every article it came
+// from to be credited wherever the text is shown. The historical echo can draw
+// on two: the person and the work.
+function sourceCredit(sources: ContextSource[]): string | undefined {
+  const titles = [
+    ...new Set(sources.map((source) => source.title).filter(Boolean)),
+  ];
+  if (!titles.length) {
     return undefined;
   }
-  return `${source.title} — Wikipedia (CC BY-SA 4.0)`;
+  return `${titles.join(" · ")} — Wikipedia (CC BY-SA 4.0)`;
+}
+
+function biographyCredit(author: AuthorContext): string | undefined {
+  return sourceCredit(author.biography_sources);
 }
 
 function Section(props: {

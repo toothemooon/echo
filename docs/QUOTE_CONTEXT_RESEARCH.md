@@ -56,7 +56,21 @@ hand-verified rather than derived:
 - The four `verified` biographies above retain their text but lost their
   `biography_sources`; all author records now carry `editorial_profile`.
 
-Re-verification of these records should be prioritised in the next pass. Note
-that 29 English contexts carry a `text_fingerprint` that no longer matches the
-current quote text — this predates the incident and is tracked separately.
+Re-verification of these records should be prioritised in the next pass. The 29
+English contexts whose `text_fingerprint` no longer matched the quote text were
+traced to an ASCII "..." → "…" normalisation applied after the fingerprints were
+taken; fingerprints are now recomputed on every run and asserted in the tests.
+
+## Historical echo is not context verification
+
+The profile screen now shows a "historical echo" section built from Wikidata
+claims and Wikipedia leads. It describes **the world a speaker lived in** — era,
+birthplace, calling, intellectual current, and what the source work is.
+
+It is **not** a substitute for the research recorded in this ledger. The
+occasion of a quotation — when, where, to whom, in response to what — remains
+unverified for all 4,283 records, and the echo never asserts one. A regex in
+`tests/quoteContexts.test.ts` fails the build if any echo text starts claiming
+one. When a record is genuinely verified here, its occasion can be rendered
+separately, keyed off `verification_status`.
 

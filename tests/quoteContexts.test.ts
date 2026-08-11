@@ -18,6 +18,7 @@ const allowedContentStatuses = new Set([
   "source_only",
   "verified",
 ]);
+const allowedEchoStatuses = new Set(["era_and_work", "era_only", "none"]);
 
 test("all published quotes have one structurally valid context", () => {
   const allQuotes = getAllQuotes();
@@ -65,12 +66,6 @@ test("all published quotes have one structurally valid context", () => {
       // in real Wikipedia prose; only the ECHO-referential form is boilerplate.
       /identified in the current ECHO catalog|presented in ECHO|在\s*ECHO|ECHOでは|ECHO.{0,8}紹介されて|完整生平尚待|本調査ファイル/i,
     );
-    assert.ok(author.editorial_note.trim().length > 0);
-    assert.equal(author.editorial_note_kind, "interpretive_commentary");
-    assert.doesNotMatch(
-      author.editorial_note,
-      /presented in ECHO|在\s*ECHO|ECHOでは|ECHO.{0,8}紹介されて/i,
-    );
     assert.doesNotMatch(
       `${author.known_role} ${author.biography}`,
       /CBDB\s*[=(]?\s*\d+/i,
@@ -80,12 +75,39 @@ test("all published quotes have one structurally valid context", () => {
   for (const context of contextJson.quote_contexts) {
     assert.ok(authorRefs.has(context.author_ref));
     assert.ok(context.context_summary.trim().length > 0);
-    assert.ok(context.editorial_note.trim().length > 0);
-    assert.equal(context.editorial_note_kind, "interpretive_commentary");
-    assert.doesNotMatch(
-      context.editorial_note,
-      /unverified|not verified|verification|未确认|尚待核实|未確認|確認状況|現在記録されている|公共角色与个人表达|public role with a more personal voice|Its force comes from narrowing|複雑な説明を重ねず|留下.{0,8}(自身|个人|讀者|读者).{0,8}(经验|經驗|余地|空间|空間)|联系自身经验|让读者自行体会|留白.{0,8}(经历|經歷|经验|經驗)|leav(?:e|ing).{0,30}(reader|own experience|room)|room for the reader|個々の経験を重ねる余白|読者.{0,12}(余白|委ね)|这句话(告诉|启示|提醒)我们|這句話(告訴|啟示|提醒)我們|this (quote|line) (tells|teaches|reminds) us|この言葉は私たちに.{0,12}(教え|気づかせ|思い出させ)|通过.{0,8}(对比|排比|转折|句式)|借助.{0,8}(并列|节奏|修辞)|対比|並列とリズム|the (contrast|parallel|conditional movement|direct claim) in/i,
+
+    // The historical echo describes the world a speaker lived in. It must stay
+    // consistent with its own status rather than quietly emptying out.
+    assert.ok(
+      allowedEchoStatuses.has(context.historical_echo_status),
+      `unexpected echo status ${context.historical_echo_status}`,
     );
+    if (context.historical_echo_status === "none") {
+      assert.equal(context.historical_echo, "");
+      assert.equal(context.historical_echo_sources.length, 0);
+    } else {
+      assert.ok(context.historical_echo.trim().length > 0);
+      // CC BY-SA: the Wikipedia articles the text came from must be creditable.
+      assert.ok(context.historical_echo_sources.length > 0);
+      for (const source of context.historical_echo_sources) {
+        assert.ok(source.title);
+        assert.match(source.url, /^https:\/\/\w[\w-]*\.wikipedia\.org\/wiki\//);
+      }
+    }
+
+    // The occasion of a quotation is unverified for every catalog record, so
+    // the echo may never claim one. This guard is the boundary between
+    // describing a speaker's world and inventing the moment they spoke.
+    assert.doesNotMatch(
+      context.historical_echo,
+      /当[他她]?.{0,8}时说|说[出下]这[句番]话时|在.{0,10}(发表|说道|讲话时)|因此[他她]?才|这促使[他她]?|spoke these words|said this (?:during|when|at|after|before)|wrote this (?:during|when|after)|which is why (?:he|she|they) |と述べた際|と語った時|この言葉を(?:述べ|語っ|残し)た(?:とき|時|際)|だからこそ.{0,6}は/i,
+    );
+    // Leftovers from the interpretive generation that this field replaced.
+    assert.doesNotMatch(
+      context.historical_echo,
+      /unverified|not verified|未确认|尚待核实|未確認|这句话(告诉|启示|提醒)我们|this (quote|line) (tells|teaches|reminds) us|この言葉は私たちに/i,
+    );
+
     assert.ok(allowedVerificationStatuses.has(context.verification_status));
     assert.ok(allowedContentStatuses.has(context.context_content_status));
 
@@ -105,11 +127,23 @@ test("all published quotes have one structurally valid context", () => {
     }
   }
 
-  assert.equal(
-    new Set(contextJson.quote_contexts.map((context) => context.editorial_note))
-      .size,
-    contextJson.quote_contexts.length,
-    "every quote should receive a distinct editorial reading",
+  // The old field was per-quote interpretation, so "every note is distinct" was
+  // the right guard. The historical echo is a property of a person and a text:
+  // 21 quotations from Hamlet share Hamlet's background, and forcing them apart
+  // would mean inventing differences. Uniqueness is therefore the wrong shape
+  // of guard here — but coverage still needs one, so assert that the echoes do
+  // not collapse: a silent fetch failure would show up as a sharp drop.
+  const echoes = contextJson.quote_contexts
+    .map((context) => context.historical_echo)
+    .filter(Boolean);
+
+  assert.ok(
+    new Set(echoes).size > 1000,
+    `only ${new Set(echoes).size} distinct historical echoes`,
+  );
+  assert.ok(
+    echoes.length / contextJson.quote_contexts.length > 0.9,
+    `only ${echoes.length}/${contextJson.quote_contexts.length} quotes have an echo`,
   );
 
   for (const quote of allQuotes) {

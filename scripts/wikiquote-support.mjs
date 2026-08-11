@@ -178,6 +178,29 @@ export function cleanWikiMarkup(value) {
     .trim();
 }
 
+// Source-work strings come straight from Wikiquote and carry citation debris:
+// URLs, trailing years, section markers, and generic labels that name no work.
+// Shared so the fetcher and the generator agree on the cache key.
+const GENERIC_WORK =
+  /^(名句|名言|語録|语录|各本|俳句|小説|詩|诗|作品|外部リンク|外部链接|external links?|quotes?|attributed|misattributed|disputed|unsourced)$/i;
+
+export function cleanWorkTitle(value) {
+  const cleaned = String(value ?? "")
+    .replace(/\[[^\]]*https?:[^\]]*\]/g, "")
+    .replace(/https?:\/\/\S+/g, "")
+    .replace(/=+\s*$/g, "")
+    .replace(/^[《『「“"（(]+|[》』」”"）)]+$/g, "")
+    .replace(/[,，]\s*\d{4}\s*$/, "")
+    .replace(/\s*\(\s*\d{4}[^)]*\)\s*$/, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (!cleaned || cleaned.length > 60) return null;
+  if (GENERIC_WORK.test(cleaned)) return null;
+  if (/^\d+$/.test(cleaned)) return null;
+  return cleaned;
+}
+
 export function normalizedQuoteKey(value) {
   return String(value)
     .normalize("NFKC")
