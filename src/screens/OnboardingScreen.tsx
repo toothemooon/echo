@@ -38,6 +38,9 @@ export default function OnboardingScreen(props: Props) {
                 },
               ]}
               onPress={() => props.onSelect(option.value)}
+              accessibilityRole="button"
+              accessibilityLabel={option.label}
+              accessibilityHint={option.summary}
             >
               <View style={styles.copy}>
                 <Text style={[styles.label, { color: props.colors.text }]}>

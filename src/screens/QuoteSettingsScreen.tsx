@@ -71,6 +71,9 @@ export default function QuoteSettingsScreen(props: Props) {
               <Pressable
                 style={styles.cardRow}
                 onPress={() => props.onChangeQuoteFont(option.value)}
+                accessibilityRole="radio"
+                accessibilityLabel={`${option.label} font`}
+                accessibilityState={{ checked: selected }}
               >
                 <View style={styles.cardLeft}>
                   <Ionicons
@@ -128,6 +131,9 @@ export default function QuoteSettingsScreen(props: Props) {
               <Pressable
                 style={styles.cardRow}
                 onPress={() => props.onChangeQuoteFontSize(option.value)}
+                accessibilityRole="radio"
+                accessibilityLabel={`${option.label} text size`}
+                accessibilityState={{ checked: selected }}
               >
                 <View style={styles.cardLeft}>
                   <Ionicons

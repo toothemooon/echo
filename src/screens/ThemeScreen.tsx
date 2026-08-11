@@ -74,6 +74,9 @@ export default function ThemeScreen(props: Props) {
                 },
               ]}
               onPress={() => props.onChangeTheme(theme.key)}
+              accessibilityRole="radio"
+              accessibilityLabel={`${theme.label} theme`}
+              accessibilityState={{ checked: isActive }}
             >
               <View style={styles.cardLeft}>
                 <Ionicons

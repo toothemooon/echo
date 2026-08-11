@@ -119,6 +119,10 @@ export default function LanguageSettingsScreen(props: Props) {
               <Pressable
                 style={styles.cardRow}
                 onPress={() => props.onChangeLanguage(option.value)}
+                accessibilityRole="radio"
+                accessibilityLabel={option.label}
+                accessibilityHint={option.description}
+                accessibilityState={{ checked: selected }}
               >
                 <View style={styles.cardLeft}>
                   <Ionicons

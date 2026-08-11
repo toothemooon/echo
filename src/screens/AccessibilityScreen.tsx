@@ -25,12 +25,14 @@ const FEATURES = [
     title: "VoiceOver",
     description:
       "Key controls have spoken labels, roles, states, and clear navigation names.",
+    enabled: true,
   },
   {
     icon: "text-outline" as const,
     title: "Dynamic Type",
     description:
       "Quote and detail screens follow the system text size and remain scrollable at larger sizes.",
+    enabled: true,
   },
 ];
 
@@ -84,6 +86,7 @@ export default function AccessibilityScreen(props: Props) {
                   </Text>
                 </View>
                 <Ionicons name="checkmark-circle" size={21} color={props.colors.label} />
+                <Text style={[styles.enabledLabel, { color: props.colors.label }]}>Enabled</Text>
               </View>
               {index < FEATURES.length - 1 ? (
                 <View style={[styles.rowDivider, { backgroundColor: props.colors.divider }]} />
@@ -109,14 +112,14 @@ export default function AccessibilityScreen(props: Props) {
                 Increase Contrast
               </Text>
               <Text style={[styles.description, { color: props.colors.author }]}>
-                Strengthens text and icon contrast in Light, Dark, and Archive themes.
+                Strengthens text and icon contrast in Light and Dark themes. Archive theme is unaffected.
               </Text>
             </View>
             <Switch
               value={props.highContrast}
               onValueChange={props.onChangeHighContrast}
               accessibilityLabel="Increase Contrast"
-              accessibilityHint="Strengthens text and icon contrast in every theme"
+              accessibilityHint="Strengthens text and icon contrast in Light and Dark themes"
               trackColor={{ false: props.colors.divider, true: props.colors.label }}
               thumbColor={props.colors.text}
             />
@@ -161,4 +164,5 @@ const styles = StyleSheet.create({
   title: { fontSize: 16, fontWeight: "500", flexShrink: 1 },
   description: { marginTop: 4, fontSize: 13, lineHeight: 19, flexShrink: 1 },
   rowDivider: { height: StyleSheet.hairlineWidth, marginLeft: 36 },
+  enabledLabel: { fontSize: 13, fontWeight: "500", marginLeft: 4 },
 });

@@ -268,7 +268,7 @@ export default function Index() {
     );
   }
 
-  const colors = highContrast
+  const colors = highContrast && theme !== "archive"
     ? HIGH_CONTRAST_COLORS[theme]
     : COLORS[theme];
 

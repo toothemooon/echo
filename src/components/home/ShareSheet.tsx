@@ -5,7 +5,6 @@ import {
   Pressable,
   StyleSheet,
   ScrollView,
-  Share,
   AccessibilityInfo,
   ActivityIndicator,
   useWindowDimensions,
@@ -31,7 +30,7 @@ export default function ShareSheet(props: Props) {
   const { height } = useWindowDimensions();
   const [copied, setCopied] = useState(false);
   const [isSharingImage, setIsSharingImage] = useState(false);
-  const [isSharingText, setIsSharingText] = useState(false);
+  
   const copy = getShareCopy(props.quote.language);
   const shareText = formatQuoteShareText(props.quote);
 
@@ -39,7 +38,7 @@ export default function ShareSheet(props: Props) {
     if (!props.visible) {
       setCopied(false);
       setIsSharingImage(false);
-      setIsSharingText(false);
+      
     }
   }, [props.visible]);
 
@@ -63,18 +62,7 @@ export default function ShareSheet(props: Props) {
     if (shared) props.onClose();
   };
 
-  const handleSystemShare = async () => {
-    if (isSharingText) return;
-    setIsSharingText(true);
-    try {
-      await Share.share({ message: shareText });
-      props.onClose();
-    } catch {
-      // The user can close the sheet and continue reading if sharing is cancelled.
-    } finally {
-      setIsSharingText(false);
-    }
-  };
+  
 
   const options = [
     {
@@ -88,12 +76,6 @@ export default function ShareSheet(props: Props) {
       label: copy.image,
       onPress: handleImageShare,
       busy: isSharingImage,
-    },
-    {
-      icon: "share-outline" as const,
-      label: copy.more,
-      onPress: handleSystemShare,
-      busy: isSharingText,
     },
   ];
 

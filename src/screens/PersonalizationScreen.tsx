@@ -59,6 +59,10 @@ export default function PersonalizationScreen(props: Props) {
                   },
                 ]}
                 onPress={() => props.onChangeMood(option.value)}
+                accessibilityRole="radio"
+                accessibilityLabel={option.label}
+                accessibilityHint={option.summary}
+                accessibilityState={{ checked: selected }}
               >
                 <View style={styles.copy}>
                   <Text style={[styles.label, { color: props.colors.text }]}>

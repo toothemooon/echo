@@ -75,11 +75,21 @@ async function safeOpenURL(url: string) {
 }
 
 export default function SettingsScreen(props: Props) {
-  const handleShareApp = async () => {
-    await Share.share({
-      title: "ECHO — Daily Quotes",
-      message: `ECHO — Daily Quotes\n\nA quiet, offline-first quote reader.\n${APP_URL}`,
-    });
+  const handleShareApp = () => {
+    const message =
+      `ECHO — Daily Quotes\n\n`
+      + `A quiet, offline-first quote reader.\n\n`
+      + `${APP_URL}`;
+
+    Alert.alert("Share App", message, [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Copy Link",
+        onPress: () => {
+          void Clipboard.setStringAsync(APP_URL);
+        },
+      },
+    ]);
   };
 
   const handleClearData = () => {
@@ -101,10 +111,10 @@ export default function SettingsScreen(props: Props) {
 
   const handleSendFeedback = () => {
     const message =
-      "Your thoughts help make ECHO better.\n\n"
-      "Feel free to send me your feedback, ideas, or suggestions. "
-      "Every message is read and greatly appreciated.\n\n"
-      FEEDBACK_EMAIL;
+      `Your thoughts help make ECHO better.\n\n`
+      + `Feel free to send me your feedback, ideas, or suggestions. `
+      + `Every message is read and greatly appreciated.\n\n`
+      + `${FEEDBACK_EMAIL}`;
 
     Alert.alert("Send Feedback", message, [
       { text: "Cancel", style: "cancel" },
@@ -112,16 +122,6 @@ export default function SettingsScreen(props: Props) {
         text: "Copy Email",
         onPress: () => {
           void Clipboard.setStringAsync(FEEDBACK_EMAIL);
-        },
-      },
-      {
-        text: "Open Mail",
-        onPress: () => {
-          void safeOpenURL(
-            `mailto:${FEEDBACK_EMAIL}?subject=${encodeURIComponent(
-              "ECHO App Feedback",
-            )}`,
-          );
         },
       },
     ]);
@@ -206,7 +206,7 @@ export default function SettingsScreen(props: Props) {
           ]}
         >
           {/* Theme */}
-          <Pressable style={styles.cardRow} onPress={props.onOpenTheme}>
+          <Pressable style={styles.cardRow} onPress={props.onOpenTheme} accessibilityRole="button" accessibilityLabel="Theme Settings">
             <View style={styles.cardLeft}>
               <Ionicons
                 name="color-palette-outline"
@@ -259,6 +259,8 @@ export default function SettingsScreen(props: Props) {
           <Pressable
             style={styles.cardRow}
             onPress={props.onOpenPersonalization}
+            accessibilityRole="button"
+            accessibilityLabel="Preferences"
           >
             <View style={styles.cardLeft}>
               <Ionicons
@@ -312,6 +314,8 @@ export default function SettingsScreen(props: Props) {
           <Pressable
             style={styles.cardRow}
             onPress={props.onOpenLanguageSettings}
+            accessibilityRole="button"
+            accessibilityLabel="Quote Language"
           >
             <View style={styles.cardLeft}>
               <Ionicons
@@ -362,7 +366,7 @@ export default function SettingsScreen(props: Props) {
           />
 
           {/* Quote Settings */}
-          <Pressable style={styles.cardRow} onPress={props.onOpenQuoteSettings}>
+          <Pressable style={styles.cardRow} onPress={props.onOpenQuoteSettings} accessibilityRole="button" accessibilityLabel="Quote Settings">
             <View style={styles.cardLeft}>
               <Ionicons
                 name="text-outline"
@@ -534,6 +538,8 @@ export default function SettingsScreen(props: Props) {
             onPress={() => {
               void safeOpenURL(PRIVACY_URL);
             }}
+            accessibilityRole="button"
+            accessibilityLabel="Privacy Policy"
           >
             <View style={styles.cardLeft}>
               <Ionicons
@@ -575,6 +581,8 @@ export default function SettingsScreen(props: Props) {
             onPress={() => {
               void safeOpenURL(TERMS_URL);
             }}
+            accessibilityRole="button"
+            accessibilityLabel="Terms of Service"
           >
             <View style={styles.cardLeft}>
               <Ionicons
