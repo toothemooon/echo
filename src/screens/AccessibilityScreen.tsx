@@ -24,15 +24,13 @@ const FEATURES = [
     icon: "volume-high-outline" as const,
     title: "VoiceOver",
     description:
-      "Key controls have spoken labels, roles, states, and clear navigation names.",
-    enabled: true,
+      "All buttons and controls include accessibility labels for VoiceOver. Enable VoiceOver in iOS Settings > Accessibility to use.",
   },
   {
     icon: "text-outline" as const,
     title: "Dynamic Type",
     description:
-      "Quote and detail screens follow the system text size and remain scrollable at larger sizes.",
-    enabled: true,
+      "Text scales with iOS Dynamic Type settings. Adjust font size in iOS Settings > Accessibility > Display & Text Size.",
   },
 ];
 
@@ -86,7 +84,6 @@ export default function AccessibilityScreen(props: Props) {
                   </Text>
                 </View>
                 <Ionicons name="checkmark-circle" size={21} color={props.colors.label} />
-                <Text style={[styles.enabledLabel, { color: props.colors.label }]}>Enabled</Text>
               </View>
               {index < FEATURES.length - 1 ? (
                 <View style={[styles.rowDivider, { backgroundColor: props.colors.divider }]} />
@@ -164,5 +161,5 @@ const styles = StyleSheet.create({
   title: { fontSize: 16, fontWeight: "500", flexShrink: 1 },
   description: { marginTop: 4, fontSize: 13, lineHeight: 19, flexShrink: 1 },
   rowDivider: { height: StyleSheet.hairlineWidth, marginLeft: 36 },
-  enabledLabel: { fontSize: 13, fontWeight: "500", marginLeft: 4 },
+
 });
