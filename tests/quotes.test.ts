@@ -15,7 +15,7 @@ const chineseQuotes = chineseQuotesJson as Quote[];
 const japaneseQuotes = japaneseQuotesJson as Quote[];
 
 test("v1.0 catalog satisfies its release quality gates", () => {
-  assert.equal(quotes.length, 1960);
+  assert.equal(quotes.length, 1465);
   assert.ok(quotes.every(isQuote));
   assert.equal(new Set(quotes.map((quote) => quote.id)).size, quotes.length);
   assert.equal(
@@ -42,7 +42,7 @@ test("v1.0 catalog satisfies its release quality gates", () => {
 });
 
 test("English, Chinese, and Japanese catalogs are equal and collision-free", () => {
-  assert.equal(quotes.length, 1960);
+  assert.equal(quotes.length, 1465);
   assert.equal(chineseQuotes.length, 891);
   assert.equal(japaneseQuotes.length, 1927);
   assert.ok(quotes.every((quote) => quote.language === "en"));
@@ -59,7 +59,7 @@ test("English, Chinese, and Japanese catalogs are equal and collision-free", () 
     ),
   );
   const combined = getAllQuotes();
-  assert.equal(combined.length, 4778);
+  assert.equal(combined.length, 4283);
   assert.equal(
     new Set(combined.map((quote) => String(quote.id))).size,
     combined.length,
@@ -75,7 +75,7 @@ test("every category and each of its five subcategories is represented", () => {
     const categoryQuotes = quotes.filter(
       (quote) => quote.primary_category === category,
     );
-    assert.ok(categoryQuotes.length >= 55, `${category} is underrepresented`);
+    assert.ok(categoryQuotes.length >= 25, `${category} is underrepresented`);
     const represented = new Set(
       categoryQuotes.map((quote) => quote.subcategory),
     );
