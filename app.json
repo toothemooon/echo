@@ -16,7 +16,11 @@
         "usesNonExemptEncryption": false
       },
       "infoPlist": {
-        "LSApplicationQueriesSchemes": ["itms-apps", "mailto", "market"]
+        "LSApplicationQueriesSchemes": ["itms-apps", "mailto", "market"],
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true,
+          "NSAllowsLocalNetworking": true
+        }
       }
     },
     "android": {
