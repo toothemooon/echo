@@ -21,14 +21,34 @@ and shareable quote cards. No account, subscription, advertising, or payment is
 required. Core browsing, favorites, history, preferences, themes, and sharing
 work without an internet connection.
 
+### New Features (v1.1)
+
+- **Historical Echo**: Each quote now includes a "Defining Moment" section
+  that provides a dramatic, single historical event related to the author.
+  This content is generated using AI and stored locally.
+
+### Content Statistics
+
+| Language | Quotes | Authors |
+|----------|--------|---------|
+| English | 1,465 | 211 |
+| Simplified Chinese | 891 | 485 |
+| Japanese | 1,927 | 322 |
+| **Total** | **3,989** | **1,018** |
+
 ## What to test
 
 Please test first launch, quote navigation, category preferences,
 Light/Dark/Archive themes, font and animation settings, bookmarks, history,
 quote sharing, clear-data confirmation, and persistence after restarting the
-app. Please report
-incorrect quote attribution, layout issues with long quotes, broken links, or
-crashes.
+app. Please also test the new "Historical Echo" feature by clicking on author
+names.
+
+Please report:
+- Incorrect quote attribution
+- Layout issues with long quotes
+- Broken links or crashes
+- Issues with Historical Echo content
 
 ## Beta review notes
 
@@ -58,18 +78,20 @@ cloud sync, accounts, advertising, or another third-party SDK is added.
 
 ## Internal testing checklist
 
-- Cold launch and relaunch on a physical iPhone.
-- Clear All Data confirmation and reset of local preferences, favorites, history,
-  and onboarding state.
-- Light, Dark, and Archive theme rendering.
-- Font, size, animation, and preference persistence.
-- Previous/next quote navigation and author rotation.
-- Bookmark add/remove and History empty state.
-- Share text, share image, and system share cancellation.
-- Privacy Policy, Terms of Service, Content Sources, Share App, and feedback links.
-- Airplane-mode operation.
-- Longest published quote and smallest supported screen.
-- VoiceOver labels and Dynamic Type behavior where supported.
+- [ ] Cold launch and relaunch on a physical iPhone
+- [ ] Clear All Data confirmation and reset of local preferences, favorites, history,
+  and onboarding state
+- [ ] Light, Dark, and Archive theme rendering
+- [ ] Font, size, animation, and preference persistence
+- [ ] Previous/next quote navigation and author rotation
+- [ ] Bookmark add/remove and History empty state
+- [ ] Share text, share image, and system share cancellation
+- [ ] Privacy Policy, Terms of Service, Content Sources, Share App, and feedback links
+- [ ] Airplane-mode operation
+- [ ] Longest published quote and smallest supported screen
+- [ ] VoiceOver labels and Dynamic Type behavior where supported
+- [ ] Historical Echo content display (click on author names)
+- [ ] Historical Echo content accuracy and language matching
 
 ## Commands after Expo login
 
