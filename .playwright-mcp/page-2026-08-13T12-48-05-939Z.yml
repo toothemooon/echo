@@ -1,0 +1,194 @@
+- generic [active] [ref=f2e1]:
+  - banner "App Store Connect" [ref=f2e3]:
+    - generic [ref=f2e4]:
+      - heading [level=1] [ref=f2e6]:
+        - link "App Store Connect" [ref=f2e7] [cursor=pointer]:
+          - /url: /
+      - navigation "Global" [ref=f2e8]:
+        - list [ref=f2e10]:
+          - listitem [ref=f2e11]:
+            - link "Apps" [ref=f2e12] [cursor=pointer]:
+              - /url: /apps
+          - listitem [ref=f2e13]:
+            - link "Trends" [ref=f2e14] [cursor=pointer]:
+              - /url: /trends
+          - listitem [ref=f2e15]:
+            - link "Reports" [ref=f2e16] [cursor=pointer]:
+              - /url: /itc/payments_and_financial_reports
+          - listitem [ref=f2e17]:
+            - link "Business" [ref=f2e18] [cursor=pointer]:
+              - /url: /business
+          - listitem [ref=f2e19]:
+            - link "Users and Access" [ref=f2e20] [cursor=pointer]:
+              - /url: /access/users
+      - button "SUCHUAN HAN SUCHUAN HAN Account name menu" [ref=f2e22] [cursor=pointer]:
+        - generic:
+          - generic: SUCHUAN HAN
+          - generic: SUCHUAN HAN
+  - generic [ref=f2e28]:
+    - button "Apps menu, ECHO (632bcf), selected" [ref=f2e33] [cursor=pointer]:
+      - generic [ref=f2e34]:
+        - generic "ECHO (632bcf)" [ref=f2e35]:
+          - img "ECHO (632bcf)" [ref=f2e36]
+        - generic [ref=f2e38]: ECHO (632bcf)
+    - navigation "Apps" [ref=f2e43]:
+      - list [ref=f2e44]:
+        - listitem [ref=f2e45]:
+          - link "Distribution" [ref=f2e46] [cursor=pointer]:
+            - /url: /apps/6793616687/distribution
+        - listitem [ref=f2e47]:
+          - link "Analytics" [ref=f2e48] [cursor=pointer]:
+            - /url: /apps/6793616687/analytics
+        - listitem [ref=f2e49]:
+          - link "TestFlight" [ref=f2e50] [cursor=pointer]:
+            - /url: /teams/137f90dd-95ed-4b24-81e9-3ac566aa2283/apps/6793616687/testflight
+        - listitem [ref=f2e51]:
+          - link "Xcode Cloud" [ref=f2e52] [cursor=pointer]:
+            - /url: /teams/137f90dd-95ed-4b24-81e9-3ac566aa2283/apps/6793616687/ci
+  - main [ref=f2e57]:
+    - generic [ref=f2e1181]:
+      - generic [ref=f2e1185]:
+        - generic [ref=f2e1186]: iOS App 1.0
+        - heading "Media Manager" [level=2] [ref=f2e1192]
+      - generic [ref=f2e1193]:
+        - generic [ref=f2e1194]:
+          - navigation [ref=f2e1195]:
+            - listitem [ref=f2e1196] [cursor=pointer]:
+              - link "iPhone" [ref=f2e1197]:
+                - /url: /apps/6793616687/distribution/ios/version/inflight/media-manager/iphone
+            - listitem [ref=f2e1198] [cursor=pointer]:
+              - link "iPad" [ref=f2e1199]:
+                - /url: /apps/6793616687/distribution/ios/version/inflight/media-manager/ipad
+            - listitem [ref=f2e1200] [cursor=pointer]:
+              - link "Apple Watch" [ref=f2e1201]:
+                - /url: /apps/6793616687/distribution/ios/version/inflight/media-manager/apple-watch
+            - listitem [ref=f2e1202] [cursor=pointer]:
+              - link "iMessage App" [ref=f2e1203]:
+                - /url: /apps/6793616687/distribution/ios/version/inflight/media-manager/imessages
+          - generic [ref=f2e1205]:
+            - button "English (U.S.)" [disabled] [ref=f2e1206]
+            - button "?" [ref=f2e1209] [cursor=pointer]
+        - paragraph [ref=f2e1210]: Adding accurate screenshots of your app on the newest devices can help you represent the app’s user experience. Keep in mind that we’ll use these screenshots for all iOS display sizes and localizations. Screenshots are only required for iOS apps, and only the first 3 will be used on the app installation sheets.
+        - generic [ref=f2e1213]:
+          - generic:
+            - alert
+          - generic [ref=f2e1215]:
+            - button "iPhone 6.9\" Display" [ref=f2e1216] [cursor=pointer]:
+              - generic [ref=f2e1228]:
+                - generic [ref=f2e1229]: iPhone
+                - generic [ref=f2e1230]: 6.9" Display
+            - region "iPhone 6.9\" Display"
+        - generic [ref=f2e1233]:
+          - generic:
+            - alert
+          - generic [ref=f2e1235]:
+            - generic [ref=f2e1244]:
+              - generic [ref=f2e1245]: iPhone
+              - generic [ref=f2e1246]: 6.5" Display
+            - region [ref=f2e1247]:
+              - tabpanel [ref=f2e1248]:
+                - generic [ref=f2e1251]:
+                  - list "App Previews from 6.5\" Display"
+                  - list "Screenshots from 6.5\" Display" [ref=f2e1252]:
+                    - listitem [ref=f2e1253]:
+                      - generic [ref=f2e1254]:
+                        - button "Screenshot screenshot_share_6.5.png" [ref=f2e1255]
+                        - button "Delete" [ref=f2e1258] [cursor=pointer]
+                    - listitem [ref=f2e1261]:
+                      - generic [ref=f2e1262]:
+                        - button "Screenshot screenshot_theme_6.5.png" [ref=f2e1263]
+                        - button "Delete" [ref=f2e1266] [cursor=pointer]
+                    - listitem [ref=f2e1269]:
+                      - generic [ref=f2e1270]:
+                        - button "Screenshot screenshot_share_sheet_6.5.png" [ref=f2e1271]
+                        - button "Delete" [ref=f2e1274] [cursor=pointer]
+                    - listitem [ref=f2e1277]:
+                      - generic [ref=f2e1278]:
+                        - button "Screenshot screenshot_history_view_6.5.png" [ref=f2e1279]
+                        - button "Delete" [ref=f2e1282] [cursor=pointer]
+                    - listitem [ref=f2e1285]:
+                      - generic [ref=f2e1286]:
+                        - button "Screenshot screenshot_settings_6.5.png" [ref=f2e1287]
+                        - button "Delete" [ref=f2e1290] [cursor=pointer]
+                - generic [ref=f2e1293]:
+                  - paragraph [ref=f2e1295]: 0 of 3 App Previews
+                  - paragraph [ref=f2e1297]: 5 of 10 Screenshots
+                  - paragraph [ref=f2e1300]:
+                    - button "Choose File" [ref=f2e1301] [cursor=pointer]
+                  - paragraph [ref=f2e1303]:
+                    - button "Delete All" [ref=f2e1304] [cursor=pointer]
+        - generic [ref=f2e1307]:
+          - generic:
+            - alert
+          - generic [ref=f2e1309]:
+            - button "iPhone 6.3\" Display" [ref=f2e1310] [cursor=pointer]:
+              - generic [ref=f2e1322]:
+                - generic [ref=f2e1323]: iPhone
+                - generic [ref=f2e1324]: 6.3" Display
+            - region "iPhone 6.3\" Display"
+        - generic [ref=f2e1327]:
+          - generic:
+            - alert
+          - generic [ref=f2e1329]:
+            - button "iPhone 6.1\" Display" [ref=f2e1330] [cursor=pointer]:
+              - generic [ref=f2e1342]:
+                - generic [ref=f2e1343]: iPhone
+                - generic [ref=f2e1344]: 6.1" Display
+            - region "iPhone 6.1\" Display"
+        - generic [ref=f2e1347]:
+          - generic:
+            - alert
+          - generic [ref=f2e1349]:
+            - button "iPhone 5.5\" Display" [ref=f2e1350] [cursor=pointer]:
+              - generic [ref=f2e1362]:
+                - generic [ref=f2e1363]: iPhone
+                - generic [ref=f2e1364]: 5.5" Display
+            - region "iPhone 5.5\" Display"
+        - generic [ref=f2e1367]:
+          - generic:
+            - alert
+          - generic [ref=f2e1369]:
+            - button "iPhone 4.7\" Display" [ref=f2e1370] [cursor=pointer]:
+              - generic [ref=f2e1382]:
+                - generic [ref=f2e1383]: iPhone
+                - generic [ref=f2e1384]: 4.7" Display
+            - region "iPhone 4.7\" Display"
+        - generic [ref=f2e1387]:
+          - generic:
+            - alert
+          - generic [ref=f2e1389]:
+            - button "iPhone 4\" Display" [ref=f2e1390] [cursor=pointer]:
+              - generic [ref=f2e1402]:
+                - generic [ref=f2e1403]: iPhone
+                - generic [ref=f2e1404]: 4" Display
+            - region "iPhone 4\" Display"
+        - generic [ref=f2e1407]:
+          - generic:
+            - alert
+          - generic [ref=f2e1409]:
+            - button "iPhone 3.5\" Display" [ref=f2e1410] [cursor=pointer]:
+              - generic [ref=f2e1422]:
+                - generic [ref=f2e1423]: iPhone
+                - generic [ref=f2e1424]: 3.5" Display
+            - region "iPhone 3.5\" Display"
+  - contentinfo [ref=f2e450]:
+    - generic [ref=f2e451]:
+      - list [ref=f2e452]:
+        - listitem [ref=f2e453]:
+          - link "App Store Connect" [ref=f2e454] [cursor=pointer]:
+            - /url: /apps
+      - list [ref=f2e455]:
+        - listitem [ref=f2e456]: Copyright © 2026 Apple Inc. All rights reserved. |
+        - listitem [ref=f2e457]:
+          - link "Terms of Service" [ref=f2e458] [cursor=pointer]:
+            - /url: /WebObjects/iTunesConnect.woa/wa/termsOfService
+          - text: "|"
+        - listitem [ref=f2e459]:
+          - link "Privacy Policy" [ref=f2e460] [cursor=pointer]:
+            - /url: https://www.apple.com/legal/privacy
+          - text: "|"
+        - listitem [ref=f2e461]:
+          - link "Contact Us" [ref=f2e462] [cursor=pointer]:
+            - /url: /contact-us
+  - log [ref=f2e1425]
+  - log [ref=f2e1426]

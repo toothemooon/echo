@@ -17,10 +17,7 @@
       },
       "infoPlist": {
         "LSApplicationQueriesSchemes": ["itms-apps", "mailto", "market"],
-        "NSAppTransportSecurity": {
-          "NSAllowsArbitraryLoads": true,
-          "NSAllowsLocalNetworking": true
-        }
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {

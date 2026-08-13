@@ -1,0 +1,361 @@
+- generic [ref=f3e1]:
+  - banner "App Store Connect" [ref=f3e3]:
+    - generic [ref=f3e4]:
+      - heading [level=1] [ref=f3e20]:
+        - link "App Store Connect" [ref=f3e21] [cursor=pointer]:
+          - /url: /
+      - navigation "Global" [ref=f3e7]:
+        - list [ref=f3e23]:
+          - listitem [ref=f3e24]:
+            - link "Apps" [ref=f3e25] [cursor=pointer]:
+              - /url: /apps
+          - listitem [ref=f3e26]:
+            - link "Trends" [ref=f3e27] [cursor=pointer]:
+              - /url: /trends
+          - listitem [ref=f3e28]:
+            - link "Reports" [ref=f3e29] [cursor=pointer]:
+              - /url: /itc/payments_and_financial_reports
+          - listitem [ref=f3e30]:
+            - link "Business" [ref=f3e31] [cursor=pointer]:
+              - /url: /business
+          - listitem [ref=f3e32]:
+            - link "Users and Access" [ref=f3e33] [cursor=pointer]:
+              - /url: /access/users
+      - button "SUCHUAN HAN SUCHUAN HAN Account name menu" [ref=f3e35] [cursor=pointer]:
+        - generic:
+          - generic: SUCHUAN HAN
+          - generic: SUCHUAN HAN
+  - generic [ref=f3e41]:
+    - button "Apps menu, ECHO (632bcf), selected" [ref=f3e46] [cursor=pointer]:
+      - generic [ref=f3e47]:
+        - generic "ECHO (632bcf)" [ref=f3e48]:
+          - img "ECHO (632bcf)" [ref=f3e49]
+        - generic [ref=f3e51]: ECHO (632bcf)
+    - navigation "Apps" [ref=f3e56]:
+      - list [ref=f3e57]:
+        - listitem [ref=f3e58]:
+          - link "Distribution" [ref=f3e59] [cursor=pointer]:
+            - /url: /apps/6793616687/distribution
+        - listitem [ref=f3e60]:
+          - link "Analytics" [ref=f3e61] [cursor=pointer]:
+            - /url: /apps/6793616687/analytics
+        - listitem [ref=f3e62]:
+          - link "TestFlight" [ref=f3e63] [cursor=pointer]:
+            - /url: /teams/137f90dd-95ed-4b24-81e9-3ac566aa2283/apps/6793616687/testflight
+        - listitem [ref=f3e64]:
+          - link "Xcode Cloud" [ref=f3e65] [cursor=pointer]:
+            - /url: /teams/137f90dd-95ed-4b24-81e9-3ac566aa2283/apps/6793616687/ci
+  - main [ref=f3e72]:
+    - generic [ref=f3e77]:
+      - navigation "Distribution" [ref=f3e79]:
+        - list [ref=f3e80]:
+          - listitem [ref=f3e81]:
+            - generic [ref=f3e82]:
+              - heading "iOS App" [level=2] [ref=f3e84]
+              - list [ref=f3e85]:
+                - listitem [ref=f3e86]:
+                  - link "1.0 Prepare for Submission" [ref=f3e87] [cursor=pointer]:
+                    - /url: /apps/6793616687/distribution/ios/version/inflight
+            - button "Add Platform" [ref=f3e91] [cursor=pointer]
+          - listitem [ref=f3e92]:
+            - separator [ref=f3e93]
+          - listitem [ref=f3e94]:
+            - heading "General" [level=2] [ref=f3e96]
+            - list [ref=f3e97]:
+              - listitem [ref=f3e98]:
+                - link "App Information" [ref=f3e99] [cursor=pointer]:
+                  - /url: /apps/6793616687/distribution/info
+              - listitem [ref=f3e101]:
+                - link "App Review" [ref=f3e102] [cursor=pointer]:
+                  - /url: /apps/6793616687/distribution/reviewsubmissions
+              - listitem [ref=f3e104]:
+                - link "History" [ref=f3e105] [cursor=pointer]:
+                  - /url: /apps/6793616687/distribution/activity/ios/versions
+          - listitem [ref=f3e107]:
+            - separator [ref=f3e108]
+          - listitem [ref=f3e109]:
+            - heading "App Store" [level=2] [ref=f3e111]
+            - generic [ref=f3e112]:
+              - heading "Trust & Safety" [level=3] [ref=f3e114]
+              - list [ref=f3e115]:
+                - listitem [ref=f3e116]:
+                  - link "App Privacy" [ref=f3e117] [cursor=pointer]:
+                    - /url: /apps/6793616687/distribution/privacy
+                - listitem [ref=f3e119]:
+                  - link "App Accessibility" [ref=f3e120] [cursor=pointer]:
+                    - /url: /apps/6793616687/distribution/accessibility
+                - listitem [ref=f3e122]:
+                  - link "Ratings and Reviews" [ref=f3e123] [cursor=pointer]:
+                    - /url: /apps/6793616687/distribution/ratings/ios
+            - generic [ref=f3e125]:
+              - heading "Growth & Marketing" [level=3] [ref=f3e127]
+              - list [ref=f3e128]:
+                - listitem [ref=f3e129]:
+                  - link "In-App Events" [ref=f3e130] [cursor=pointer]:
+                    - /url: /apps/6793616687/distribution/events
+                - listitem [ref=f3e132]:
+                  - link "Custom Product Pages" [ref=f3e133] [cursor=pointer]:
+                    - /url: /apps/6793616687/distribution/productpages
+                - listitem [ref=f3e135]:
+                  - link "Product Page Optimization" [ref=f3e136] [cursor=pointer]:
+                    - /url: /apps/6793616687/distribution/optimization
+                - listitem [ref=f3e138]:
+                  - link "Promo Codes" [ref=f3e139] [cursor=pointer]:
+                    - /url: /apps/6793616687/distribution/promo_codes/generate
+                - listitem [ref=f3e141]:
+                  - link "Game Center" [ref=f3e142] [cursor=pointer]:
+                    - /url: /apps/6793616687/distribution/gamecenter
+            - generic [ref=f3e144]:
+              - heading "Monetization" [level=3] [ref=f3e146]
+              - list [ref=f3e147]:
+                - listitem [ref=f3e148]:
+                  - link "Pricing and Availability" [ref=f3e149] [cursor=pointer]:
+                    - /url: /apps/6793616687/distribution/pricing
+                - listitem [ref=f3e151]:
+                  - link "In-App Purchases" [ref=f3e152] [cursor=pointer]:
+                    - /url: /apps/6793616687/distribution/iaps
+                - listitem [ref=f3e154]:
+                  - link "Subscriptions" [ref=f3e155] [cursor=pointer]:
+                    - /url: /apps/6793616687/distribution/subscriptions
+            - generic [ref=f3e157]:
+              - heading "Featuring" [level=3] [ref=f3e159]
+              - list [ref=f3e160]:
+                - listitem [ref=f3e161]:
+                  - link "Nominations" [ref=f3e162] [cursor=pointer]:
+                    - /url: /apps/6793616687/distribution/nominations
+      - generic [ref=f3e166]:
+        - generic [ref=f3e167]:
+          - generic [ref=f3e168]:
+            - heading "iOS App Version 1.0" [level=2] [ref=f3e171]
+            - generic [ref=f3e172]:
+              - button "Save" [ref=f3e173] [cursor=pointer]
+              - button "Add for Review" [disabled] [ref=f3e174]
+          - separator [ref=f3e175]
+        - generic [ref=f3e176]:
+          - generic [ref=f3e179]:
+            - paragraph [ref=f3e181]: The assets and metadata below appear on your app’s product page, when users install your app, and will be used for web engine search results once you release your app.
+            - generic [ref=f3e184]:
+              - button "English (U.S.)" [ref=f3e185] [cursor=pointer]
+              - button "?" [ref=f3e190] [cursor=pointer]
+          - separator [ref=f3e191]
+          - generic [ref=f3e192]:
+            - heading "Previews and Screenshots" [level=3] [ref=f3e193]
+            - button "More information" [ref=f3e195] [cursor=pointer]: "?"
+          - paragraph [ref=f3e196]: Adding accurate screenshots of your app on the newest devices can help you represent the app's user experience. Keep in mind that we'll use these screenshots for all display sizes and localizations. Screenshots are only required for iOS apps, and only the first 3 will be used on the app installation sheets.
+          - generic [ref=f3e197]:
+            - tablist [ref=f3e198]:
+              - tab "iPhone" [selected] [ref=f3e199] [cursor=pointer]
+              - tab "iPad" [ref=f3e201] [cursor=pointer]
+              - tab "Apple Watch" [ref=f3e203] [cursor=pointer]
+            - paragraph [ref=f3e205]:
+              - link "View All Sizes in Media Manager" [ref=f3e206] [cursor=pointer]:
+                - /url: /apps/6793616687/distribution/ios/version/inflight/media-manager/iphone
+          - generic [ref=f3e208]:
+            - generic:
+              - alert
+            - tabpanel "iPhone" [ref=f3e209]:
+              - generic [ref=f3e210]:
+                - generic [ref=f3e219]:
+                  - generic [ref=f3e220]: iPhone
+                  - generic [ref=f3e221]: 6.5" Display
+                - region [ref=f3e222]:
+                  - tabpanel [ref=f3e223]:
+                    - generic [ref=f3e226]:
+                      - list "App Previews from 6.5\" Display"
+                      - list "Screenshots from 6.5\" Display" [ref=f3e227]:
+                        - listitem [ref=f3e276]:
+                          - generic [ref=f3e277]:
+                            - button "Screenshot screenshot_archive_theme_6.5.png" [ref=f3e278]
+                            - button "Delete" [ref=f3e281] [cursor=pointer]
+                        - listitem [ref=f3e268]:
+                          - generic [ref=f3e269]:
+                            - button "Screenshot screenshot_dark_theme_final_6.5.png" [ref=f3e270]
+                            - button "Delete" [ref=f3e273] [cursor=pointer]
+                        - listitem [ref=f3e228]:
+                          - generic [ref=f3e229]:
+                            - button "Screenshot screenshot_share_6.5.png" [ref=f3e230]
+                            - button "Delete" [ref=f3e233] [cursor=pointer]
+                        - listitem [ref=f3e236]:
+                          - generic [ref=f3e237]:
+                            - button "Screenshot screenshot_theme_6.5.png" [ref=f3e238]
+                            - button "Delete" [ref=f3e241] [cursor=pointer]
+                        - listitem [ref=f3e244]:
+                          - generic [ref=f3e245]:
+                            - button "Screenshot screenshot_share_sheet_6.5.png" [ref=f3e246]
+                            - button "Delete" [ref=f3e249] [cursor=pointer]
+                        - listitem [ref=f3e252]:
+                          - generic [ref=f3e253]:
+                            - button "Screenshot screenshot_history_view_6.5.png" [ref=f3e254]
+                            - button "Delete" [ref=f3e257] [cursor=pointer]
+                        - listitem [ref=f3e260]:
+                          - generic [ref=f3e261]:
+                            - button "Screenshot screenshot_settings_6.5.png" [ref=f3e262]
+                            - button "Delete" [ref=f3e265] [cursor=pointer]
+                    - generic [ref=f3e284]:
+                      - paragraph [ref=f3e286]: 0 of 3 App Previews
+                      - paragraph [ref=f3e288]: 7 of 10 Screenshots
+                      - paragraph [ref=f3e291]:
+                        - button "Choose File" [ref=f3e292] [cursor=pointer]
+                      - paragraph [ref=f3e294]:
+                        - button "Delete All" [ref=f3e295] [cursor=pointer]
+          - generic [ref=f3e296]:
+            - generic [ref=f3e297]:
+              - generic [ref=f3e299]:
+                - generic [ref=f3e300]: Promotional Text
+                - button "More information" [ref=f3e302] [cursor=pointer]: "?"
+              - textbox "Promotional Text" [ref=f3e304]: "ECHO: Daily wisdom in English, Chinese & Japanese. Offline-first, mindful reading."
+              - status "Characters remaining" [ref=f3e306]: "88"
+            - separator [ref=f3e308]
+            - generic [ref=f3e309]:
+              - generic [ref=f3e311]:
+                - generic [ref=f3e312]: Description
+                - button "More information" [ref=f3e314] [cursor=pointer]: "?"
+              - textbox "Description" [ref=f3e316]: "ECHO is an offline-first daily quote reading app built with Expo and React Native. It provides a quiet, mindful reading experience with three-language content (English, Simplified Chinese, and Japanese). Key Features: • Daily curated quotes based on your mood and preferences • Three-language support: English, 中文, 日本語 • Light, Dark, and Archive themes • Elegant and System font options • Bookmark and reading history • No account required, no ads, no subscriptions • Complete offline functionality ECHO uses a smart recommendation system that considers your mood preferences, reading history, and content categories to deliver personalized daily wisdom. The app includes nearly 4,000 carefully curated quotes from diverse sources worldwide. Perfect for daily mindfulness practice, language learners, and anyone seeking quiet inspiration in their daily routine."
+              - status "Characters remaining" [ref=f3e318]: 3,136
+            - generic [ref=f3e319]:
+              - generic [ref=f3e321]:
+                - generic [ref=f3e322]: Keywords
+                - button "More information" [ref=f3e324] [cursor=pointer]: "?"
+              - textbox "Keywords" [ref=f3e326]: quotes,daily,wisdom,mindfulness,meditation,inspiration,english,chinese,japanese,offline,reading
+              - status "Characters remaining" [ref=f3e328]: "5"
+            - generic [ref=f3e329]:
+              - generic [ref=f3e331]:
+                - generic [ref=f3e332]: Support URL
+                - button "More information" [ref=f3e334] [cursor=pointer]: "?"
+              - textbox "Support URL" [ref=f3e336]: https://github.com/allenhan/echo/issues
+            - generic [ref=f3e337]:
+              - generic [ref=f3e339]:
+                - generic [ref=f3e340]: Marketing URL
+                - button "More information" [ref=f3e342] [cursor=pointer]: "?"
+              - textbox "Marketing URL" [ref=f3e344]: https://github.com/allenhan/echo
+            - generic [ref=f3e345]:
+              - generic [ref=f3e347]:
+                - generic [ref=f3e348]: Version
+                - button "More information" [ref=f3e350] [cursor=pointer]: "?"
+              - textbox "Version" [ref=f3e352]: "1.0"
+            - generic [ref=f3e353]:
+              - generic [ref=f3e355]:
+                - generic [ref=f3e356]: Copyright
+                - button "More information" [ref=f3e358] [cursor=pointer]: "?"
+              - textbox "Copyright" [ref=f3e360]: 2026 ECHO App
+              - status "Characters remaining" [ref=f3e362]: "187"
+            - generic [ref=f3e363]:
+              - generic [ref=f3e365]:
+                - generic [ref=f3e366]: Routing App Coverage File
+                - button "More information" [ref=f3e368] [cursor=pointer]: "?"
+              - generic [ref=f3e370] [cursor=pointer]:
+                - button "Choose File" [ref=f3e371]
+                - generic [ref=f3e372]: Choose File
+          - separator [ref=f3e374]
+          - button [ref=f3e376] [cursor=pointer]
+          - generic [ref=f3e381]:
+            - heading [level=3] [ref=f3e382]:
+              - button [ref=f3e383] [cursor=pointer]
+            - button "More information" [ref=f3e388] [cursor=pointer]: "?"
+        - generic [ref=f3e389]:
+          - generic [ref=f3e390]:
+            - heading "Build" [level=3] [ref=f3e391]
+            - button "Add Build" [ref=f3e392] [cursor=pointer]
+          - generic [ref=f3e396]:
+            - paragraph [ref=f3e397]:
+              - generic [ref=f3e398]:
+                - text: Upload your builds using one of several tools.
+                - link "See Upload Tools" [ref=f3e399] [cursor=pointer]:
+                  - /url: https://developer.apple.com/help/app-store-connect/manage-builds/upload-builds
+            - button "Add Build" [ref=f3e401] [cursor=pointer]
+        - generic [ref=f3e402]:
+          - heading "In-App Purchases and Subscriptions" [level=3] [ref=f3e403]
+          - generic [ref=f3e404]:
+            - paragraph [ref=f3e407]:
+              - text: In-app purchases and subscriptions can now be submitted for review from the In-App Purchases and Subscriptions sections. Include an app version in your submission to have items reviewed together. Your first in-app purchase and subscription must be submitted with a new app version.
+              - link "Learn More" [ref=f3e408] [cursor=pointer]:
+                - /url: https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/submit-an-in-app-purchase
+            - button [ref=f3e409] [cursor=pointer]
+        - generic [ref=f3e413]:
+          - generic [ref=f3e417] [cursor=pointer]:
+            - checkbox "Game Center" [ref=f3e419]
+            - text: Game Center
+          - generic [ref=f3e421]:
+            - paragraph [ref=f3e424]:
+              - text: Game Center components can now be added for review directly from the Game Center section. You can no longer select them from the app version page.
+              - link "Learn More" [ref=f3e425] [cursor=pointer]:
+                - /url: https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/submit-game-center-components
+            - button [ref=f3e426] [cursor=pointer]
+        - separator [ref=f3e429]
+        - generic [ref=f3e430]:
+          - heading "App Review Information" [level=3] [ref=f3e431]
+          - generic [ref=f3e432]:
+            - generic [ref=f3e434]:
+              - generic [ref=f3e436]:
+                - generic [ref=f3e437]: Sign-In Information
+                - button "More information" [ref=f3e439] [cursor=pointer]: "?"
+              - paragraph [ref=f3e440]: Provide a user name and password so we can sign in to your app. We’ll need this to complete your app review.
+              - generic [ref=f3e442]:
+                - checkbox "Sign-in required" [active] [ref=f3e443]
+                - generic [ref=f3e444]: Sign-in required
+            - generic [ref=f3e452]:
+              - generic [ref=f3e454]:
+                - generic [ref=f3e455]: Contact Information
+                - button "More information" [ref=f3e457] [cursor=pointer]: "?"
+              - textbox "First name" [ref=f3e460]
+              - textbox "Last name" [ref=f3e463]
+              - textbox "Phone number" [ref=f3e466]
+              - textbox "Email" [ref=f3e469]
+            - generic [ref=f3e470]:
+              - generic [ref=f3e472]:
+                - generic [ref=f3e473]: Notes
+                - button "More information" [ref=f3e475] [cursor=pointer]: "?"
+              - paragraph [ref=f3e476]:
+                - generic [ref=f3e477]:
+                  - text: Chinese law requires apps with news, religious, book, and magazine content to have relevant permits in order to be available on the App Store in China mainland. If applicable, enter information about your permits below.
+                  - link "Learn More" [ref=f3e478] [cursor=pointer]:
+                    - /url: https://developer.apple.com/help/app-store-connect/reference/app-information
+              - textbox "Notes" [ref=f3e480]
+              - status "Characters remaining" [ref=f3e482]: 4,000
+            - generic [ref=f3e483]:
+              - generic [ref=f3e485]:
+                - generic [ref=f3e486]: Attachment
+                - button "More information" [ref=f3e488] [cursor=pointer]: "?"
+              - generic [ref=f3e490] [cursor=pointer]:
+                - button "Choose File (Optional)" [ref=f3e491]
+                - generic [ref=f3e492]: Choose File (Optional)
+        - separator [ref=f3e494]
+        - generic [ref=f3e495]:
+          - heading "App Store Version Release" [level=3] [ref=f3e496]
+          - paragraph [ref=f3e497]: To make your app available on the App Store, you can automatically release it after it’s been approved by App Review. You can also manually release it on the App Store at a later date.
+          - generic [ref=f3e498]:
+            - generic [ref=f3e500]:
+              - generic [ref=f3e501]:
+                - radio "Manually release this version" [ref=f3e502]
+                - generic [ref=f3e503]: Manually release this version
+              - generic [ref=f3e505]:
+                - radio "Automatically release this version" [checked] [ref=f3e506]
+                - generic [ref=f3e507]: Automatically release this version
+              - generic [ref=f3e509]:
+                - radio "Automatically release this version after App Review, no earlier than" [ref=f3e510]
+                - generic [ref=f3e511]: Automatically release this version after App Review, no earlier than
+            - paragraph [ref=f3e514]: Your local date and time.
+            - generic [ref=f3e517]:
+              - textbox "Automatically release this version after App Review, no earlier than" [disabled] [ref=f3e518]: Aug 13, 2026 10:00 PM
+              - text: GMT+9
+  - contentinfo [ref=f3e10]:
+    - generic [ref=f3e11]:
+      - list [ref=f3e66]:
+        - listitem [ref=f3e67]:
+          - link "App Store Connect" [ref=f3e68] [cursor=pointer]:
+            - /url: /apps
+      - list [ref=f3e12]:
+        - listitem [ref=f3e13]: Copyright © 2026 Apple Inc. All rights reserved. |
+        - listitem [ref=f3e14]:
+          - link "Terms of Service" [ref=f3e15] [cursor=pointer]:
+            - /url: /WebObjects/iTunesConnect.woa/wa/termsOfService
+          - text: "|"
+        - listitem [ref=f3e16]:
+          - link "Privacy Policy" [ref=f3e17] [cursor=pointer]:
+            - /url: https://www.apple.com/legal/privacy
+          - text: "|"
+        - listitem [ref=f3e18]:
+          - link "Contact Us" [ref=f3e19] [cursor=pointer]:
+            - /url: /contact-us
+  - log [ref=f3e519]
+  - log [ref=f3e520]: You have dropped the item. You have moved the item from position 7 to position 1
