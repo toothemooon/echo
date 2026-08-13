@@ -11,7 +11,7 @@
 
 ```
 echo/
-├── assets/                  # 打包资源:三份名言目录 JSON(1465/891/1927 条)、图标、字体贴图
+├── assets/                  # 打包资源:三份名言目录 JSON(1305/831/1853 条)、图标、字体贴图
 │   ├── quotes.json          #   英文名言目录
 │   ├── quotes.zh-Hans.json  #   简中名言目录
 │   └── quotes.ja.json       #   日文名言目录

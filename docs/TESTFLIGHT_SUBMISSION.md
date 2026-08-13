@@ -31,9 +31,9 @@ work without an internet connection.
 
 | Language | Quotes | Authors |
 |----------|--------|---------|
-| English | 1,465 | 211 |
-| Simplified Chinese | 891 | 485 |
-| Japanese | 1,927 | 322 |
+| English | 1,305 | 211 |
+| Simplified Chinese | 831 | 485 |
+| Japanese | 1,853 | 322 |
 | **Total** | **3,989** | **1,018** |
 
 ## What to test
