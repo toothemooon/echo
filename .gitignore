@@ -54,5 +54,10 @@ __pycache__/
 /data/quote-audit/*.json
 /quotes_*.txt
 
+# Local batch API inputs and enrichment work files
+/batch_input_full.jsonl
+/batch_insufficient.jsonl
+/batch_insufficient_enriched.jsonl
+
 # MCP
 .playwright-mcp/
