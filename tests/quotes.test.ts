@@ -14,6 +14,13 @@ const quotes = quotesJson as Quote[];
 const chineseQuotes = chineseQuotesJson as Quote[];
 const japaneseQuotes = japaneseQuotesJson as Quote[];
 
+function normalizeQuoteText(text: string): string {
+  return text
+    .normalize("NFKC")
+    .toLocaleLowerCase()
+    .replace(/[\p{P}\p{S}\s]/gu, "");
+}
+
 test("v1.0 catalog satisfies its release quality gates", () => {
   assert.equal(quotes.length, 1282);
   assert.ok(quotes.every(isQuote));
@@ -41,10 +48,10 @@ test("v1.0 catalog satisfies its release quality gates", () => {
   assert.ok(Math.max(...authorCounts.values()) <= 16);
 });
 
-test("English, Chinese, and Japanese catalogs are equal and collision-free", () => {
+test("English, Chinese, and Japanese catalogs match the release counts and contain no normalized collisions", () => {
   assert.equal(quotes.length, 1282);
   assert.equal(chineseQuotes.length, 823);
-  assert.equal(japaneseQuotes.length, 1822);
+  assert.equal(japaneseQuotes.length, 1820);
   assert.ok(quotes.every((quote) => quote.language === "en"));
   assert.ok(
     chineseQuotes.every(
@@ -59,10 +66,31 @@ test("English, Chinese, and Japanese catalogs are equal and collision-free", () 
     ),
   );
   const combined = getAllQuotes();
-  assert.equal(combined.length, 3927);
+  assert.equal(combined.length, 3925);
   assert.equal(
     new Set(combined.map((quote) => String(quote.id))).size,
     combined.length,
+  );
+
+  const normalizedTexts = combined.map((quote) =>
+    normalizeQuoteText(quote.text),
+  );
+  assert.equal(new Set(normalizedTexts).size, combined.length);
+
+  const toshiyoriStatement = combined.find(
+    (quote) => quote.id === "ja-wikiquote-3624-05",
+  );
+  assert.equal(toshiyoriStatement?.author_id, "ja_wikiquote_1888");
+  assert.equal(toshiyoriStatement?.author, "後鳥羽天皇");
+  assert.equal(toshiyoriStatement?.role, "日本の第82代天皇");
+  assert.equal(toshiyoriStatement?.source, "『後鳥羽院御口伝』");
+  assert.equal(
+    combined.some((quote) => quote.id === "ja-wikiquote-1818-09"),
+    false,
+  );
+  assert.equal(
+    combined.some((quote) => quote.id === "ja-wikiquote-1430-11"),
+    false,
   );
 });
 

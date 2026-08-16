@@ -13,11 +13,38 @@ test("all published quotes have one structurally valid context", () => {
     String(context.quote_id),
   );
 
-  assert.equal(contextIds.length, 3927);
+  assert.equal(contextIds.length, 3925);
   assert.equal(new Set(contextIds).size, contextIds.length);
   for (const quoteId of quoteIds) {
     assert.ok(contextIds.includes(quoteId), `missing context for ${quoteId}`);
   }
+
+  const correctedContext = contextJson.quote_contexts.find(
+    (context) => context.quote_id === "ja-wikiquote-3624-05",
+  );
+  assert.equal(correctedContext?.author_ref, "ja:ja_wikiquote_1888");
+  assert.equal(correctedContext?.source_work, "『後鳥羽院御口伝』");
+  assert.equal(
+    contextJson.quote_contexts.some(
+      (context) => context.quote_id === "ja-wikiquote-1818-09",
+    ),
+    false,
+  );
+  assert.equal(
+    contextJson.quote_contexts.some(
+      (context) => context.quote_id === "ja-wikiquote-1430-11",
+    ),
+    false,
+  );
+  assert.equal(contextJson.statistics.quotes, contextJson.quote_contexts.length);
+  assert.equal(
+    contextJson.statistics.language_scoped_authors,
+    contextJson.authors.length,
+  );
+  assert.equal(contextJson.statistics.quotes_with_source_work, 2700);
+  assert.equal(contextJson.statistics.quotes_without_source_work, 1225);
+  assert.equal(contextJson.statistics.biographies_populated, 915);
+  assert.equal(contextJson.statistics.quote_contexts_populated, 3925);
 
   const authorRefs = new Set(
     contextJson.authors.map((author) => author.author_ref),
