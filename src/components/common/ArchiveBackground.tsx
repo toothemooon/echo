@@ -1,4 +1,4 @@
-import { Image, StyleSheet, View } from "react-native";
+import { ImageBackground, StyleSheet, View } from "react-native";
 import type { ThemeMode } from "../../storage/preferences";
 
 type Props = {
@@ -10,14 +10,22 @@ export default function ArchiveBackground({ theme }: Props) {
     return null;
   }
 
+  // ImageBackground guarantees the texture fills its bounds: a bare <Image>
+  // sized only by absolute insets can collapse to zero size on some devices /
+  // layout passes (notably the Fabric renderer), which left the archive theme
+  // showing only its flat brown backgroundColor instead of the paper texture.
   return (
     <View pointerEvents="none" style={StyleSheet.absoluteFill}>
-      <Image
+      <ImageBackground
         source={require("../../../assets/archive-paper-texture.jpg")}
         resizeMode="cover"
         style={StyleSheet.absoluteFill}
-      />
-      <View style={[StyleSheet.absoluteFill, styles.readabilityWash]} />
+      >
+        <View
+          pointerEvents="none"
+          style={[StyleSheet.absoluteFill, styles.readabilityWash]}
+        />
+      </ImageBackground>
     </View>
   );
 }

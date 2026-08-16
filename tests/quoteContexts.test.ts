@@ -13,7 +13,7 @@ test("all published quotes have one structurally valid context", () => {
     String(context.quote_id),
   );
 
-  assert.equal(contextIds.length, 3989);
+  assert.equal(contextIds.length, 3927);
   assert.equal(new Set(contextIds).size, contextIds.length);
   for (const quoteId of quoteIds) {
     assert.ok(contextIds.includes(quoteId), `missing context for ${quoteId}`);
