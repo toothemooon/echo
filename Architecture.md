@@ -1,7 +1,7 @@
 # ECHO 架构文档
 
 > ECHO 是一个**完全离线**的每日名言 App(Expo / React Native,iOS 为主)。
-> 4,283 条三语名言(英/简中/日)与作者语境全部打包进应用,没有后端、没有网络请求;
+> 3,925 条三语名言(英/简中/日)与作者语境全部打包进应用,没有后端、没有网络请求;
 > 所有"数据交互"都发生在 打包 JSON(只读目录) 与 AsyncStorage(用户状态) 之间。
 > 核心体验:启动 → 按心情偏好推荐一条名言 → 左右切换/收藏/历史/分享。
 
@@ -11,7 +11,7 @@
 
 ```
 echo/
-├── assets/                  # 打包资源:三份名言目录 JSON(1305/831/1853 条)、图标、字体贴图
+├── assets/                  # 打包资源:三份名言目录 JSON(1282/823/1820 条)、图标、字体贴图
 │   ├── quotes.json          #   英文名言目录
 │   ├── quotes.zh-Hans.json  #   简中名言目录
 │   └── quotes.ja.json       #   日文名言目录
@@ -29,7 +29,8 @@ echo/
 │   │   └── quoteContexts.ts #   语境目录:按 quote_id / author_ref 建 Map 索引
 │   ├── storage/             # 可写持久层(AsyncStorage,每文件一个领域)
 │   │   ├── preferences.ts   #   主题/字体/语言/心情/onboarding 等偏好
-│   │   ├── savedQuotes.ts   #   收藏(带串行化写队列 + 严格快照校验)
+│   │   ├── storageMutationQueue.ts # 全局存储写入队列,与 Clear All 串行
+│   │   ├── savedQuotes.ts   #   收藏(严格快照校验,写入走全局队列)
 │   │   ├── quoteRotation.ts #   当日轮换状态(已看过的名言/作者/类目计数)
 │   │   ├── viewedQuotes.ts  #   最近 100 条浏览历史
 │   │   └── clearLocalData.ts#   清理 ECHO 命名空间数据
@@ -162,10 +163,10 @@ flowchart LR
    日期计算(Header 的 "TODAY" 日期,跨天后不刷新)——凡是"import 时算一次"
    的值都不会响应运行中的环境变化。同类问题已出现两处,新代码容易照抄。
 
-3. **quoteRotation 的无锁读-改-写。**
-   `getNextRecommendedQuote` 读 rotation → 选择 → 写回,没有像 savedQuotes 那样的
-   串行化队列。当前靠 UI 层 `isSelectingQuote` ref 挡住并发,属于隐性依赖;
-   将来任何新入口(widget 或定时预取)并发调用都会静默丢计数。
+3. **quoteRotation 与 exposure 的双写不是原子事务。**
+   `getNextRecommendedQuote` 的完整读-选择-写周期已经进入全局存储队列，不再依赖
+   UI 层互斥；但 rotation 与 exposure 仍是两个 AsyncStorage key。任一写入单独失败时，
+   两份计数可能短暂不一致。
 
 4. **12.5MB JSON 随 bundle 全量加载。**
    QUOTE_CONTEXTS.json+ 三份名言目录在启动时同步解析并常驻内存。

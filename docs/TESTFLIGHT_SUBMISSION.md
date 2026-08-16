@@ -21,20 +21,20 @@ and shareable quote cards. No account, subscription, advertising, or payment is
 required. Core browsing, favorites, history, preferences, themes, and sharing
 work without an internet connection.
 
-### New Features (v1.1)
+### New Features (v1.0)
 
-- **Historical Echo**: Each quote now includes a "Defining Moment" section
-  that provides a dramatic, single historical event related to the author.
-  This content is generated using AI and stored locally.
+- **Historical Echo**: Each quote includes locally bundled, AI-assisted
+  editorial context about the speaker's era, life, and related work. It does
+  not claim to identify the exact occasion on which the quotation was spoken.
 
 ### Content Statistics
 
 | Language | Quotes | Authors |
 |----------|--------|---------|
-| English | 1,305 | 211 |
-| Simplified Chinese | 831 | 485 |
-| Japanese | 1,853 | 322 |
-| **Total** | **3,989** | **1,018** |
+| English | 1,282 | 206 |
+| Simplified Chinese | 823 | 445 |
+| Japanese | 1,820 | 301 |
+| **Total** | **3,925** | **952** |
 
 ## What to test
 

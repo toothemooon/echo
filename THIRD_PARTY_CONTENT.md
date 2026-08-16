@@ -6,30 +6,30 @@ ECHO 应用中的引文内容来自以下来源，使用 CC BY-SA 协议：
 
 ### 英文引文
 - 来源：English Wikiquote + ECHO 原始目录
-- 数量：1,305 条
-  - Wikiquote 来源：约 1,391 条
-  - ECHO 原始目录：约 74 条（有明确来源）
+- 数量：1,282 条
 - 协议：CC BY-SA 4.0（Wikiquote）+ 原始授权（ECHO 原始）
 - 署名：https://en.wikiquote.org/
 
 ### 简体中文引文
 - 来源：Chinese Wikiquote
-- 数量：831 条
+- 数量：823 条
 - 协议：CC BY-SA 4.0
 - 署名：https://zh.wikiquote.org/
 
 ### 日文引文
 - 来源：Japanese Wikiquote
-- 数量：1,853 条
+- 数量：1,820 条
 - 协议：CC BY-SA 4.0
 - 署名：https://ja.wikiquote.org/
+
+三语发布目录合计 3,925 条引文。
 
 ## 人物生平
 
 人物介绍页「生平 / LIFE」一节的正文取自维基百科条目的导言段。
 
 - 来源：English / 日本語 / 中文 Wikipedia
-- 覆盖：1,214 位作者中的 994 位（其余作者不显示生平段落）
+- 覆盖：952 位语言域作者中的 915 位（其余作者不显示生平段落）
 - 协议：CC BY-SA 4.0
 - 署名：每条生平在应用内显示条目名与「Wikipedia (CC BY-SA 4.0)」，
   条目 URL 存放在作者记录的 `biography_sources` 字段

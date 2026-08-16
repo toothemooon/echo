@@ -8,34 +8,27 @@
 
 ### 1.1 本次发布不得不修
 
-严格按 iOS 1.0.0 的最小发布范围，真正的 release blockers 是以下 **3 类**。任何一类未关闭，都不建议提交正式版本。
+本次按产品决定采用最小修复范围：保留 Historical Echo，只关闭已确认的日文归属冲突、发布数量/审核元数据、Clear All 竞态和字体失败白屏。更广泛的 Historical Echo 来源与状态问题继续作为已知风险延期，不在本文中伪装成已修复。
 
-#### R1. 发布内容的真实性、来源、许可和审核元数据
+#### R1. 日文归属冲突、内容数量和审核元数据（已完成）
 
 - 对应问题：P4、P8、P21。
-- 原因：当前 iOS UI 会直接显示未验证的 AI 历史叙述；96 条没有历史来源，1,225 条没有作品却标记为 `era_and_work`，应用内说明和 App Review 文档还互相矛盾。这既是内容可信度问题，也是潜在的许可与审核风险。
+- 完成内容：删除 `ja-wikiquote-1818-09` 和 `ja-wikiquote-1430-11` 两条规范化重复记录；保留的两句均核正为后鸟羽天皇，来源统一为 `『後鳥羽院御口伝』`。
 - Apple App Review Guideline 2.3 要求元数据准确反映 App 核心体验，5.2 要求 App 只包含自行创作或已获许可使用的内容。参见 [Apple App Review Guidelines](https://developer.apple.com/app-store/review/guidelines/)。
-- 最低完成标准：
-  - 1.0.0 先隐藏/移除 Historical Echo，或完成逐条来源和人工事实审核；
-  - 人工核验并修正/删除四条日语作者冲突记录；
-  - 对实际发布 quote 集合保留可审计的来源/归属证据，不能只依赖本机未发布报告；
-  - 重新计算实际记录数和作者数；
-  - 同步修改应用内 Content Sources、`README.md`、`THIRD_PARTY_CONTENT.md` 和 `docs/TESTFLIGHT_SUBMISSION.md`，删除与实际内容不符的 AI、数量、来源和版本声明。
-- Historical Echo 的处理方式二选一：
-  1. 在 1.0.0 中隐藏/移除 Historical Echo，只保留已核验的人物和作品信息；或
-  2. 对发布内容逐条补充可核对来源、人工审核状态和正确的类型字段，拒绝无来源内容进入发布目录。
+- 最终发布数量：英文 1,282、简体中文 823、日文 1,820，共 3,925 条；语言域作者共 952 位。README、第三方内容说明、架构文档和 TestFlight/App Review 文档已同步。
+- 产品决定：Historical Echo 在 1.0.0 中继续显示。P4 所列逐条来源、状态和人工审核问题仍然开放并延期，不能据本条“已完成”推断其内容已经逐条核实。
 
-#### R2. 修复 Clear All Data 的竞态和错误结果提示
+#### R2. 修复 Clear All Data 的竞态和错误结果提示（已完成）
 
 - 对应问题：P5。
 - 原因：这是面向用户的隐私删除能力。当前已复现清除完成后收藏、主题、rotation 和 exposure 被在途写入重新创建；图标同步失败还会谎报“数据未改变”。
-- 最低完成标准：清除期间建立全局写屏障，等待/取消旧写入，旧 generation 不得提交；图标同步从清除事务中拆开；成功或部分失败提示必须与实际结果一致。
+- 完成内容：所有活跃的 `@echo/` 写路径和 Clear All 共用一个全局写入队列；清除会排在此前已发起的写入之后。回归测试明确阻塞一条未完成写入，同时发起清除，并验证清除返回后没有 ECHO key 被复活。图标同步失败已与数据删除结果分离。
 
-#### R3. 冻结并校验 iOS 1.0.0 的四个运行数据文件
+#### R3. 四个运行数据文件的冻结与校验（本次不实施）
 
 - 对应问题：P2、P3、P21。
 - 原因：当前发布内容依赖某台电脑上未版本化的 JSON，且内容脚本可直接覆盖这些文件。即使暂时不完成 Git LFS/制品服务，也必须确保 1.0.0 能准确重建和回滚。
-- 最低完成标准：为四个发布 JSON 生成并保存版本、记录数、文件大小和 SHA-256 manifest；建立只读备份；构建前校验 manifest；禁止在正式构建前运行会原地覆盖数据的脚本。
+- 产品决定：1.0.0 继续使用 Expo 当前的数据处理方式，不增加 manifest、checksum、Git LFS 或制品冻结架构。P2 的可复现性风险保持开放。
 
 ### 1.2 必须立即做的仓库安全处置
 
@@ -44,7 +37,7 @@
 - 对应问题：P1。
 - 原因：个人联系方式和账户身份已经进入 `origin/main`，且 `.easignore` 不排除该目录。它没有被 App 代码 import，目前没有证据表明它进入 IPA，因此不应描述成 iOS 运行时 blocker；但在下一次 EAS 上传前必须处理，避免继续扩散。
 - 最低完成标准：
-  - 取消跟踪 `.playwright-mcp/**`；
+  - `.playwright-mcp/**` 已由用户从当前工作树删除；
   - 同时在 `.gitignore` 和 `.easignore` 排除该目录；
   - 确认远端仓库、fork、缓存和 EAS 上传范围；
   - 根据仓库可见性决定是否重写 Git 历史及更换审核联系人信息。
@@ -53,7 +46,7 @@
 
 这些问题不是法律/数据不可逆意义上的硬 blocker，但在普通 iPhone 使用路径上可见，建议和 1.0.0 一起关闭。
 
-1. **字体失败白屏**（P6）：bundled font 和本地 production export 已成功，尚未在标准 iPhone 复现；应在生产 EAS 包上反复执行冷启动、杀进程和离线启动，出现一次即升级为 blocker。修复成本较低，仍建议本次直接补 fallback。
+1. **字体失败白屏**（P6，已修复）：现在读取 `fontError`；失败时启动继续，并在本次运行中使用系统名言字体，不覆盖用户保存的字体偏好。生产 EAS 包仍应执行冷启动、杀进程和离线启动 smoke test。
 2. **全局 StatusBar**（P15）：应用主题与系统主题不同时，设置页状态栏图标可能不可见。
 3. **Settings 的 Share App / Send Feedback 回归**（P14）：菜单名称、无障碍提示和真实行为不一致。
 4. **Safe Area、Dynamic Type 和 VoiceOver**（P15、P16、P31）：在 iPhone SE 和带 Dynamic Island/Home Indicator 的设备验证；出现遮挡、不可操作或焦点逃逸即升级为 blocker。
@@ -67,7 +60,7 @@
 - Web 构建和宽屏 ShareCard。
 - 长会话/超大收藏性能优化。
 - 未接入 UI 的 Defining Moment/OpenAI/Wikipedia 服务；前提是继续保持不可达，不能在 1.0.0 启用。
-- Batch 流水线重构；前提是 1.0.0 发布数据已经冻结，发布前不再运行该流水线。
+- Batch 流水线重构；1.0.0 发布前不再运行会原地覆盖正式 JSON 的脚本。
 - 开发脚本跨平台、Metro LAN、脚本执行位等开发体验问题。
 
 ## 2. 高严重度问题
@@ -97,29 +90,29 @@
 
 - **位置**：`QUOTE_CONTEXTS.json`、[`scripts/apply_batch_output.ts`](../scripts/apply_batch_output.ts)、[`tests/quoteContexts.test.ts`](../tests/quoteContexts.test.ts)、[`src/screens/ContentSourcesScreen.tsx`](../src/screens/ContentSourcesScreen.tsx)。
 - **证据**：
-  - 3,927 条全部标为 `era_and_work`；
+  - 3,925 条全部标为 `era_and_work`；
   - 1,225 条 `source_work=null`；
   - 96 条非空历史叙述没有 `historical_echo_sources`；
-  - 2,717 条没有逐条 `context_sources`；
+  - 2,715 条没有逐条 `context_sources`；
   - 测试明确跳过 AI 内容来源检查；
   - UI 不显示审核状态或逐条来源；
-  - TestFlight 文档称其为 AI 生成事件，README/应用内文案却称其为可验证事实组装。
+  - TestFlight 文档现已说明其为 AI-assisted editorial context，但 README/应用内文案仍称其为可验证事实组装。
 - **影响**：未经验证的历史叙述可能被当成史实；来源可能继承自不相关的旧内容；应用的可追溯声明不真实。
 - **修复**：新增明确的 AI/未验证状态、生成元数据和人工审核字段；无逐项证据不得发布；界面显示来源和状态；增加跨字段不变量测试。
 
-### P5. Clear All Data 存在已复现的写回竞态
+### P5. Clear All Data 存在已复现的写回竞态（已修复）
 
 - **位置**：[`src/storage/clearLocalData.ts`](../src/storage/clearLocalData.ts)、[`src/app/index.tsx`](../src/app/index.tsx)、[`src/storage/quoteRotation.ts`](../src/storage/quoteRotation.ts)、[`src/storage/savedQuotes.ts`](../src/storage/savedQuotes.ts)。
-- **证据**：分别复现在清除完成后重建 rotation/exposure、收藏和主题。`clearLocalData()` 只删除调用瞬间看到的 key，各模块队列互不协调。图标同步失败发生在删除后，却提示数据没有改变。
+- **修复前证据**：分别复现在清除完成后重建 rotation/exposure、收藏和主题。`clearLocalData()` 只删除调用瞬间看到的 key，各模块队列互不协调。图标同步失败发生在删除后，却提示数据没有改变。
 - **影响**：用户认为已删除的数据和偏好会重新出现；隐私操作结果不可信。
-- **修复**：统一存储协调器和 reset generation；清除时阻止新写入并等待/取消旧任务；图标同步独立处理；验证删除后的 key 集合。
+- **修复结果**：新增全局存储写入队列，收藏、浏览记录、推荐轮换/曝光、偏好和 Clear All 均按调用顺序串行；清除会删除在它之前完成的在途写入。图标同步独立处理。回归测试覆盖“未完成写入与清除重叠”、ECHO key 全部删除、非 ECHO key 保留以及失败写入不污染后续队列。
 
-### P6. 字体加载失败会永久停在透明启动页
+### P6. 字体加载失败会永久停在透明启动页（已修复）
 
 - **位置**：[`src/app/index.tsx`](../src/app/index.tsx)、[`src/components/common/SplashScreen.tsx`](../src/components/common/SplashScreen.tsx)。
-- **证据**：`useFonts` 只读取 `fontsLoaded`，丢弃 error；字体失败后 `fontsLoaded` 永远为 false，Splash 自己仍淡出为透明。
+- **修复前证据**：`useFonts` 只读取 `fontsLoaded`，丢弃 error；字体失败后 `fontsLoaded` 永远为 false，Splash 自己仍淡出为透明。
 - **影响**：字体资源异常时应用永久白屏且无法重试。
-- **修复**：处理 `fontError` 并降级系统字体；readiness 完成后才淡出；加入超时、错误页和失败回归测试。
+- **修复结果**：启动 readiness 采用 `fontsLoaded || fontError != null`；失败时只把本次运行的名言字体降级为系统字体，不写回偏好。纯函数测试覆盖加载中、成功和失败三条分支。
 
 ### P7. Android 返回键绕过视觉导航并退出应用
 
@@ -130,12 +123,12 @@
 
 ## 3. 中严重度问题
 
-### P8. 日语目录存在标准化重复且作者冲突
+### P8. 日语目录存在标准化重复且作者冲突（已修复）
 
 - **位置**：`assets/quotes.ja.json` 中 ID `ja-wikiquote-3624-05`、`ja-wikiquote-1818-09`、`ja-wikiquote-1888-07`、`ja-wikiquote-1430-11`。
-- **证据**：两组正文仅标点不同，却分别归属于不同作者；至少一条归属错误。现有测试没有执行 NFKC、标点和空白归一化。
+- **修复前证据**：两组正文仅标点不同，却分别归属于不同作者；至少一条归属错误。测试当时没有执行 NFKC、标点和空白归一化。
 - **影响**：核心引用内容存在错误归属。
-- **修复**：三语联合做 NFKC + 标点/符号/空白归一化去重；人工核验原始页面和修订版本。
+- **修复结果**：人工核对日文 Wikiquote 原始页面后，删除 `ja-wikiquote-1818-09`、`ja-wikiquote-1430-11`；保留 `ja-wikiquote-3624-05`、`ja-wikiquote-1888-07` 并统一归属后鸟羽天皇。测试对三语正文执行 NFKC + 标点/符号/空白归一化去重，并锁定保留记录的作者与来源。
 
 ### P9. Android Share as Image 实际只分享文字
 
@@ -224,17 +217,15 @@
 - **影响**：低端设备启动、长会话和大收藏列表可能卡顿或出现高内存峰值。
 - **修复**：延迟/分片加载 context；限制算法历史窗口；改用虚拟列表和分页/上限。需在低端 Android profiling 后定量确认。
 
-### P21. 当前数据、重建脚本、审计门禁和发布文档版本不一致
+### P21. 当前数据、重建脚本、审计门禁和发布文档版本不一致（部分修复）
 
 - **位置**：[`README.md`](../README.md)、[`THIRD_PARTY_CONTENT.md`](../THIRD_PARTY_CONTENT.md)、[`docs/TESTFLIGHT_SUBMISSION.md`](TESTFLIGHT_SUBMISSION.md)、[`scripts/audit-quote-catalogs.mjs`](../scripts/audit-quote-catalogs.mjs)、[`scripts/generate-editorial-notes.mjs`](../scripts/generate-editorial-notes.mjs)。
 - **证据**：
-  - 实际：1,282/823/1,822，共 3,927 条、952 位语言域作者；
-  - README/TestFlight：1,305/831/1,853，共 3,989 条；
+  - 修正后的实际与发布文档：1,282/823/1,820，共 3,925 条、952 位语言域作者；
   - 导入和审计脚本：2,000/894/2,000，共 4,894 条；
-  - 43 条 `context.source_work` 与当前 quote source 不同；
-  - `THIRD_PARTY_CONTENT.md` 的英文子项数量超过其声明总数。
-- **影响**：重建可能覆盖正式数据；App Review、许可说明和统计互相矛盾。
-- **修复**：建立唯一 catalog manifest；测试、脚本和文档从它生成；重建写 staging，审计和人工 diff 后原子替换。
+  - 43 条 `context.source_work` 与当前 quote source 不同。
+- **影响**：重建仍可能覆盖正式数据；脚本门禁和 43 条上下文漂移仍可能再次造成发布内容不一致。本次已消除文档数量矛盾。
+- **本次结果**：实际目录、上下文统计、README、第三方内容说明、架构和 TestFlight/App Review 数量已经同步。重建脚本、审计门禁、43 条 `source_work` 漂移和 catalog manifest 尚未修复；按产品决定延期。
 
 ### P22. 内容脚本的异常、网络和模型输入处理不健壮
 

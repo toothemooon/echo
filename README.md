@@ -44,10 +44,10 @@ v1.0 聚焦以下目标：
 
 | 语言 | 文件 | 数量 |
 | --- | --- | ---: |
-| 英文 | `assets/quotes.json` | 1,305 |
-| 简体中文 | `assets/quotes.zh-Hans.json` | 831 |
-| 日语 | `assets/quotes.ja.json` | 1,853 |
-| 合计 | 三个目录 | 3,989 |
+| 英文 | `assets/quotes.json` | 1,282 |
+| 简体中文 | `assets/quotes.zh-Hans.json` | 823 |
+| 日语 | `assets/quotes.ja.json` | 1,820 |
+| 合计 | 三个目录 | 3,925 |
 
 设置页提供 `Quote Language`，用户可以在 English、简体中文和日本語之间切换。
 切换后，当前浏览栈会重建，后续推荐和左右翻页只使用所选语言的数据。
@@ -118,7 +118,7 @@ Settings → Content Sources 会展示内容来源和许可说明。数据许可
 作者的全部名言。
 
 **历史回声只写「说话的人身处什么世界」，不写「这句话在哪个瞬间被说出」。**
-后者对全部 3,989 条记录都尚未核实，编造它即是伪造史实；该边界由
+后者对全部 3,925 条记录都尚未核实，编造它即是伪造史实；该边界由
 `tests/quoteContexts.test.ts` 中的反虚构正则守卫。
 
 历史背景模板和核实状态属于内部编辑数据，不在当前用户界面展示。资料不足时直接
@@ -161,12 +161,12 @@ Settings → Content Sources 会展示内容来源和许可说明。数据许可
 当 `source` 存在时，卡片优先显示作品来源；没有可靠作品名时显示具体
 `role`。项目不会为了填满字段而虚构作品来源。
 
-作者与语境资料保存在本地 `QUOTE_CONTEXTS.json`。当前它覆盖发布目录的 3,989 条
+作者与语境资料保存在本地 `QUOTE_CONTEXTS.json`。当前它覆盖发布目录的 3,925 条
 格言。`quote_id` 定位当前名言的语境，`author_ref` 再定位作者生平；人物介绍还可
 由 `语言:author_id` 直接定位作者档案，因此语境缺失时人物页仍能正常显示。
 
 每条名言都来自 Wikiquote，因此语境记录不再保留逐条的核实状态字段：
-`verification_status` 对全部 3,989 条一律是 `pending`，不携带任何信息；
+`verification_status` 对全部 3,925 条一律是 `pending`，不携带任何信息；
 `context_type`、`context_content_status` 只是换个说法复述 `source_work` 是否存在；
 `context_summary` 则是 829 KB 从不展示、且内容全为「尚未核实」的说明文字。这四个
 字段已一并移除。逐条来源仍保存在 `context_sources`。
@@ -219,7 +219,7 @@ node scripts/generate-editorial-notes.mjs
 
 当前发布目录必须满足：
 
-- 英文 1,305 条、简体中文 831 条、日语 1,853 条，共 3,989 条；
+- 英文 1,282 条、简体中文 823 条、日语 1,820 条，共 3,925 条；
 - 全部 ID 在三个目录之间保持唯一；
 - 标准化后的正文不存在重复；
 - 每条记录都通过运行时 Quote schema 验证；
