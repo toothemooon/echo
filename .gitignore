@@ -53,3 +53,6 @@ __pycache__/
 /assets/quotes.ja.json
 /data/quote-audit/*.json
 /quotes_*.txt
+
+# MCP
+.playwright-mcp/
