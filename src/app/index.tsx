@@ -155,6 +155,11 @@ export default function Index() {
   const backdropAnim = useRef(new Animated.Value(0)).current;
   const isAnimating = useRef(false);
   const isSelectingQuote = useRef(false);
+  // Bumped every time the quote history is replaced wholesale (language or
+  // mood change, retry, clear-all). An in-flight quote selection captures
+  // the generation it started under and discards its result when the
+  // history has been rebuilt in the meantime.
+  const historyGeneration = useRef(0);
   const shareCardRef = useRef<View>(null);
 
   // ── 初始化 ──
@@ -323,6 +328,7 @@ export default function Index() {
             void getNextRecommendedQuote(preferredCategories, [], quoteLanguage)
               .then((quote) => {
                 if (quote) {
+                  historyGeneration.current += 1;
                   setQuoteHistory([quote]);
                   setHistoryIndex(0);
                 }
@@ -404,6 +410,11 @@ export default function Index() {
   ) {
     setQuoteLanguageState(nextLanguage);
 
+    // Invalidate any in-flight quote selection so its result cannot be
+    // appended to the new history later.
+    const generation = historyGeneration.current + 1;
+    historyGeneration.current = generation;
+
     try {
       await setQuoteLanguage(nextLanguage);
       const firstMatchingQuote = await getNextRecommendedQuote(
@@ -412,7 +423,7 @@ export default function Index() {
         nextLanguage,
       );
 
-      if (firstMatchingQuote) {
+      if (firstMatchingQuote && historyGeneration.current === generation) {
         setQuoteHistory([firstMatchingQuote]);
         setHistoryIndex(0);
       }
@@ -432,6 +443,11 @@ export default function Index() {
     setMood(nextMood);
     setPreferredCategories(nextCategories);
 
+    // Invalidate any in-flight quote selection so its result cannot be
+    // appended to the new history later.
+    const generation = historyGeneration.current + 1;
+    historyGeneration.current = generation;
+
     try {
       await Promise.all([
         setMoodPreference(nextMood),
@@ -443,7 +459,7 @@ export default function Index() {
         [],
         quoteLanguage,
       );
-      if (firstMatchingQuote) {
+      if (firstMatchingQuote && historyGeneration.current === generation) {
         setQuoteHistory([firstMatchingQuote]);
         setHistoryIndex(0);
       }
@@ -598,6 +614,7 @@ export default function Index() {
     }
 
     isSelectingQuote.current = true;
+    const generation = historyGeneration.current;
     const newQuote = await getNextRecommendedQuote(
       preferredCategories,
       quoteHistory,
@@ -610,6 +627,13 @@ export default function Index() {
       return;
     }
 
+    // A language/mood change or data reset that happened while the quote
+    // was being selected must not append this stale quote to the new
+    // history.
+    if (historyGeneration.current !== generation) {
+      return;
+    }
+
     runQuoteTransition("right", () => {
       setQuoteHistory((previous) => [...previous, newQuote]);
 
@@ -619,6 +643,10 @@ export default function Index() {
 
   // ── 上一条名言 ──
   const goPrev = () => {
+    if (isAnimating.current || isSelectingQuote.current) {
+      return;
+    }
+
     if (historyIndex <= 0) {
       return;
     }
@@ -673,6 +701,7 @@ export default function Index() {
 
   const clearAllData = async () => {
     try {
+      historyGeneration.current += 1;
       await clearViewedQuotes();
       await clearLocalData();
       setThemeState("light");

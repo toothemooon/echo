@@ -136,7 +136,7 @@ test("selector only returns quotes from the selected language", () => {
   assert.equal(selected?.id, 3);
 });
 
-test("selector returns null after the current session exhausts its eligible pool", () => {
+test("selector still serves a quote after the session exhausts its eligible pool", () => {
   const onlyQuote = {
     ...quote(1, "author_en", "WISDOM", "TRUTH"),
     language: "en" as const,
@@ -153,7 +153,35 @@ test("selector returns null after the current session exhausts its eligible pool
     language: "en",
     random: () => 0,
   });
-  assert.equal(selected, null);
+  // Exhausting the session must not dead-end the Next action: the final
+  // fallback reopens the preferred pool instead of returning null.
+  assert.equal(selected?.id, onlyQuote.id);
+});
+
+test("the exhausted-session fallback avoids the immediately previous quote and author", () => {
+  const first = {
+    ...quote(1, "author_a", "WISDOM", "TRUTH"),
+    language: "en" as const,
+  };
+  const second = {
+    ...quote(2, "author_b", "WISDOM", "TRUTH"),
+    language: "en" as const,
+  };
+  const selected = selectNextQuote([first, second], {
+    preferredCategories: ["WISDOM"],
+    recentQuotes: [first, second],
+    rotation: {
+      ...emptyRotation,
+      shownQuoteIds: [first.id, second.id],
+      shownAuthorIds: [first.author_id, second.author_id],
+    },
+    exposure: {},
+    language: "en",
+    random: () => 0,
+  });
+  // `second` was the last quote shown; the fallback must hand back `first`
+  // rather than repeating the current card.
+  assert.equal(selected?.id, first.id);
 });
 
 test("daily history can be reused after a restart when the session is empty", () => {

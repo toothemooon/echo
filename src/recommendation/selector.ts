@@ -158,18 +158,24 @@ export function selectNextQuote(
   const relaxedChoice = chooseFromPool(relaxedDailyAuthors, options);
   if (relaxedChoice) return relaxedChoice;
 
-  // Final fallback keeps immediate quote and author repetition out, even
-  // after a very long session. It deliberately searches the full preferred
-  // pool rather than the sweep, so a session that has already covered the
-  // least-read tier still gets a quote instead of a blank screen.
-  return chooseFromPool(
-    preferredPool.filter(
+  // Absolute last resort after a session has swept the whole eligible pool:
+  // serve the preferred pool again, keeping only the immediately-previous
+  // quote (and its author, when the pool allows) out so a card never
+  // repeats back-to-back. This is what guarantees the Next action always
+  // yields a quote once the day's strict no-repeat rules are exhausted,
+  // instead of the app silently dead-ending mid-session.
+  const previous = options.recentQuotes[options.recentQuotes.length - 1];
+  let anyPool = preferredPool;
+  if (previous) {
+    const withoutImmediateRepeat = preferredPool.filter(
       (quote) =>
-        !recentQuoteIds.has(quote.id) &&
-        !recentAuthorIds.has(quote.author_id),
-    ),
-    options,
-  );
+        quote.id !== previous.id && quote.author_id !== previous.author_id,
+    );
+    if (withoutImmediateRepeat.length > 0) {
+      anyPool = withoutImmediateRepeat;
+    }
+  }
+  return chooseFromPool(anyPool, options);
 }
 
 export function recordSelection(
