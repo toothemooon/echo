@@ -702,7 +702,6 @@ export default function Index() {
   const clearAllData = async () => {
     try {
       historyGeneration.current += 1;
-      await clearViewedQuotes();
       await clearLocalData();
       setThemeState("light");
       setPreferredCategories([...CATEGORIES]);
@@ -721,9 +720,20 @@ export default function Index() {
       setShareVisible(false);
       setContextQuote(null);
       setCurrentPage("home");
-      await syncAppIconWithTheme("light");
     } catch {
       Alert.alert("Unable to clear data", "Your local data was not changed. Please try again.");
+      return;
+    }
+
+    try {
+      await syncAppIconWithTheme("light");
+    } catch (error) {
+      if (__DEV__) {
+        console.warn(
+          "Local data was cleared, but the app icon could not be reset.",
+          error instanceof Error ? error.message : "Unknown error",
+        );
+      }
     }
   };
 

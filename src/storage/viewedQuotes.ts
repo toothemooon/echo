@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { isQuote, type Quote } from "../data/quotes";
 import { quoteKey } from "../recommendation/exposure";
+import { enqueueStorageMutation } from "./storageMutationQueue";
 
 const VIEWED_QUOTES_KEY = "@echo/viewed_quotes_v1";
 const MAX_VIEWED_QUOTES = 100;
@@ -9,8 +10,6 @@ export type ViewedQuoteRecord = {
   quote: Quote;
   viewedAt: string;
 };
-
-let mutationQueue: Promise<void> = Promise.resolve();
 
 function isIsoTimestamp(value: unknown): value is string {
   if (typeof value !== "string") return false;
@@ -61,7 +60,7 @@ export async function getViewedQuotes(): Promise<ViewedQuoteRecord[]> {
 }
 
 export async function recordViewedQuote(quote: Quote): Promise<void> {
-  const result = mutationQueue.catch(() => undefined).then(async () => {
+  await enqueueStorageMutation(async () => {
     const records = await readRecords();
     const key = quoteKey(quote.id);
     const next: ViewedQuoteRecord[] = [
@@ -70,15 +69,10 @@ export async function recordViewedQuote(quote: Quote): Promise<void> {
     ].slice(0, MAX_VIEWED_QUOTES);
     await AsyncStorage.setItem(VIEWED_QUOTES_KEY, JSON.stringify(next));
   });
-
-  mutationQueue = result.catch(() => undefined);
-  await result;
 }
 
 export async function clearViewedQuotes(): Promise<void> {
-  const result = mutationQueue.catch(() => undefined).then(() =>
+  await enqueueStorageMutation(() =>
     AsyncStorage.removeItem(VIEWED_QUOTES_KEY),
   );
-  mutationQueue = result.catch(() => undefined);
-  await result;
 }

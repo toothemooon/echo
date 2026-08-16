@@ -6,6 +6,7 @@ import {
   type MoodPreference,
 } from "../constants/categories";
 import type { QuoteLanguage } from "../data/quotes";
+import { enqueueStorageMutation } from "./storageMutationQueue";
 
 const QUOTE_FONT_KEY = "@echo/quote_font";
 const QUOTE_FONT_SIZE_KEY = "@echo/quote_font_size";
@@ -59,6 +60,10 @@ function allCategories(): Category[] {
   return [...CATEGORIES];
 }
 
+function setStorageItem(key: string, value: string): Promise<void> {
+  return enqueueStorageMutation(() => AsyncStorage.setItem(key, value));
+}
+
 /**
  * Returns the stored categories, or all categories when storage is empty or
  * contains no valid category values.
@@ -96,7 +101,7 @@ export async function setPreferredCategories(
   try {
     const normalized = normalizeCategories(categories);
     const value = normalized.length > 0 ? normalized : allCategories();
-    await AsyncStorage.setItem(PREFS_KEY, JSON.stringify(value));
+    await setStorageItem(PREFS_KEY, JSON.stringify(value));
   } catch (error) {
     warnInDevelopment("Failed to write preferred categories", error);
     throw error;
@@ -127,7 +132,7 @@ export async function setTheme(theme: ThemeMode): Promise<void> {
       throw new TypeError("Theme must be light, dark, or archive.");
     }
 
-    await AsyncStorage.setItem(THEME_KEY, theme);
+    await setStorageItem(THEME_KEY, theme);
   } catch (error) {
     warnInDevelopment("Failed to write theme", error);
     throw error;
@@ -150,7 +155,7 @@ export async function getQuoteFont(): Promise<QuoteFont> {
 }
 
 export async function setQuoteFont(font: QuoteFont): Promise<void> {
-  await AsyncStorage.setItem(QUOTE_FONT_KEY, font);
+  await setStorageItem(QUOTE_FONT_KEY, font);
 }
 
 // font
@@ -170,7 +175,7 @@ export async function getQuoteFontSize(): Promise<QuoteFontSize> {
 }
 
 export async function setQuoteFontSize(size: QuoteFontSize): Promise<void> {
-  await AsyncStorage.setItem(QUOTE_FONT_SIZE_KEY, size);
+  await setStorageItem(QUOTE_FONT_SIZE_KEY, size);
 }
 
 export async function getQuoteAnimation(): Promise<QuoteAnimation> {
@@ -195,7 +200,7 @@ export async function getQuoteAnimation(): Promise<QuoteAnimation> {
 export async function setQuoteAnimation(
   animation: QuoteAnimation,
 ): Promise<void> {
-  await AsyncStorage.setItem(QUOTE_ANIMATION_KEY, animation);
+  await setStorageItem(QUOTE_ANIMATION_KEY, animation);
 }
 
 export async function getMoodPreference(): Promise<MoodPreference> {
@@ -216,7 +221,7 @@ export async function setMoodPreference(
   if (!VALID_MOODS.has(mood)) {
     throw new TypeError("Invalid mood preference.");
   }
-  await AsyncStorage.setItem(MOOD_KEY, mood);
+  await setStorageItem(MOOD_KEY, mood);
 }
 
 export async function getOnboardingComplete(): Promise<boolean> {
@@ -229,7 +234,7 @@ export async function getOnboardingComplete(): Promise<boolean> {
 }
 
 export async function setOnboardingComplete(value: boolean): Promise<void> {
-  await AsyncStorage.setItem(ONBOARDING_KEY, String(value));
+  await setStorageItem(ONBOARDING_KEY, String(value));
 }
 
 export async function getQuoteLanguage(): Promise<QuoteLanguagePreference> {
@@ -258,7 +263,7 @@ export async function setQuoteLanguage(
     throw new TypeError("Invalid quote language.");
   }
 
-  await AsyncStorage.setItem(QUOTE_LANGUAGE_KEY, language);
+  await setStorageItem(QUOTE_LANGUAGE_KEY, language);
 }
 
 export async function getHighContrast(): Promise<boolean> {
@@ -271,5 +276,5 @@ export async function getHighContrast(): Promise<boolean> {
 }
 
 export async function setHighContrast(value: boolean): Promise<void> {
-  await AsyncStorage.setItem(HIGH_CONTRAST_KEY, String(value));
+  await setStorageItem(HIGH_CONTRAST_KEY, String(value));
 }

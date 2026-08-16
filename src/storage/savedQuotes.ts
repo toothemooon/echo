@@ -5,6 +5,10 @@ import {
   SUBCATEGORIES,
   type Category,
 } from "../constants/categories";
+import {
+  enqueueStorageMutation,
+  waitForStorageMutations,
+} from "./storageMutationQueue";
 
 const SAVED_QUOTES_KEY = "@echo/saved_quotes";
 
@@ -12,8 +16,6 @@ export type SavedQuoteRecord = {
   quote: Quote;
   savedAt: string;
 };
-
-let mutationQueue: Promise<void> = Promise.resolve();
 
 function warnInDevelopment(operation: string, error?: unknown): void {
   if (typeof __DEV__ === "undefined" || !__DEV__) return;
@@ -184,7 +186,7 @@ function enqueueMutation(
   operation: string,
   task: () => Promise<void>,
 ): Promise<void> {
-  const result = mutationQueue.then(async () => {
+  return enqueueStorageMutation(async () => {
     try {
       await task();
     } catch (error) {
@@ -192,14 +194,11 @@ function enqueueMutation(
       throw error;
     }
   });
-
-  mutationQueue = result.catch(() => undefined);
-  return result;
 }
 
 /** Returns valid saved snapshots ordered from newest to oldest. */
 export async function getSavedQuotes(): Promise<SavedQuoteRecord[]> {
-  await mutationQueue;
+  await waitForStorageMutations();
 
   try {
     return await readStoredRecords();
