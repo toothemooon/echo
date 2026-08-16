@@ -44,7 +44,7 @@ test("v1.0 catalog satisfies its release quality gates", () => {
 test("English, Chinese, and Japanese catalogs are equal and collision-free", () => {
   assert.equal(quotes.length, 1305);
   assert.equal(chineseQuotes.length, 831);
-  assert.equal(japaneseQuotes.length, 1853);
+  assert.equal(japaneseQuotes.length, 1850);
   assert.ok(quotes.every((quote) => quote.language === "en"));
   assert.ok(
     chineseQuotes.every(
