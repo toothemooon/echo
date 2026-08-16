@@ -89,6 +89,10 @@ import {
   type ViewedQuoteRecord,
 } from "../storage/viewedQuotes";
 import { clearLocalData } from "../storage/clearLocalData";
+import {
+  isFontReady,
+  resolveRuntimeQuoteFont,
+} from "../startup/fontFallback";
 
 type Page =
   | "home"
@@ -104,7 +108,7 @@ type Page =
 
 export default function Index() {
   const { height: screenHeight } = useWindowDimensions();
-  const [fontsLoaded] = useFonts({
+  const [fontsLoaded, fontError] = useFonts({
     CormorantGaramond_400Regular_Italic,
   });
 
@@ -123,6 +127,8 @@ export default function Index() {
   const [viewedQuotes, setViewedQuotes] = useState<ViewedQuoteRecord[]>([]);
 
   const [quoteFont, setQuoteFontState] = useState<QuoteFont>("elegant");
+  const fontReady = isFontReady(fontsLoaded, fontError);
+  const runtimeQuoteFont = resolveRuntimeQuoteFont(quoteFont, fontError);
 
   const [quoteFontSize, setQuoteFontSizeState] =
     useState<QuoteFontSize>("medium");
@@ -257,7 +263,7 @@ export default function Index() {
   }, [currentQuote?.id]);
 
   // ── 启动页 ──
-  if (!fontsLoaded || !initializationReady || showSplash) {
+  if (!fontReady || !initializationReady || showSplash) {
     return (
       <View
         style={{
@@ -898,7 +904,7 @@ export default function Index() {
         colors={colors}
         fadeAnim={fadeAnim}
         slideAnim={slideAnim}
-        quoteFont={quoteFont}
+        quoteFont={runtimeQuoteFont}
         quoteFontSize={quoteFontSize}
         onPressAuthor={() => openQuoteContext(currentQuote)}
       />
