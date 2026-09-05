@@ -2,7 +2,7 @@
   "expo": {
     "name": "ECHO",
     "slug": "ECHO",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "scheme": "echo",
     "orientation": "portrait",
     "icon": "./assets/echo-icon-light.png",

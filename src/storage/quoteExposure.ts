@@ -6,6 +6,7 @@ import {
   type ExposureCounts,
 } from "../recommendation/exposure";
 import { getViewedQuotes } from "./viewedQuotes";
+import { enqueueStorageMutation } from "./storageMutationQueue";
 
 const EXPOSURE_KEY_PREFIX = "@echo/quote_exposure_v1:";
 
@@ -45,5 +46,7 @@ export async function saveExposure(
   language: QuoteLanguage,
   counts: ExposureCounts,
 ): Promise<void> {
-  await AsyncStorage.setItem(exposureKey(language), JSON.stringify(counts));
+  return enqueueStorageMutation(() =>
+    AsyncStorage.setItem(exposureKey(language), JSON.stringify(counts))
+  );
 }
