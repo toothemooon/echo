@@ -2,7 +2,7 @@
   "expo": {
     "name": "ECHO",
     "slug": "ECHO",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "scheme": "echo",
     "orientation": "portrait",
     "icon": "./assets/echo-icon-light.png",
@@ -16,8 +16,15 @@
         "usesNonExemptEncryption": false
       },
       "infoPlist": {
-        "LSApplicationQueriesSchemes": ["itms-apps", "mailto", "market"],
+        "LSApplicationQueriesSchemes": [
+          "itms-apps",
+          "mailto",
+          "market"
+        ],
         "ITSAppUsesNonExemptEncryption": false
+      },
+      "runtimeVersion": {
+        "policy": "appVersion"
       }
     },
     "android": {
@@ -79,6 +86,9 @@
         "projectId": "31027af5-fe6e-41bf-9cee-23204247f355"
       }
     },
-    "owner": "hsc110110"
+    "owner": "hsc110110",
+    "updates": {
+      "url": "https://u.expo.dev/31027af5-fe6e-41bf-9cee-23204247f355"
+    }
   }
 }

@@ -42,11 +42,18 @@ export async function getExposure(
   }
 }
 
+/** Writes exposure counts for a caller that already owns the storage queue. */
+export async function writeExposure(
+  language: QuoteLanguage,
+  counts: ExposureCounts,
+): Promise<void> {
+  await AsyncStorage.setItem(exposureKey(language), JSON.stringify(counts));
+}
+
+/** Persists exposure counts as one serialized storage mutation. */
 export async function saveExposure(
   language: QuoteLanguage,
   counts: ExposureCounts,
 ): Promise<void> {
-  return enqueueStorageMutation(() =>
-    AsyncStorage.setItem(exposureKey(language), JSON.stringify(counts))
-  );
+  return enqueueStorageMutation(() => writeExposure(language, counts));
 }

@@ -11,7 +11,7 @@ import {
   type RotationState,
 } from "../recommendation/selector";
 import { recordExposure } from "../recommendation/exposure";
-import { getExposure, saveExposure } from "./quoteExposure";
+import { getExposure, writeExposure } from "./quoteExposure";
 import { enqueueStorageMutation } from "./storageMutationQueue";
 
 const ROTATION_KEY = "@echo/quote_rotation_v1";
@@ -85,7 +85,7 @@ export async function getNextRecommendedQuote(
           ROTATION_KEY,
           JSON.stringify(recordSelection(rotation, quote)),
         ),
-        saveExposure(language, recordExposure(exposure, quote)),
+        writeExposure(language, recordExposure(exposure, quote)),
       ]);
     } catch {
       // Recommendation still works in memory when persistence is unavailable.
