@@ -1,112 +1,74 @@
-# ECHO TestFlight submission
+# ECHO TestFlight and App Review preparation
 
-## App Store Connect record
+> Reviewed against the repository on 2026-11-11. This is a preparation sheet, not evidence that a build has been uploaded, is available in TestFlight, or has been submitted for review. Confirm external values in App Store Connect and EAS before using this copy.
 
-- App name: `ECHO`
-- Primary language: English (U.S.)
-- Bundle ID: `yachts.sarada.echo`
-- SKU: `echo-ios-2026`
-- Version: `1.0.0`
-- Primary category: Lifestyle
-- Privacy policy URL: `https://sarada.yachts/projects/echo/privacy`
-- Support URL: `https://sarada.yachts/projects/echo`
-- Marketing URL: `https://sarada.yachts/projects/echo`
-- Feedback email: `abc510433622@gmail.com`
+## Repository-backed build facts
 
-## Beta app description
+| Field | Current value | Source / note |
+| --- | --- | --- |
+| App name | ECHO | `app.json` |
+| Marketing version | `1.0.2` | `app.json` and `package.json` |
+| iOS bundle ID | `yachts.sarada.echo` | `app.json` |
+| Checked-in iOS build number | `7` | `app.json`; EAS uses remote app versioning and auto-increment, so confirm the actual build |
+| EAS project ID | `31027af5-fe6e-41bf-9cee-23204247f355` | `app.json` |
+| Production build profile | `production` | `eas.json`; channel `production`, auto-increment enabled |
+| Submit profile | Incomplete in this repo | `eas.json` has an empty `submit.production` object; confirm or configure App Store Connect submission details |
 
-ECHO is an offline-first daily quote experience with personalized categories,
-three visual themes, typography controls, bookmarks, persistent reading history,
-and shareable quote cards. No account, subscription, advertising, or payment is
-required. Core browsing, favorites, history, preferences, themes, and sharing
-work without an internet connection.
+The App Store Connect app record, SKU, category, screenshots, copyright, review contact, selected build, and current review status are external state. Verify them in App Store Connect instead of copying values from the archived 1.0.0 notes.
 
-### New Features (v1.0)
+## Draft beta description
 
-- **Historical Echo**: Each quote includes locally bundled, AI-assisted
-  editorial context about the speaker's era, life, and related work. It does
-  not claim to identify the exact occasion on which the quotation was spoken.
+ECHO is an offline-first quote-reading app in English, Simplified Chinese, and Japanese. Choose a reading mood to guide quote recommendations, then save, revisit, or share quotes. Light, Dark, and Archive themes, typography settings, and reading history let you shape a quiet daily reading experience.
 
-### Content Statistics
+Quote text and author materials are bundled with the app. Author profiles include sourced biographical notes and a historical echo about the speaker's wider time and work. This context does not claim to verify the specific occasion on which a quotation was said. Reading and saved content remain available offline.
 
-| Language | Quotes | Authors |
-|----------|--------|---------|
+## Local catalog snapshot
+
+These counts match the data files in the current local workspace. The files are not present in a clean Git clone unless supplied separately.
+
+| Language | Quotes | Language-scoped authors |
+| --- | ---: | ---: |
 | English | 1,282 | 206 |
 | Simplified Chinese | 823 | 445 |
 | Japanese | 1,820 | 301 |
 | **Total** | **3,925** | **952** |
 
-## What to test
+The app's content-source screen identifies Wikiquote, Wikipedia, Wikidata, and CC BY-SA material. Review the packaged attribution and the current license/source documents before submission.
 
-Please test first launch, quote navigation, category preferences,
-Light/Dark/Archive themes, font and animation settings, bookmarks, history,
-quote sharing, clear-data confirmation, and persistence after restarting the
-app. Please also test the new "Historical Echo" feature by clicking on author
-names.
+## Draft beta review notes
 
-Please report:
-- Incorrect quote attribution
-- Layout issues with long quotes
-- Broken links or crashes
-- Issues with Historical Echo content
+ECHO does not require an account or demo credentials. Quote reading, recommendations, preferences, saved quotes, and reading history use data bundled with or stored locally by the app and are available offline. The app also configures Expo Updates and provides links to external policy, terms, and content-source pages; do not describe the entire binary as making no network requests. There is no account, cloud-sync, advertising, subscription, or in-app purchase flow in the current app.
 
-## Beta review notes
+The repository does not establish the current App Store Connect privacy answers or the behavior of the build selected for review. Confirm the binary's SDKs, update configuration, data practices, privacy labels, and reviewer notes for that exact build before submission.
 
-ECHO does not require an account or demo credentials. All published quote
-content is bundled with the app and can be used offline. Preferences and
-bookmarks are stored locally on the device. The current build contains no ads,
-in-app purchases, subscriptions, remote push notifications, widgets, or paywall.
-Internet access occurs only when the user explicitly opens the privacy policy,
-terms, content-source page, email client, or an external sharing destination.
+## TestFlight test checklist
 
-The Privacy Policy, Terms of Service, Content Sources, Share App, and Feedback
-entries are available from Settings. Rate App is hidden until a real App Store
-ID exists.
+- [ ] Fresh install, first-launch mood selection, and relaunch
+- [ ] Next/previous navigation and category preference changes
+- [ ] English, Simplified Chinese, and Japanese content selection
+- [ ] Light, Dark, and Archive themes; app icon synchronization where supported
+- [ ] Font, size, animation, and high-contrast settings
+- [ ] Save/remove a quote; confirm favorites survive relaunch
+- [ ] Reading history, history clearing, and Clear All Data confirmation
+- [ ] Share quote text and image; cancel the system share sheet
+- [ ] Open a quote's author profile and review biography, historical echo, and source display
+- [ ] Airplane-mode reading, recommendations, saved quotes, and history
+- [ ] Long quotes on the smallest supported iPhone size
+- [ ] VoiceOver labels, focus order, and larger system text
+- [ ] Privacy, terms, and content-source links; feedback behavior when no mail app is configured
 
-## App privacy answers
+Record the device model, iOS version, app version, and actual build number with each issue. Do not treat this checklist as completed until a tester has run it on the selected TestFlight build.
 
-Based on the current code and dependencies:
+## Build and submit commands
 
-- Data collection: No, the developer and included SDKs do not collect data
-  from the app.
-- Tracking: No.
-- Account creation: None.
-- Analytics or advertising SDK: None.
-
-Recheck these answers before every submission if analytics, crash reporting,
-cloud sync, accounts, advertising, or another third-party SDK is added.
-
-## Internal testing checklist
-
-- [ ] Cold launch and relaunch on a physical iPhone
-- [ ] Clear All Data confirmation and reset of local preferences, favorites, history,
-  and onboarding state
-- [ ] Light, Dark, and Archive theme rendering
-- [ ] Font, size, animation, and preference persistence
-- [ ] Previous/next quote navigation and author rotation
-- [ ] Bookmark add/remove and History empty state
-- [ ] Share text, share image, and system share cancellation
-- [ ] Privacy Policy, Terms of Service, Content Sources, Share App, and feedback links
-- [ ] Airplane-mode operation
-- [ ] Longest published quote and smallest supported screen
-- [ ] VoiceOver labels and Dynamic Type behavior where supported
-- [ ] Historical Echo content display (click on author names)
-- [ ] Historical Echo content accuracy and language matching
-
-## Commands after Expo login
+After confirming the local runtime data files are present and authenticating with the official Expo/Apple flows:
 
 ```sh
-npx eas-cli login
 npx eas-cli whoami
 npx eas-cli build --platform ios --profile production
 npx eas-cli submit --platform ios --profile production --latest
 ```
 
-Before submission, replace the external placeholders with the final App Store
-Connect screenshots, metadata, privacy answers, copyright confirmation, and
-review contact details. The local checks cannot submit a build or change App
-Store Connect state on their own.
+Before submitting, confirm the EAS build completed, its marketing version/build number match the intended App Store Connect version, and the correct build is selected for TestFlight review. The current `submit.production` profile does not specify an `ascAppId`; EAS may require interactive app selection or a repository configuration update.
 
-Do not paste an Expo password, Apple password, two-factor code, App Store
-Connect API key, or recovery code into a chat. Complete authentication only in
-the local terminal or the official Expo/Apple sign-in page.
+Never paste Expo or Apple passwords, two-factor codes, App Store Connect API keys, or recovery codes into project documentation or chat.

@@ -1,5 +1,7 @@
 # Quote App 1.0.0 本次运行修改说明
 
+> **历史记录（2026-08-03）**。本文保留当时 1.0.0 运行、数据目录和构建验证的记录，其中的版本、目录数量、Build 5 与上架状态不是当前项目状态。当前仓库配置及数据快照请看 [项目状态](project-status.md)；提交准备请看 [TestFlight 准备稿](TESTFLIGHT_SUBMISSION.md)。
+
 日期：2026-08-03  
 项目：ECHO  
 Bundle Identifier：`yachts.sarada.echo`  
