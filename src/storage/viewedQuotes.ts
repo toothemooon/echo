@@ -27,8 +27,12 @@ function cloneQuote(quote: Quote): Quote {
   return { ...quote, categories: [...quote.categories] };
 }
 
-async function readRecords(): Promise<ViewedQuoteRecord[]> {
-  const raw = await AsyncStorage.getItem(VIEWED_QUOTES_KEY);
+type ViewedQuoteStorage = Pick<typeof AsyncStorage, "getItem">;
+
+async function readRecords(
+  storage: ViewedQuoteStorage = AsyncStorage,
+): Promise<ViewedQuoteRecord[]> {
+  const raw = await storage.getItem(VIEWED_QUOTES_KEY);
   if (!raw) return [];
 
   try {
@@ -51,9 +55,11 @@ async function readRecords(): Promise<ViewedQuoteRecord[]> {
   }
 }
 
-export async function getViewedQuotes(): Promise<ViewedQuoteRecord[]> {
+export async function getViewedQuotes(
+  storage: ViewedQuoteStorage = AsyncStorage,
+): Promise<ViewedQuoteRecord[]> {
   try {
-    return await readRecords();
+    return await readRecords(storage);
   } catch {
     return [];
   }

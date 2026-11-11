@@ -81,7 +81,12 @@ import QuoteContextScreen from "../screens/QuoteContextScreen";
 import AccessibilityScreen from "../screens/AccessibilityScreen";
 import ContentSourcesScreen from "../screens/ContentSourcesScreen";
 import { syncAppIconWithTheme } from "../services/appIcon";
-import { getNextRecommendedQuote } from "../storage/quoteRotation";
+import {
+  commitQuoteSelection,
+  prepareNextRecommendedQuote,
+  type PreparedQuoteSelection,
+} from "../storage/quoteRotation";
+import { releaseBusyForCurrentRequest } from "../utils/requestSequence";
 import {
   clearViewedQuotes,
   getViewedQuotes,
@@ -105,6 +110,17 @@ type Page =
   | "animation-settings"
   | "accessibility"
   | "content-sources";
+
+function commitAcceptedSelection(selection: PreparedQuoteSelection): void {
+  void commitQuoteSelection(selection).catch((error) => {
+    if (__DEV__) {
+      console.warn(
+        "Failed to save recommendation progress.",
+        error instanceof Error ? error.message : "Unknown error",
+      );
+    }
+  });
+}
 
 export default function Index() {
   const { height: screenHeight } = useWindowDimensions();
@@ -161,12 +177,19 @@ export default function Index() {
   const backdropAnim = useRef(new Animated.Value(0)).current;
   const isAnimating = useRef(false);
   const isSelectingQuote = useRef(false);
+  const quoteRequestId = useRef(0);
   // Bumped every time the quote history is replaced wholesale (language or
   // mood change, retry, clear-all). An in-flight quote selection captures
   // the generation it started under and discards its result when the
   // history has been rebuilt in the meantime.
   const historyGeneration = useRef(0);
   const shareCardRef = useRef<View>(null);
+
+  const invalidateQuoteRequests = () => {
+    quoteRequestId.current += 1;
+    isSelectingQuote.current = false;
+    setRetryingQuote(false);
+  };
 
   // ── 初始化 ──
   useEffect(() => {
@@ -222,13 +245,20 @@ export default function Index() {
         setHighContrastState(savedHighContrast);
         setViewedQuotes(savedViewedQuotes);
 
-        const firstQuote = savedOnboardingComplete
-          ? await getNextRecommendedQuote(prefs, [], savedQuoteLanguage)
+        const generation = historyGeneration.current;
+        const firstSelection = savedOnboardingComplete
+          ? await prepareNextRecommendedQuote(
+              prefs,
+              [],
+              savedQuoteLanguage,
+              generation,
+            )
           : null;
 
-        if (firstQuote) {
-          setQuoteHistory([firstQuote]);
+        if (firstSelection && historyGeneration.current === generation) {
+          setQuoteHistory([firstSelection.quote]);
           setHistoryIndex(0);
+          commitAcceptedSelection(firstSelection);
         }
       } catch (error) {
         if (__DEV__) {
@@ -330,16 +360,49 @@ export default function Index() {
           }}
           disabled={retryingQuote}
           onPress={() => {
+            const requestId = ++quoteRequestId.current;
+            const generation = historyGeneration.current + 1;
+            historyGeneration.current = generation;
             setRetryingQuote(true);
-            void getNextRecommendedQuote(preferredCategories, [], quoteLanguage)
-              .then((quote) => {
-                if (quote) {
-                  historyGeneration.current += 1;
-                  setQuoteHistory([quote]);
-                  setHistoryIndex(0);
+            void (async () => {
+              try {
+                const selection = await prepareNextRecommendedQuote(
+                  preferredCategories,
+                  [],
+                  quoteLanguage,
+                  generation,
+                );
+                if (
+                  !selection ||
+                  requestId !== quoteRequestId.current ||
+                  historyGeneration.current !== generation
+                ) {
+                  return;
                 }
-              })
-              .finally(() => setRetryingQuote(false));
+                setQuoteHistory([selection.quote]);
+                setHistoryIndex(0);
+                commitAcceptedSelection(selection);
+              } catch (error) {
+                if (
+                  requestId === quoteRequestId.current &&
+                  historyGeneration.current === generation
+                ) {
+                  if (__DEV__) {
+                    console.warn("Failed to load a quote.", error);
+                  }
+                  Alert.alert(
+                    "Unable to load quote",
+                    "Please try again in a moment.",
+                  );
+                }
+              } finally {
+                releaseBusyForCurrentRequest(
+                  requestId,
+                  quoteRequestId.current,
+                  () => setRetryingQuote(false),
+                );
+              }
+            })();
           }}
           accessibilityRole="button"
           accessibilityLabel="Try loading a quote again"
@@ -420,18 +483,21 @@ export default function Index() {
     // appended to the new history later.
     const generation = historyGeneration.current + 1;
     historyGeneration.current = generation;
+    invalidateQuoteRequests();
 
     try {
       await setQuoteLanguage(nextLanguage);
-      const firstMatchingQuote = await getNextRecommendedQuote(
+      const firstMatchingSelection = await prepareNextRecommendedQuote(
         preferredCategories,
         [],
         nextLanguage,
+        generation,
       );
 
-      if (firstMatchingQuote && historyGeneration.current === generation) {
-        setQuoteHistory([firstMatchingQuote]);
+      if (firstMatchingSelection && historyGeneration.current === generation) {
+        setQuoteHistory([firstMatchingSelection.quote]);
         setHistoryIndex(0);
+        commitAcceptedSelection(firstMatchingSelection);
       }
     } catch {
       if (__DEV__) {
@@ -453,6 +519,7 @@ export default function Index() {
     // appended to the new history later.
     const generation = historyGeneration.current + 1;
     historyGeneration.current = generation;
+    invalidateQuoteRequests();
 
     try {
       await Promise.all([
@@ -460,14 +527,16 @@ export default function Index() {
         savePreferredCategories(nextCategories),
         ...(completeOnboarding ? [setOnboardingComplete(true)] : []),
       ]);
-      const firstMatchingQuote = await getNextRecommendedQuote(
+      const firstMatchingSelection = await prepareNextRecommendedQuote(
         nextCategories,
         [],
         quoteLanguage,
+        generation,
       );
-      if (firstMatchingQuote && historyGeneration.current === generation) {
-        setQuoteHistory([firstMatchingQuote]);
+      if (firstMatchingSelection && historyGeneration.current === generation) {
+        setQuoteHistory([firstMatchingSelection.quote]);
         setHistoryIndex(0);
+        commitAcceptedSelection(firstMatchingSelection);
       }
       if (completeOnboarding) {
         setOnboardingCompleteState(true);
@@ -619,32 +688,51 @@ export default function Index() {
       return;
     }
 
+    const requestId = ++quoteRequestId.current;
     isSelectingQuote.current = true;
     const generation = historyGeneration.current;
-    const newQuote = await getNextRecommendedQuote(
-      preferredCategories,
-      quoteHistory,
-      quoteLanguage,
-    ).finally(() => {
-      isSelectingQuote.current = false;
-    });
+    try {
+      const selection = await prepareNextRecommendedQuote(
+        preferredCategories,
+        quoteHistory,
+        quoteLanguage,
+        generation,
+      );
 
-    if (!newQuote) {
-      return;
+      if (
+        !selection ||
+        requestId !== quoteRequestId.current ||
+        historyGeneration.current !== generation
+      ) {
+        return;
+      }
+
+      runQuoteTransition("right", () => {
+        if (
+          requestId !== quoteRequestId.current ||
+          historyGeneration.current !== generation
+        ) {
+          return;
+        }
+        setQuoteHistory((previous) => [...previous, selection.quote]);
+        setHistoryIndex((previous) => previous + 1);
+        commitAcceptedSelection(selection);
+      });
+    } catch (error) {
+      if (
+        requestId === quoteRequestId.current &&
+        historyGeneration.current === generation
+      ) {
+        if (__DEV__) {
+          console.warn("Failed to select the next quote.", error);
+        }
+        Alert.alert("Unable to load quote", "Please try again in a moment.");
+      }
+    } finally {
+      releaseBusyForCurrentRequest(requestId, quoteRequestId.current, () => {
+        isSelectingQuote.current = false;
+      });
     }
-
-    // A language/mood change or data reset that happened while the quote
-    // was being selected must not append this stale quote to the new
-    // history.
-    if (historyGeneration.current !== generation) {
-      return;
-    }
-
-    runQuoteTransition("right", () => {
-      setQuoteHistory((previous) => [...previous, newQuote]);
-
-      setHistoryIndex((previous) => previous + 1);
-    });
   };
 
   // ── 上一条名言 ──
@@ -708,6 +796,7 @@ export default function Index() {
   const clearAllData = async () => {
     try {
       historyGeneration.current += 1;
+      invalidateQuoteRequests();
       await clearLocalData();
       setThemeState("light");
       setPreferredCategories([...CATEGORIES]);

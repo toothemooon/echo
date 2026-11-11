@@ -4,14 +4,14 @@ Last reviewed against the local workspace: **2026-11-11**.
 
 ## Current documents
 
-- [Project status](project-status.md) — current product, runtime, data, version, and known repository constraints.
+- [Project status](project-status.md) — current product, runtime, data, version, recommendation snapshot/migration behavior, and dated verification results.
 - [TestFlight preparation](TESTFLIGHT_SUBMISSION.md) — repository-backed release facts and the checks that still require App Store Connect or a device.
 - [Quote context research ledger](QUOTE_CONTEXT_RESEARCH.md) — current local data snapshot, research rules, and dated research history.
 
 ## Historical records
 
 - [1.0.0 change log](QUOTE_APP_1.0.0_CHANGES.md) — a record of work and validation performed on 2026-08-03; its counts and release state are historical.
-- [2026-08-16 project audit](problem.md) — a point-in-time engineering audit. Its findings and command output have not all been rechecked against today's code.
+- [2026-08-16 project audit](problem.md) — a point-in-time engineering audit with dated follow-ups for the 2026-11-11 recommendation and Clear All repair. Other findings and command output have not all been rechecked against today's code.
 - [`superpowers/`](superpowers/) — dated design and implementation records for the iOS 1.0.0 release work. These explain past decisions; they are not current work instructions.
 
 ## Source-of-truth notes

@@ -4,17 +4,29 @@
 > - 审计方式：静态审阅、定向动态复现、数据一致性统计、平台导出、依赖与 Git 历史检查
 > - 说明：本文记录审计时确认的问题。除非条目明确标注“待确认”，否则均有代码、数据统计或复现证据。
 
-> **历史快照，不是当前待办清单。** 下文的问题状态、建议顺序以及测试/构建输出反映 2026-08-16 的工作区；本次文档翻新没有重跑这些审计。请以[当前项目状态](project-status.md)为准。该状态页仅记录本次实际对照过的事实，其余条目的当前状态仍待复查。
+> **历史快照，不是当前待办清单。** 下文原始问题、建议顺序以及测试/构建输出反映 2026-08-16 的工作区。2026-11-11 的后续修复只覆盖本文明确标注的推荐与 Clear All 条目，没有重跑完整审计。请以[当前项目状态](project-status.md)为准；其余条目仍待复查。
 
 ## 2026-11-11 有限代码核对
 
 本次只核对了当前配置、相关源码和本机数据，没有重新执行完整工程审计：
 
 - **P2 仍存在**：三份格言 JSON 和 `QUOTE_CONTEXTS.json` 仍被 Git 忽略；EAS 忽略规则会重新包含它们。
-- **P5/P6 的实现已在当前源码中**：活跃存储变更使用全局队列；字体加载失败可以使用本次运行的系统字体回退。这里仅确认实现存在，本次没有运行相关测试。
+- **P5/P6 的实现已在当前源码中**：活跃存储变更使用全局队列；字体加载失败可以使用本次运行的系统字体回退。该次有限核对没有运行测试；随后完成的推荐/Clear All 定向修复与验证见下文。
 - **P34/P35 服务仍未接入应用主流程**：Wikipedia/OpenAI 服务代码仍存在；当前应用界面使用本地语境数据。若将来接入，需要重新评估 API 密钥、网络与隐私处理。
 - **版本信息有差异**：当前 `app.json` 与 `package.json` 为 1.0.2；本文 2026-08-16 的发布结论仍是 1.0.0 历史记录。根目录 README 也仍写 1.0.0。
 - 其余 P1–P37 条目及本文后续的测试、导出和依赖审计结果没有在本次逐项复测，不应直接当成当前事实。
+
+## 2026-11-11 推荐状态与 Clear All 定向修复
+
+本次在 `feat/dsh-playwright-mcp` 上实现了推荐候选提交闭环。此处只更新实际修改并验证的项目，不代表重新审计了其他问题：
+
+- **P5 补强**：Clear All 在全局存储队列中写入空的 v2 推荐快照并递增 `epoch`，随后清除其他 `@echo/` keys，同时保留 v2 标记。清除前 prepare 的旧 epoch commit 会被丢弃。
+- **P10 已修复**：推荐选择改为只读 prepare；页面接受候选并确认请求代次有效后才提交计数。被页面丢弃的候选不会增加 exposure 或 rotation。
+- **P11 已修复**：rotation 与各语言 exposure 合并保存到 `@echo/recommendation_state_v2`，一次 `setItem` 更新，避免两份 key 部分成功造成状态分裂。写入失败不会改变已持久化计数，当前已展示格言仍保留。
+- **P13 已修复**：Try Again 与“下一条”均捕获请求错误，并通过请求序号限制当前请求显示错误或释放 busy 状态；旧请求的 `finally` 不会清掉新请求的锁。
+- **迁移边界**：旧 rotation/exposure key 只在 v2 写入成功后清理；迁移失败时从旧值回退读取并保留旧 key。已有 v2 优先且不会被旧 key 覆盖；无效 v2 返回可重试错误。最近 32 个 `selectionId` 仅在内存中用于 commit 幂等。
+- **自动验证**：`npm run test` 50/50 通过；`npx tsc --noEmit` 通过。`npm run check` 的测试和类型检查阶段通过，但临时 npx `expo-doctor` 因无法解析 `@expo/env` 退出。
+- **iOS 验证边界**：iPhone 17 模拟器原生 development build 成功并加载当前 bundle；由于 macOS 拒绝模拟按键输入且未安装 UI 自动化工具，没有完成按钮级交互走查。
 
 ## 1. iOS 1.0.0 发布结论
 
@@ -149,19 +161,19 @@
 - **影响**：Android 用户选择图片却没有图片附件。
 - **修复**：使用 `expo-sharing` 或支持 FileProvider 的库，以 `content://`、`image/png` 和读取权限分享；分别处理截图和分享错误。
 
-### P10. 未展示的推荐已被记录为“已显示”
+### P10. 未展示的推荐已被记录为“已显示”（2026-11-11 已修复）
 
 - **位置**：[`src/storage/quoteRotation.ts`](../src/storage/quoteRotation.ts)、[`src/app/index.tsx`](../src/app/index.tsx)。
 - **证据**：语言、心情或 clear 使 generation 失效时，UI 丢弃 quote，但 rotation/exposure 已提前写入。
 - **影响**：用户从未看到的名言可能被延后数月再次出现。
-- **修复**：选择只返回 reservation，UI 采用后再 commit；或写入前校验 AbortSignal/generation。
+- **修复结果**：`prepareNextRecommendedQuote()` 只返回候选；UI 按 generation 接纳后调用 `commitQuoteSelection()`。旧 generation 或旧 epoch 的候选不计数。
 
-### P11. rotation 与 exposure 双写不原子
+### P11. rotation 与 exposure 双写不原子（2026-11-11 已修复）
 
-- **位置**：[`src/storage/quoteRotation.ts`](../src/storage/quoteRotation.ts) 的 `Promise.all`。
+- **原位置**：[`src/storage/quoteRotation.ts`](../src/storage/quoteRotation.ts) 的两个独立 key 写入。
 - **证据**：一个写立即失败时队列会释放，另一个写仍可能晚到并覆盖后续结果；错误被吞掉。
 - **影响**：状态分裂、计数回退、重复推荐或覆盖率失真。
-- **修复**：合并为一个带版本快照；最低限度使用 `allSettled` 等待底层写结束，并恢复部分提交。
+- **修复结果**：使用 v2 合并快照，一次写入 rotation 和 exposure；写入失败时不更新内存幂等缓存或持久化计数。
 
 ### P12. 偏好保存失败后 UI 与磁盘不一致
 
@@ -170,12 +182,12 @@
 - **影响**：界面显示已保存，重启后恢复旧值；onboarding、mood 和 categories 可能互相矛盾。
 - **修复**：保存成功后再提交 UI，或基于 generation 回滚；相关偏好存为一个版本化 JSON。
 
-### P13. 下一条和空状态重试缺少 catch
+### P13. 下一条和空状态重试缺少 catch（2026-11-11 已修复）
 
 - **位置**：[`src/app/index.tsx`](../src/app/index.tsx) 的 Try Again 和 `goNext`。
 - **证据**：两处只有 `finally` 没有 `catch`。
 - **影响**：意外的存储/native rejection 会成为未处理 Promise，且用户没有反馈。
-- **修复**：捕获异常、恢复 busy 状态、记录诊断并显示可重试提示。
+- **修复结果**：两处均有 catch/finally；请求序号 guard 保证只有当前请求可以提示错误或释放对应 busy 状态。
 
 ### P14. Settings 的 Share App / Send Feedback 功能回归
 

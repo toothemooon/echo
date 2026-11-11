@@ -13,6 +13,10 @@ class MemoryStorage {
     return [...this.values.keys()];
   }
 
+  async getItem(key: string): Promise<string | null> {
+    return this.values.get(key) ?? null;
+  }
+
   async multiRemove(keys: readonly string[]): Promise<void> {
     for (const key of keys) this.values.delete(key);
   }
@@ -22,10 +26,19 @@ class MemoryStorage {
   }
 }
 
-test("Clear All waits for an unfinished write and removes the key it creates", async () => {
+test("Clear All waits for writes and retains an incremented recommendation epoch", async () => {
   await waitForStorageMutations();
   const storage = new MemoryStorage();
   storage.values.set("@echo/theme", "dark");
+  storage.values.set(
+    "@echo/recommendation_state_v2",
+    JSON.stringify({
+      schemaVersion: 2,
+      epoch: 3,
+      rotation: { date: "2026-11-11", shownQuoteIds: [] },
+      exposures: { en: {}, "zh-Hans": {}, ja: {} },
+    }),
+  );
   storage.values.set("third-party/key", "keep");
 
   let releaseWrite!: () => void;
@@ -47,9 +60,16 @@ test("Clear All waits for an unfinished write and removes the key it creates", a
 
   releaseWrite();
   await Promise.all([pendingWrite, pendingClear]);
+  const retained = JSON.parse(
+    storage.values.get("@echo/recommendation_state_v2")!,
+  ) as { schemaVersion: number; epoch: number; rotation: { categoryCounts: object }; exposures: object };
+  assert.equal(retained.schemaVersion, 2);
+  assert.equal(retained.epoch, 4);
+  assert.deepEqual(retained.rotation.categoryCounts, {});
+  assert.deepEqual(retained.exposures, { en: {}, "zh-Hans": {}, ja: {} });
   assert.deepEqual(
     [...storage.values.keys()].filter((key) => key.startsWith("@echo/")),
-    [],
+    ["@echo/recommendation_state_v2"],
   );
   assert.equal(storage.values.get("third-party/key"), "keep");
 });

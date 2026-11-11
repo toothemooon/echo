@@ -45,6 +45,21 @@ The quote catalogs and `QUOTE_CONTEXTS.json` are excluded by `.gitignore`. `.eas
 - The current app has iOS and Android configuration. iOS is the documented primary release target. A `web` npm script exists, but this repository does not include `react-native-web`; do not treat Web as a supported build target without a separate compatibility check.
 - The navigation pages are represented in React state rather than separate Expo Router routes. The Android system-back behavior called out in the 2026-08 audit remains a platform issue to verify before claiming Android parity.
 
+### Recommendation state and Clear All
+
+Recommendation persistence uses the single `@echo/recommendation_state_v2` AsyncStorage value. Its schema is `{ schemaVersion: 2, epoch, rotation, exposures }`; `exposures` contains separate counts for English, Simplified Chinese, and Japanese. The selector itself remains a pure function in `src/recommendation/selector.ts`.
+
+The read path is a two-step lifecycle:
+
+1. `prepareNextRecommendedQuote()` selects a candidate and returns its quote, generation, epoch, and `selectionId`. It does not increment exposure or rotation counts.
+2. The screen accepts the candidate only if its request generation is still current. It then calls `commitQuoteSelection()`, which re-reads the snapshot in the shared storage mutation queue, validates the prepared epoch, and writes the updated rotation and exposure together as one snapshot.
+
+The store keeps at most 32 recently committed selection IDs in memory to make repeated commits idempotent; this history is not persisted. A failed snapshot write leaves the previous counts intact while the already displayed quote remains available for reading.
+
+Migration from `@echo/quote_rotation_v1` and `@echo/quote_exposure_v1:*` is single-flight. A valid v2 snapshot is authoritative; residual v1 keys are cleanup-only. When no v2 snapshot exists, migration writes v2 before removing the old keys. If that write fails, preparation can read the legacy values and leaves them intact. An existing malformed v2 value raises a retryable error instead of being replaced from legacy data.
+
+Clear All is serialized with recommendation commits. It writes empty rotation and exposure state with `epoch + 1`, then removes the other `@echo/` keys while retaining the v2 marker. A candidate prepared under an older epoch is discarded at commit, so clearing cannot be undone by an in-flight recommendation.
+
 ## Network and historical context
 
 The quote-reading path uses bundled content and remains available offline. That does not mean every app operation is network-free: `app.json` configures Expo Updates, and Settings exposes external policy, terms, and source links.
@@ -55,4 +70,11 @@ Historical Echo describes a speaker's broader historical setting and source work
 
 ## Verification boundary
 
-This status page was prepared by reading the current configuration, source, and local data files. It does not claim a fresh app build, device smoke test, Expo Doctor run, dependency audit, or App Store submission check. The results listed in the [August 2026 audit](problem.md) are historical unless they are explicitly reconfirmed in current source.
+Updated on 2026-11-11 after the recommendation-state repair. Current local verification:
+
+- `npm run test`: 50 tests passed, including duplicate commit, concurrent commit, Clear All epoch, migration fallback/recovery, v2 precedence, malformed snapshot, and stale request-lock coverage.
+- `npx tsc --noEmit`: passed.
+- iOS development build: native build succeeded and the iPhone 17 simulator loaded the current Metro bundle. Interactive tapping through Next, language/mood changes, Try Again, migration failure, and Clear All was not completed because macOS denied simulated keyboard input and no UI automation tool was installed.
+- `npm run check`: tests and TypeScript passed; the final `expo-doctor` step exited because the temporary npx `expo-doctor` package could not resolve `@expo/env`. The project dependency tree does contain `@expo/env` through Expo packages.
+
+This does not claim a TestFlight-device smoke test, dependency audit, or App Store submission check. Findings in the [August 2026 audit](problem.md) remain historical unless a dated follow-up below explicitly rechecks them.
